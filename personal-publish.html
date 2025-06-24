@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>语e桥 - 个人发布</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        
+        :root {
+            --primary: #4361ee;
+            --primary-light: #eef2ff;
+            --secondary: #3ccf91;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --bg-light: #f9fafb;
+            --border-color: #e5e7eb;
+            --culture-red: #e53e3e;
+            --culture-gold: #d69e2e;
+        }
+        
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            padding: 0 20px;
+        }
+        
+        /* 顶部导航栏 */
+        .top-nav {
+            background-color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            position: fixed;
+            width: 100%;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            left: 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin: 0 15px;
+            position: relative;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+            padding: 8px 12px;
+            border-radius: 6px;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .nav-links a.active {
+            color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .nav-links i {
+            margin-right: 8px;
+        }
+        
+        .login-btn {
+            background-color: var(--primary);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .login-btn:hover {
+            background-color: #3051d3;
+            transform: translateY(-2px);
+        }
+        
+        /* 下拉菜单 */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            z-index: 1;
+            top: 100%;
+            left: 0;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        
+        .dropdown-content a {
+            color: var(--text-dark);
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: all 0.2s;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: var(--primary-light);
+            color: var(--primary);
+        }
+        
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+        .dropdown-icon {
+            margin-left: 5px;
+            font-size: 12px;
+        }
+        
+        /* 主要内容区域 */
+        .main-content {
+            display: flex;
+            padding-top: 90px;
+            min-height: 100vh;
+            gap: 24px;
+        }
+        
+        /* 用户信息侧边栏 */
+        .user-sidebar {
+            width: 280px;
+            background-color: white;
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+        
+        .user-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: var(--primary-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 20px;
+            font-size: 40px;
+            color: var(--primary);
+            overflow: hidden;
+        }
+        
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .user-name {
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 5px;
+        }
+        
+        .user-info {
+            color: var(--text-light);
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .user-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .stat-value {
+            font-weight: 600;
+            font-size: 18px;
+            color: var(--primary);
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+        
+        .user-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .action-button {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            border-radius: 6px;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        
+        .action-button:hover {
+            background-color: var(--primary-light);
+            color: var(--primary);
+        }
+        
+        .action-button i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        
+        /* 内容区域 */
+        .content-area {
+            flex: 1;
+        }
+        
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .content-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        
+        .share-button {
+            background-color: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+        }
+        
+        .share-button:hover {
+            background-color: #3051d3;
+            transform: translateY(-2px);
+        }
+        
+        .share-button i {
+            margin-right: 8px;
+        }
+        
+        /* 发布内容卡片 */
+        .post-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            margin-bottom: 24px;
+        }
+        
+        .post-header {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .post-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 12px;
+        }
+        
+        .post-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .post-user-info {
+            flex: 1;
+        }
+        
+        .post-user-name {
+            font-weight: 600;
+            font-size: 16px;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+        
+        .post-time {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+        
+        .post-content {
+            padding: 16px;
+        }
+        
+        .post-text {
+            font-size: 16px;
+            color: var(--text-dark);
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+        
+        .post-image {
+            width: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+        
+        .post-image img {
+            width: 100%;
+            max-height: 400px; /* 限制图片最大高度 */
+            object-fit: contain; /* 保持图片比例 */
+        }
+        
+        .post-actions {
+            display: flex;
+            border-top: 1px solid var(--border-color);
+            padding: 12px 16px;
+        }
+        
+        .post-action {
+            display: flex;
+            align-items: center;
+            color: var(--text-light);
+            margin-right: 24px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .post-action:hover {
+            color: var(--primary);
+        }
+        
+        .post-action i {
+            margin-right: 6px;
+        }
+        
+        /* 发布框 */
+        .publish-box {
+            background-color: white;
+            border-radius: 8px;
+            padding: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            margin-bottom: 24px;
+        }
+        
+        .publish-input {
+            width: 100%;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 12px;
+            font-size: 16px;
+            resize: none;
+            margin-bottom: 16px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        
+        .publish-input:focus {
+            border-color: var(--primary);
+        }
+        
+        .publish-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .publish-tools {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .publish-tool {
+            display: flex;
+            align-items: center;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .publish-tool:hover {
+            color: var(--primary);
+        }
+        
+        .publish-tool i {
+            margin-right: 6px;
+        }
+        
+        .publish-button {
+            background-color: var(--primary);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .publish-button:hover {
+            background-color: #3051d3;
+        }
+        
+        /* 模态框 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal {
+            background-color: white;
+            border-radius: 8px;
+            width: 500px;
+            max-width: 90%;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            position: relative;
+            transform: translateY(-20px);
+            transition: all 0.3s;
+        }
+        
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .modal-close:hover {
+            color: var(--text-dark);
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        .upload-area {
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .upload-area:hover {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .upload-icon {
+            font-size: 40px;
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+        
+        .upload-text {
+            font-size: 16px;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+        }
+        
+        .upload-hint {
+            font-size: 14px;
+            color: var(--text-light);
+        }
+        
+        .permission-notice {
+            font-size: 13px;
+            color: var(--text-light);
+            margin-top: 10px;
+            text-align: center;
+        }
+        
+        .content-textarea {
+            width: 100%;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 12px;
+            font-size: 16px;
+            resize: none;
+            margin-bottom: 20px;
+            outline: none;
+            transition: border-color 0.2s;
+            height: 120px;
+        }
+        
+        .content-textarea:focus {
+            border-color: var(--primary);
+        }
+        
+        .modal-footer {
+            padding: 16px 20px;
+            display: flex;
+            justify-content: center;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .publish-modal-button {
+            background-color: var(--primary);
+            color: white;
+            padding: 10px 30px;
+            border-radius: 6px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .publish-modal-button:hover {
+            background-color: #3051d3;
+            transform: translateY(-2px);
+        }
+        
+        .preview-image {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+            margin: 10px auto;
+            object-fit: contain;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            z-index: 1;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 900px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .user-sidebar {
+                width: 100%;
+                position: static;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .top-nav {
+                padding: 12px 15px;
+            }
+            
+            .nav-links li {
+                margin: 0 5px;
+            }
+            
+            .nav-links a {
+                padding: 6px 8px;
+                font-size: 14px;
+            }
+            
+            .login-btn {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+            
+            .content-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+            
+            .share-button {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .publish-actions {
+                flex-direction: column;
+                gap: 16px;
+            }
+            
+            .publish-button {
+                width: 100%;
+            }
+        }
+
+        .upload-content {
+            position: relative;
+            z-index: 2;
+            transition: opacity 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <nav class="top-nav">
+        <div class="logo">语e桥</div>
+        
+        <ul class="nav-links">
+            <li><a href="index.html"><i class="icon">🏠</i>首页</a></li>
+            <li><a href="languagepartner-search.html"><i class="icon">👫</i>语伴</a></li>
+            <li class="dropdown">
+                <a href="chat.html"><i class="icon">💬</i>聊天<span class="dropdown-icon">▼</span></a>
+                <div class="dropdown-content">
+                    <a href="ai-chat.html">AI语伴</a>
+                    <a href="chat.html">语伴聊天</a>
+                </div>
+            </li>
+            <li><a href="experiment.html"><i class="icon">🧪</i>实验招募</a></li>
+            <li class="dropdown">
+                <a href="community-resources.html" class="active"><i class="icon">📚</i>学习社区<span class="dropdown-icon">▼</span></a>
+                <div class="dropdown-content">
+                    <a href="personal-publish.html">个人发布</a>
+                    <a href="community-resources.html">社区资源</a>
+                    <a href="learningpath.html">学习路径</a>
+                </div>
+            </li>
+            <li><a href="tutor-matching.html"><i class="icon">👥</i>轻辅导</a></li>
+        </ul>
+        
+        <a href="login.html" class="login-btn">登录</a>
+    </nav>
+
+    <div class="container">
+        <div class="main-content">
+            <!-- 用户信息侧边栏 -->
+            <div class="user-sidebar">
+                <div class="user-avatar">
+                    <img src="https://ts1.tc.mm.bing.net/th/id/R-C.413226704d6fb28423d6c7c44e20579c?rik=dY0cRjVHKMIUCQ&riu=http%3a%2f%2fimg.51miz.com%2fElement%2f00%2f18%2f81%2f44%2ff06713ff_E188144_9809375c.png!%2fquality%2f90%2funsharp%2ftrue%2fcompress%2ftrue%2fformat%2fpng&ehk=Ug1dzy9FlFGQGe8KL9yinE7%2fDDADIBvuD0z81KdUM1Q%3d&risl=&pid=ImgRaw&r=0" alt="用户头像">
+                </div>
+                <h3 class="user-name">小e同学</h3>
+                <p class="user-info">语伴交流官</p>
+                
+                <div class="user-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">42</div>
+                        <div class="stat-label">发布</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">128</div>
+                        <div class="stat-label">关注</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">256</div>
+                        <div class="stat-label">粉丝</div>
+                    </div>
+                </div>
+                
+                <div class="user-actions">
+                    <a href="personal-publish.html" class="action-button">
+                        <i class="icon">📋</i> 个人发布
+                    </a>
+                    <a href="#" class="action-button">
+                        <i class="icon">❤️</i> 我的收藏
+                    </a>
+                    <a href="#" class="action-button">
+                        <i class="icon">🔔</i> 学习提醒
+                    </a>
+                    <a href="#" class="action-button">
+                        <i class="icon">📊</i> 学习进度
+                    </a>
+                </div>
+            </div>
+            
+            <!-- 内容区域 -->
+            <div class="content-area">
+                <div class="content-header">
+                    <h1 class="content-title">个人发布</h1>
+                    <button class="share-button" id="openShareModal">
+                        <i class="icon">📤</i> 分享你的学习资源
+                    </button>
+                </div>
+                
+                <!-- 发布框 -->
+                <div class="publish-box">
+                    <textarea class="publish-input" placeholder="分享你的学习心得..."></textarea>
+                    <div class="publish-actions">
+                        <div class="publish-tools">
+                            <div class="publish-tool" id="uploadImage">
+                                <i class="icon">🖼️</i> 图片
+                            </div>
+                            <div class="publish-tool">
+                                <i class="icon">📎</i> 附件
+                            </div>
+                            <div class="publish-tool">
+                                <i class="icon">🏷️</i> 标签
+                            </div>
+                        </div>
+                        <button class="publish-button" id="quickPublish">立即发布</button>
+                    </div>
+                </div>
+                
+                <!-- 发布内容列表 -->
+                <div id="posts-container">
+                    <div class="post-card">
+                        <div class="post-header">
+                            <div class="post-avatar">
+                                <img src="https://ts1.tc.mm.bing.net/th/id/R-C.413226704d6fb28423d6c7c44e20579c?rik=dY0cRjVHKMIUCQ&riu=http%3a%2f%2fimg.51miz.com%2fElement%2f00%2f18%2f81%2f44%2ff06713ff_E188144_9809375c.png!%2fquality%2f90%2funsharp%2ftrue%2fcompress%2ftrue%2fformat%2fpng&ehk=Ug1dzy9FlFGQGe8KL9yinE7%2fDDADIBvuD0z81KdUM1Q%3d&risl=&pid=ImgRaw&r=0" alt="用户头像">
+                            </div>
+                            <div class="post-user-info">
+                                <div class="post-user-name">小e同学</div>
+                                <div class="post-time">2025年3月21日 10:30</div>
+                            </div>
+                        </div>
+                        <div class="post-content">
+                            <p class="post-text">今天学习了中文的四个声调，发现第三声最难掌握。有什么好的练习方法吗？</p>
+                            <div class="post-image">
+                                <img src="https://ts1.tc.mm.bing.net/th/id/R-C.d331c4b164be514767c466e5a7f20bc5?rik=BarCnure92pXKw&riu=http%3a%2f%2fwww.1mpi.com%2fpic%2fe9b351f97fc9a411b988aa1d%2f1-1021-jpg_6_0_______-772-0-0-772.jpg&ehk=LIStQEIfZUjhZI%2fS%2fxRVFzvtj0z9HUSeY41jHMDCN4M%3d&risl=&pid=ImgRaw&r=0" alt="声调图">
+                            </div>
+                        </div>
+                        <div class="post-actions">
+                            <div class="post-action">
+                                <i class="icon">👍</i> 点赞 (12)
+                            </div>
+                            <div class="post-action">
+                                <i class="icon">💬</i> 评论 (5)
+                            </div>
+                            <div class="post-action">
+                                <i class="icon">🔄</i> 分享
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="post-card">
+                        <div class="post-header">
+                            <div class="post-avatar">
+                                <img src="https://ts1.tc.mm.bing.net/th/id/R-C.413226704d6fb28423d6c7c44e20579c?rik=dY0cRjVHKMIUCQ&riu=http%3a%2f%2fimg.51miz.com%2fElement%2f00%2f18%2f81%2f44%2ff06713ff_E188144_9809375c.png!%2fquality%2f90%2funsharp%2ftrue%2fcompress%2ftrue%2fformat%2fpng&ehk=Ug1dzy9FlFGQGe8KL9yinE7%2fDDADIBvuD0z81KdUM1Q%3d&risl=&pid=ImgRaw&r=0" alt="用户头像">
+                            </div>
+                            <div class="post-user-info">
+                                <div class="post-user-name">小e同学</div>
+                                <div class="post-time">2025年3月20日 15:45</div>
+                            </div>
+                        </div>
+                        <div class="post-content">
+                            <p class="post-text">分享一个学习汉字的小技巧：通过部首来记忆汉字，比如"森"字由三个"木"组成，表示很多树木，也就是森林。这样记忆汉字会更加容易！</p>
+                        </div>
+                        <div class="post-actions">
+                            <div class="post-action">
+                                <i class="icon">👍</i> 点赞 (24)
+                            </div>
+                            <div class="post-action">
+                                <i class="icon">💬</i> 评论 (8)
+                            </div>
+                            <div class="post-action">
+                                <i class="icon">🔄</i> 分享
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 分享资源模态框 -->
+    <div class="modal-overlay" id="shareModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">分享学习资源</div>
+                <button class="modal-close" id="closeModal">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-content" id="uploadContent">
+                        <div class="upload-icon">📷</div>
+                        <div class="upload-text">上传图片</div>
+                        <div class="upload-hint">点击或拖拽图片到此处</div>
+                    </div>
+                    <input type="file" id="fileInput" accept="image/*" style="display: none;">
+                    <img id="previewImage" class="preview-image" src="/placeholder.svg" alt="预览图片">
+                </div>
+                <div class="permission-notice">
+                    <i class="icon">ℹ️</i> 上传图片前，请允许网站获取您的图片内容
+                </div>
+                <img id="previewImage" class="preview-image" src="/placeholder.svg" alt="预览图片">
+                <textarea class="content-textarea" id="contentInput" placeholder="分享内容..."></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="publish-modal-button" id="publishButton">发布</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM加载完成，开始初始化事件监听器');
+            
+            // 模态框相关元素
+            const shareModal = document.getElementById('shareModal');
+            const openShareModal = document.getElementById('openShareModal');
+            const closeModal = document.getElementById('closeModal');
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+            const previewImage = document.getElementById('previewImage');
+            const contentInput = document.getElementById('contentInput');
+            const publishButton = document.getElementById('publishButton');
+            const postsContainer = document.getElementById('posts-container');
+            const quickPublish = document.getElementById('quickPublish');
+            const uploadImage = document.getElementById('uploadImage');
+            
+            console.log('元素引用获取完成', {
+                shareModal, openShareModal, closeModal, uploadArea,
+                fileInput, previewImage, contentInput, publishButton,
+                postsContainer, quickPublish, uploadImage
+            });
+            
+            // 模态框相关元素
+            
+            // 打开模态框
+            openShareModal.addEventListener('click', function() {
+                shareModal.classList.add('active');
+                resetModalContent();
+            });
+            
+            // 快速发布按钮也打开模态框
+            quickPublish.addEventListener('click', function() {
+                shareModal.classList.add('active');
+                resetModalContent();
+            });
+            
+            // 上传图片按钮也打开模态框
+            uploadImage.addEventListener('click', function() {
+                shareModal.classList.add('active');
+                resetModalContent();
+            });
+            
+            // 关闭模态框
+            closeModal.addEventListener('click', function() {
+                shareModal.classList.remove('active');
+            });
+            
+            // 点击模态框外部关闭模态框
+            shareModal.addEventListener('click', function(e) {
+                if (e.target === shareModal) {
+                    shareModal.classList.remove('active');
+                }
+            });
+            
+            // 上传区域点击触发文件选择
+            uploadArea.addEventListener('click', function() {
+                fileInput.click();
+            });
+            
+            // 文件选择后预览
+            fileInput.addEventListener('change', function() {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        previewImage.src = e.target.result;
+                        previewImage.style.display = 'block';
+                        document.getElementById('uploadContent').style.opacity = '0.2'; // Fade the upload content
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            // 拖拽上传
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.style.borderColor = '';
+                this.style.backgroundColor = '';
+                
+                const file = e.dataTransfer.files[0];
+                if (file && file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        previewImage.src = e.target.result;
+                        previewImage.style.display = 'block';
+                        document.getElementById('uploadContent').style.opacity = '0.2'; // Fade the upload content
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            // 发布按钮点击事件
+            publishButton.addEventListener('click', function() {
+                const content = contentInput.value.trim();
+                const imageSrc = previewImage.style.display !== 'none' ? previewImage.src : '';
+                
+                if (content === '' && imageSrc === '') {
+                    alert('请输入内容或上传图片');
+                    return;
+                }
+                
+                // 创建新的发布卡片
+                const postCard = document.createElement('div');
+                postCard.className = 'post-card';
+                
+                // 获取当前时间
+                const now = new Date();
+                const year = now.getFullYear();
+                const month = now.getMonth() + 1;
+                const day = now.getDate();
+                const hours = now.getHours().toString().padStart(2, '0');
+                const minutes = now.getMinutes().toString().padStart(2, '0');
+                const timeString = `${year}年${month}月${day}日 ${hours}:${minutes}`;
+                
+                // 构建卡片HTML
+                postCard.innerHTML = `
+                    <div class="post-header">
+                        <div class="post-avatar">
+                            <img src="https://ts1.tc.mm.bing.net/th/id/R-C.413226704d6fb28423d6c7c44e20579c?rik=dY0cRjVHKMIUCQ&riu=http%3a%2f%2fimg.51miz.com%2fElement%2f00%2f18%2f81%2f44%2ff06713ff_E188144_9809375c.png!%2fquality%2f90%2funsharp%2ftrue%2fcompress%2ftrue%2fformat%2fpng&ehk=Ug1dzy9FlFGQGe8KL9yinE7%2fDDADIBvuD0z81KdUM1Q%3d&risl=&pid=ImgRaw&r=0" alt="用户头像">
+                        </div>
+                        <div class="post-user-info">
+                            <div class="post-user-name">小e同学</div>
+                            <div class="post-time">${timeString}</div>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        ${content ? `<p class="post-text">${content}</p>` : ''}
+                        ${imageSrc ? `
+                            <div class="post-image">
+                                <img src="${imageSrc}" alt="发布图片">
+                            </div>
+                        ` : ''}
+                    </div>
+                    <div class="post-actions">
+                        <div class="post-action">
+                            <i class="icon">👍</i> 点赞 (0)
+                        </div>
+                        <div class="post-action">
+                            <i class="icon">💬</i> 评论 (0)
+                        </div>
+                        <div class="post-action">
+                            <i class="icon">🔄</i> 分享
+                        </div>
+                    </div>
+                `;
+                
+                // 将新卡片插入到容器的最前面
+                postsContainer.insertBefore(postCard, postsContainer.firstChild);
+                
+                // 关闭模态框
+                shareModal.classList.remove('active');
+                
+                // 添加点赞功能
+                const likeButton = postCard.querySelector('.post-action:first-child');
+                likeButton.addEventListener('click', function() {
+                    const likeText = this.textContent;
+                    const likeCount = parseInt(likeText.match(/\d+/)[0]);
+                    this.innerHTML = `<i class="icon">👍</i> 点赞 (${likeCount + 1})`;
+                    this.style.color = '#4361ee';
+                });
+            });
+            
+            // 为现有的点赞按钮添加功能
+            const existingLikeButtons = document.querySelectorAll('.post-action:first-child');
+            existingLikeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const likeText = this.textContent;
+                    const likeCount = parseInt(likeText.match(/\d+/)[0]);
+                    this.innerHTML = `<i class="icon">👍</i> 点赞 (${likeCount + 1})`;
+                    this.style.color = '#4361ee';
+                });
+            });
+
+            function resetModalContent() {
+                previewImage.style.display = 'none';
+                previewImage.src = '';
+                contentInput.value = '';
+                document.getElementById('uploadContent').style.opacity = '1'; // Reset upload content opacity
+            }
+        });
+    </script>
+</body>
+</html>
+

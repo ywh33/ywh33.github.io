@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>语e桥 - 社区资源</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        
+        :root {
+            --primary: #4361ee;
+            --primary-light: #eef2ff;
+            --secondary: #3ccf91;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --bg-light: #f9fafb;
+            --border-color: #e5e7eb;
+            --culture-red: #e53e3e;
+            --culture-gold: #d69e2e;
+        }
+        
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            padding: 0 20px;
+        }
+        
+        /* 顶部导航栏 */
+        .top-nav {
+            background-color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            position: fixed;
+            width: 100%;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            left: 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin: 0 15px;
+            position: relative;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+            padding: 8px 12px;
+            border-radius: 6px;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .nav-links a.active {
+            color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .nav-links i {
+            margin-right: 8px;
+        }
+        
+        .login-btn {
+            background-color: var(--primary);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .login-btn:hover {
+            background-color: #3051d3;
+            transform: translateY(-2px);
+        }
+        
+        /* 下拉菜单 */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            z-index: 1;
+            top: 100%;
+            left: 0;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        
+        .dropdown-content a {
+            color: var(--text-dark);
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: all 0.2s;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: var(--primary-light);
+            color: var(--primary);
+        }
+        
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+        .dropdown-icon {
+            margin-left: 5px;
+            font-size: 12px;
+        }
+        
+        /* 主要内容区域 */
+        .main-content {
+            display: flex;
+            padding-top: 90px;
+            min-height: 100vh;
+            gap: 24px;
+        }
+        
+        /* 用户信息侧边栏 */
+        .user-sidebar {
+            width: 280px;
+            background-color: white;
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+        
+        .user-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: var(--primary-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 20px;
+            font-size: 40px;
+            color: var(--primary);
+            overflow: hidden;
+        }
+        
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .user-name {
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 5px;
+        }
+        
+        .user-info {
+            color: var(--text-light);
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .user-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .stat-value {
+            font-weight: 600;
+            font-size: 18px;
+            color: var(--primary);
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+        
+        .user-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .action-button {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            border-radius: 6px;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        
+        .action-button:hover {
+            background-color: var(--primary-light);
+            color: var(--primary);
+        }
+        
+        .action-button i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        
+        /* 内容区域 */
+        .content-area {
+            flex: 1;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 10px;
+            color: var(--primary);
+        }
+        
+        .section-more {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-more i {
+            margin-left: 5px;
+        }
+        
+        .section-content {
+            padding: 20px;
+        }
+        
+        /* Listen 板块 */
+        .audio-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .audio-card {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        
+        .audio-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+            border-color: var(--primary);
+        }
+        
+        .audio-image {
+            width: 100%;
+            height: 160px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .audio-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+        
+        .audio-card:hover .audio-image img {
+            transform: scale(1.05);
+        }
+        
+        .audio-play {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .audio-play i {
+            font-size: 24px;
+            color: var(--primary);
+        }
+        
+        .audio-card:hover .audio-play {
+            background-color: var(--primary);
+        }
+        
+        .audio-card:hover .audio-play i {
+            color: white;
+        }
+        
+        .audio-content {
+            padding: 15px;
+        }
+        
+        .audio-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+        }
+        
+        .audio-description {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 15px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            height: 40px;
+        }
+        
+        .audio-player {
+            width: 100%;
+            height: 36px;
+        }
+        
+        /* Read 板块 */
+        .word-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid var(--culture-gold);
+        }
+        
+        .word-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .word-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        
+        .word-date {
+            font-size: 14px;
+            color: var(--text-light);
+        }
+        
+        .word-content {
+            margin-bottom: 15px;
+        }
+        
+        .word-chinese {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--culture-red);
+            margin-bottom: 10px;
+        }
+        
+        .word-pinyin {
+            font-size: 16px;
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+        
+        .word-meaning {
+            font-size: 16px;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+        }
+        
+        .word-example {
+            background-color: var(--bg-light);
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+        
+        .example-chinese {
+            font-size: 16px;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+        }
+        
+        .example-english {
+            font-size: 14px;
+            color: var(--text-light);
+        }
+        
+        .word-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .word-action {
+            display: flex;
+            align-items: center;
+            color: var(--text-light);
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .word-action:hover {
+            color: var(--primary);
+        }
+        
+        .word-action i {
+            margin-right: 5px;
+        }
+        
+        /* 传统文化板块 */
+        .culture-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .culture-card {
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .culture-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .culture-image {
+            width: 100%;
+            height: 180px;
+            overflow: hidden;
+        }
+        
+        .culture-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+        
+        .culture-card:hover .culture-image img {
+            transform: scale(1.05);
+        }
+        
+        .culture-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 15px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+            color: white;
+        }
+        
+        .culture-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .culture-date {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        /* 网络用语板块 */
+        .slang-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .slang-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid var(--primary);
+        }
+
+        .slang-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .slang-icon {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+
+        .slang-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .slang-content {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .slang-item {
+            padding: 10px;
+            border-radius: 6px;
+            background-color: var(--bg-light);
+            transition: all 0.2s;
+        }
+
+        .slang-item:hover {
+            background-color: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        .slang-chinese {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .slang-pinyin {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+
+        .slang-meaning {
+            font-size: 15px;
+            color: var(--text-dark);
+        }
+
+        .slang-footer {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .slang-more {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: var(--primary-light);
+            color: var(--primary);
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .slang-more:hover {
+            background-color: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 900px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .user-sidebar {
+                width: 100%;
+                position: static;
+            }
+            
+            .audio-list, .culture-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .audio-list, .culture-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .top-nav {
+                padding: 12px 15px;
+            }
+            
+            .nav-links li {
+                margin: 0 5px;
+            }
+            
+            .nav-links a {
+                padding: 6px 8px;
+                font-size: 14px;
+            }
+            
+            .login-btn {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <nav class="top-nav">
+        <a href="index.html" class="logo">语e桥</a>
+        
+        <ul class="nav-links">
+            <li><a href="index.html"><i class="icon">🏠</i>首页</a></li>
+            <li><a href="languagepartner-search.html"><i class="icon">👫</i>语伴</a></li>
+            <li class="dropdown">
+                <a href="chat.html"><i class="icon">💬</i>聊天<span class="dropdown-icon">▼</span></a>
+                <div class="dropdown-content">
+                    <a href="ai-chat.html">AI语伴</a>
+                    <a href="chat.html">语伴聊天</a>
+                </div>
+            </li>
+            <li><a href="experiment.html"><i class="icon">🧪</i>实验招募</a></li>
+            <li class="dropdown">
+                <a href="community-resources.html" class="active"><i class="icon">📚</i>学习社区<span class="dropdown-icon">▼</span></a>
+                <div class="dropdown-content">
+                    <a href="personal-publish.html">个人发布</a>
+                    <a href="community-resources.html">社区资源</a>
+                    <a href="learningpath.html">学习路径</a>
+                </div>
+            </li>
+            <li><a href="tutor-matching.html"><i class="icon">👥</i>轻辅导</a></li>
+        </ul>
+        
+        <a href="login.html" class="login-btn">登录</a>
+    </nav>
+
+    <div class="container">
+        <div class="main-content">
+            <!-- 用户信息侧边栏 -->
+            <div class="user-sidebar">
+                <div class="user-avatar">
+                    <img src="https://ts1.tc.mm.bing.net/th/id/R-C.413226704d6fb28423d6c7c44e20579c?rik=dY0cRjVHKMIUCQ&riu=http%3a%2f%2fimg.51miz.com%2fElement%2f00%2f18%2f81%2f44%2ff06713ff_E188144_9809375c.png!%2fquality%2f90%2funsharp%2ftrue%2fcompress%2ftrue%2fformat%2fpng&ehk=Ug1dzy9FlFGQGe8KL9yinE7%2fDDADIBvuD0z81KdUM1Q%3d&risl=&pid=ImgRaw&r=0" alt="用户头像" id="sidebar-avatar">
+                </div>
+                <h3 class="user-name" id="sidebar-username">小e同学</h3>
+                <p class="user-info">语伴交流官</p>
+                
+                <div class="user-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">42</div>
+                        <div class="stat-label">发布</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">128</div>
+                        <div class="stat-label">关注</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">256</div>
+                        <div class="stat-label">粉丝</div>
+                    </div>
+                </div>
+                
+                <div class="user-actions">
+                    <a href="personal-publish.html" class="action-button">
+                        <i class="icon">📋</i> 个人发布
+                    </a>
+                    <a href="#" class="action-button">
+                        <i class="icon">❤️</i> 我的收藏
+                    </a>
+                    <a href="#" class="action-button">
+                        <i class="icon">🔔</i> 学习提醒
+                    </a>
+                    <a href="#" class="action-button">
+                        <i class="icon">📊</i> 学习进度
+                    </a>
+                </div>
+            </div>
+            
+            <!-- 内容区域 -->
+            <div class="content-area">
+                <!-- Listen 板块 -->
+                <div class="section">
+                    <div class="section-header">
+                        <h2 class="section-title"><i class="icon">🎧</i> Listen - 双语播报</h2>
+                        <a href="#" class="section-more">更多 <i class="icon">→</i></a>
+                    </div>
+                    <div class="section-content">
+                        <div class="audio-list">
+                            <div class="audio-card">
+                                <div class="audio-image">
+                                    <img src="https://n.sinaimg.cn/sinacn11/397/w1200h797/20180719/bbcd-hfnsvza6675109.jpg" alt="中国茶道">
+                                    <div class="audio-play">
+                                        <i class="icon">▶️</i>
+                                    </div>
+                                </div>
+                                <div class="audio-content">
+                                    <h3 class="audio-title">中国茶道的历史与文化</h3>
+                                    <p class="audio-description">探索中国茶道的起源、发展和文化内涵，了解不同茶类的特点和冲泡方法。</p>
+                                    <audio class="audio-player" controls>
+                                        <source src="#" type="audio/mpeg">
+                                        您的浏览器不支持音频播放。
+                                    </audio>
+                                </div>
+                            </div>
+
+                            <div class="audio-card">
+                                <div class="audio-image">
+                                    <img src="https://boot-img.xuexi.cn/contribute_img/20190314174044/7155045317196343.jpg" alt="中国剪纸">
+                                    <div class="audio-play">
+                                        <i class="icon">▶️</i>
+                                    </div>
+                                </div>
+                                <div class="audio-content">
+                                    <h3 class="audio-title">中国剪纸艺术的魅力</h3>
+                                    <p class="audio-description">探索中国剪纸艺术的历史、象征意义和制作技巧，了解这项民间艺术如何反映中国传统文化和生活智慧。</p>
+                                    <audio class="audio-player" controls>
+                                        <source src="#" type="audio/mpeg">
+                                        您的浏览器不支持音频播放。
+                                    </audio>
+                                </div>
+                            </div>
+                            
+                            <div class="audio-card">
+                                <div class="audio-image">
+                                    <img src="https://ts1.tc.mm.bing.net/th/id/R-C.3a013d68362fc87d4798ddfe363ada3a?rik=oVdfktjVrE4P9g&riu=http%3a%2f%2fseopic.699pic.com%2fphoto%2f50024%2f2913.jpg_wh1200.jpg&ehk=4SLLEByGmL%2b7KshjIVlU57xg8%2f%2fRuSN7v8Icj69YAgM%3d&risl=&pid=ImgRaw&r=0" alt="中国节日">
+                                    <div class="audio-play">
+                                        <i class="icon">▶️</i>
+                                    </div>
+                                </div>
+                                <div class="audio-content">
+                                    <h3 class="audio-title">春节的传统习俗与庆祝方式</h3>
+                                    <p class="audio-description">了解中国最重要的传统节日——春节的历史、习俗和现代庆祝方式。</p>
+                                    <audio class="audio-player" controls>
+                                        <source src="#" type="audio/mpeg">
+                                        您的浏览器不支持音频播放。
+                                    </audio>
+                                </div>
+                            </div>
+                            
+                            <div class="audio-card">
+                                <div class="audio-image">
+                                    <img src="https://www.ci.fudan.edu.cn/_upload/article/images/fc/ce/0677bd6f4adfb35cec312742893e/7c95fe84-7762-48c0-b57b-c1e5f017495b.jpg" alt="中国书法">
+                                    <div class="audio-play">
+                                        <i class="icon">▶️</i>
+                                    </div>
+                                </div>
+                                <div class="audio-content">
+                                    <h3 class="audio-title">中国书法艺术入门指南</h3>
+                                    <p class="audio-description">介绍中国书法的基本工具、笔画技巧和不同书体的特点，适合初学者了解。</p>
+                                    <audio class="audio-player" controls>
+                                        <source src="#" type="audio/mpeg">
+                                        您的浏览器不支持音频播放。
+                                    </audio>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Read 板块 -->
+                <div class="section">
+                    <div class="section-header">
+                        <h2 class="section-title"><i class="icon">📖</i> Read - 每日一词</h2>
+                        <a href="idioms-more.html" class="section-more">更多 <i class="icon">→</i></a>
+                    </div>
+                    <div class="section-content">
+                        <div class="word-card">
+                            <div class="word-header">
+                                <h3 class="word-title">每日一词</h3>
+                                <div class="word-date">2025年3月21日</div>
+                            </div>
+                            <div class="word-content">
+                                <div class="word-chinese">画蛇添足</div>
+                                <div class="word-pinyin">huà shé tiān zú</div>
+                                <div class="word-meaning">给蛇画上脚。比喻做了多余的事，不但无益，反而不好。</div>
+                                <div class="word-example">
+                                    <div class="example-chinese">这篇文章已经很完整了，如果再增加内容反而是画蛇添足。</div>
+                                    <div class="example-english">This article is already complete. Adding more content would be superfluous (drawing legs on a snake).</div>
+                                </div>
+                            </div>
+                            <div class="word-actions">
+                                <div class="word-action">
+                                    <i class="icon">🔊</i> 发音
+                                </div>
+                                <div class="word-action">
+                                    <i class="icon">❤️</i> 收藏
+                                </div>
+                                <div class="word-action">
+                                    <i class="icon">🔄</i> 下一个
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 传统文化板块 -->
+                <div class="section">
+                    <div class="section-header">
+                        <h2 class="section-title"><i class="icon">🏮</i> 传统文化 - 中国节日</h2>
+                        <a href="festivals-more.html" class="section-more">更多 <i class="icon">→</i></a>
+                    </div>
+                    <div class="section-content">
+                        <div class="culture-grid">
+                            <div class="culture-card">
+                                <div class="culture-image">
+                                    <img src="https://ts1.tc.mm.bing.net/th/id/R-C.3b0d9b618afbb58c5a913aa1d0a13ef6?rik=jTLf9Uv9wxrdjg&riu=http%3a%2f%2fseopic.699pic.com%2fphoto%2f50024%2f2900.jpg_wh1200.jpg&ehk=CcFAjmaS%2bogVkjVnn6t7Ey7ZLUAFMFPFrcYcnfDDDDU%3d&risl=&pid=ImgRaw&r=0" alt="春节">
+                                </div>
+                                <div class="culture-overlay">
+                                    <h3 class="culture-title">春节</h3>
+                                    <div class="culture-date">农历正月初一</div>
+                                </div>
+                            </div>
+                            
+                            <div class="culture-card">
+                                <div class="culture-image">
+                                    <img src="https://ts1.tc.mm.bing.net/th/id/R-C.cbaec25f4f7203f8b51be2fc1db3e51a?rik=r5UggRo4xHgSFQ&riu=http%3a%2f%2fgjzx.jschina.com.cn%2f20219%2f202301%2fW020230131368509596604.png&ehk=ZE6Qj5pvIuXghEHdsmEGGLijjDRUjqhcbgtHOhfgFDM%3d&risl=&pid=ImgRaw&r=0" alt="元宵节">
+                                </div>
+                                <div class="culture-overlay">
+                                    <h3 class="culture-title">元宵节</h3>
+                                    <div class="culture-date">农历正月十五</div>
+                                </div>
+                            </div>
+                            
+                            <div class="culture-card">
+                                <div class="culture-image">
+                                    <img src="https://bkimg.cdn.bcebos.com/pic/d52a2834349b033b28871da31bce36d3d539bdb8" alt="清明节">
+                                </div>
+                                <div class="culture-overlay">
+                                    <h3 class="culture-title">清明节</h3>
+                                    <div class="culture-date">公历4月4日或5日</div>
+                                </div>
+                            </div>
+                            
+                            <div class="culture-card">
+                                <div class="culture-image">
+                                    <img src="https://media.gettyimages.com/id/170365411/photo/revelers-gather-for-hong-kong-boat-carnival.jpg?b=1&s=594x594&w=0&k=20&c=lDkDWr2j6cbHOQremFFoduUM2EMpbGNLlrhdEMt-KOg=" alt="端午节">
+                                </div>
+                                <div class="culture-overlay">
+                                    <h3 class="culture-title">端午节</h3>
+                                    <div class="culture-date">农历五月初五</div>
+                                </div>
+                            </div>
+                            
+                            <div class="culture-card">
+                                <div class="culture-image">
+                                    <img src="https://img95.699pic.com/photo/40159/5136.jpg_wh860.jpg" alt="中秋节">
+                                </div>
+                                <div class="culture-overlay">
+                                    <h3 class="culture-title">中秋节</h3>
+                                    <div class="culture-date">农历八月十五</div>
+                                </div>
+                            </div>
+                            
+                            <div class="culture-card">
+                                <div class="culture-image">
+                                    <img src="https://tse4-mm.cn.bing.net/th/id/OIP-C.nl9yVbmyNehMDsb6FhcGDgHaEB?rs=1&pid=ImgDetMain" alt="重阳节">
+                                </div>
+                                <div class="culture-overlay">
+                                    <h3 class="culture-title">重阳节</h3>
+                                    <div class="culture-date">农历九月初九</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 网络用语板块 -->
+                <div class="section">
+                    <div class="section-header">
+                        <h2 class="section-title"><i class="icon">🔤</i> 网络用语 - 流行表达</h2>
+                        <a href="internet-slang.html" class="section-more">更多 <i class="icon">→</i></a>
+                    </div>
+                    <div class="section-content">
+                        <div class="slang-container">
+                            <div class="slang-card">
+                                <div class="slang-header">
+                                    <div class="slang-icon">🔥</div>
+                                    <div class="slang-title">网络热词</div>
+                                </div>
+                                <div class="slang-content">
+                                    <div class="slang-item">
+                                        <div class="slang-chinese">666</div>
+                                        <div class="slang-pinyin">liù liù liù</div>
+                                        <div class="slang-meaning">形容某人技术很厉害、很强或者很棒</div>
+                                    </div>
+                                    <div class="slang-item">
+                                        <div class="slang-chinese">凡尔赛</div>
+                                        <div class="slang-pinyin">fán ěr sài</div>
+                                        <div class="slang-meaning">指炫耀时故作谦虚，源自法国凡尔赛宫的奢华</div>
+                                    </div>
+                                    <div class="slang-item">
+                                        <div class="slang-chinese">老六</div>
+                                        <div class="slang-pinyin">lǎo liù</div>
+                                        <div class="slang-meaning">指行为猥琐、不光明正大的人</div>
+                                    </div>
+                                </div>
+                                <div class="slang-footer">
+                                    <a href="internet-slang.html" class="slang-more">查看更多网络用语</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/common.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 检查登录状态并更新侧边栏
+            if (isLoggedIn) {
+                document.getElementById('sidebar-username').textContent = currentUser.username;
+                document.getElementById('sidebar-avatar').src = currentUser.avatar;
+            }
+            
+            // 音频播放控制
+            const audioPlays = document.querySelectorAll('.audio-play');
+            const audioPlayers = document.querySelectorAll('.audio-player');
+            
+            audioPlays.forEach((play, index) => {
+                play.addEventListener('click', function() {
+                    const player = audioPlayers[index];
+                    
+                    // 暂停其他所有播放器
+                    audioPlayers.forEach((p, i) => {
+                        if (i !== index) {
+                            p.pause();
+                        }
+                    });
+                    
+                    // 切换当前播放器状态
+                    if (player.paused) {
+                        player.play();
+                        this.querySelector('i').textContent = '⏸️';
+                    } else {
+                        player.pause();
+                        this.querySelector('i').textContent = '▶️';
+                    }
+                });
+            });
+            
+            // 音频播放结束后重置图标
+            audioPlayers.forEach((player, index) => {
+                player.addEventListener('ended', function() {
+                    audioPlays[index].querySelector('i').textContent = '▶️';
+                });
+            });
+            
+            // 每日一词发音功能
+            const pronunciationBtn = document.querySelector('.word-action:first-child');
+            pronunciationBtn.addEventListener('click', function() {
+                alert('发音功能即将上线');
+            });
+            
+            // 收藏功能
+            const favoriteBtn = document.querySelector('.word-action:nth-child(2)');
+            favoriteBtn.addEventListener('click', function() {
+                this.innerHTML = '<i class="icon">❤️</i> 已收藏';
+                this.style.color = '#e53e3e';
+            });
+            
+            // 下一个词汇功能
+            const nextWordBtn = document.querySelector('.word-action:last-child');
+            nextWordBtn.addEventListener('click', function() {
+                alert('下一个词汇功能即将上线');
+            });
+            
+            // 传统文化卡片点击事件
+            const cultureCards = document.querySelectorAll('.culture-card');
+            cultureCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const title = this.querySelector('.culture-title').textContent;
+                    window.location.href = 'festivals-more.html';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+

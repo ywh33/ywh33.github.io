@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学习路径 | Learning Path - 语e桥</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        
+        :root {
+            --primary: #4361ee;
+            --primary-light: #eef2ff;
+            --secondary: #3ccf91;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --bg-light: #f9fafb;
+            --border-color: #e5e7eb;
+        }
+        
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+        
+        /* 顶部导航栏 */
+        .top-nav {
+            background-color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            position: fixed;
+            width: 100%;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            left: 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin: 0 15px;
+            position: relative;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+            padding: 8px 12px;
+            border-radius: 6px;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .nav-links a.active {
+            color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .nav-links i {
+            margin-right: 8px;
+        }
+        
+        .login-btn {
+            background-color: var(--primary);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .login-btn:hover {
+            background-color: #3051d3;
+            transform: translateY(-2px);
+        }
+
+        /* 下拉菜单 */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            z-index: 1;
+            top: 100%;
+            left: 0;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        
+        .dropdown-content a {
+            color: var(--text-dark);
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: all 0.2s;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: var(--primary-light);
+            color: var(--primary);
+        }
+        
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+        .dropdown-icon {
+            margin-left: 5px;
+            font-size: 12px;
+        }
+        
+        /* 主要内容区域 */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 100px 20px 40px;
+        }
+        
+        .welcome-card {
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .welcome-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .user-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            margin-right: 20px;
+            object-fit: cover;
+        }
+        
+        .welcome-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+        
+        .welcome-subtitle {
+            color: var(--text-light);
+            font-size: 16px;
+        }
+        
+        .welcome-message {
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+        
+        .path-header {
+            background: linear-gradient(135deg, #4361ee, #3a0ca3);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .path-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .path-description {
+            font-size: 16px;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+        
+        .path-stage {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 25px;
+            margin-bottom: 30px;
+            position: relative;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .path-stage:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stage-number {
+            position: absolute;
+            top: -15px;
+            left: 25px;
+            background-color: var(--primary);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .stage-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin: 15px 0 10px 0;
+            color: var(--primary);
+        }
+        
+        .stage-duration {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .stage-duration i {
+            margin-right: 5px;
+        }
+        
+        .stage-goal {
+            background-color: var(--primary-light);
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+            color: var(--primary);
+        }
+        
+        .stage-content {
+            margin-bottom: 20px;
+        }
+        
+        .content-title {
+            font-weight: bold;
+            margin-bottom: 12px;
+            color: var(--text-dark);
+            font-size: 18px;
+        }
+        
+        .content-list {
+            list-style-type: none;
+            padding-left: 5px;
+        }
+        
+        .content-list li {
+            margin-bottom: 15px;
+            position: relative;
+            padding-left: 25px;
+        }
+        
+        .content-list li:before {
+            content: "•";
+            color: var(--primary);
+            font-size: 20px;
+            position: absolute;
+            left: 0;
+            top: -2px;
+        }
+        
+        .content-list ul {
+            list-style-type: none;
+            margin-top: 10px;
+        }
+        
+        .content-list ul li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+        }
+        
+        .content-list ul li:before {
+            content: "◦";
+            color: var(--text-light);
+            font-size: 16px;
+        }
+        
+        .ai-example {
+            background-color: #f8f9fa;
+            border-left: 4px solid var(--primary);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: var(--secondary);
+            width: 0%;
+            transition: width 1s;
+        }
+        
+        .back-button {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            margin-top: 20px;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .back-button:hover {
+            background-color: #3051d3;
+            transform: translateY(-2px);
+        }
+        
+        /* 路径选择器 */
+        .path-selector {
+            display: flex;
+            margin-bottom: 30px;
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .path-option {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .path-option.active {
+            background-color: var(--primary-light);
+            border-bottom-color: var(--primary);
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .path-option:hover:not(.active) {
+            background-color: #f5f7fa;
+        }
+        
+        .path-content {
+            display: none;
+        }
+        
+        .path-content.active {
+            display: block;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 80px 15px 30px;
+            }
+            
+            .welcome-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .user-avatar {
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <nav class="top-nav">
+        <a href="index.html" class="logo">语e桥</a>
+        
+        <ul class="nav-links">
+            <li><a href="index.html"><i class="icon">🏠</i>首页</a></li>
+            <li><a href="languagepartner-search.html"><i class="icon">👫</i>语伴</a></li>
+            <li class="dropdown">
+                <a href="chat.html"><i class="icon">💬</i>聊天<span class="dropdown-icon">▼</span></a>
+                <div class="dropdown-content">
+                    <a href="ai-chat.html">AI语伴</a>
+                    <a href="chat.html">语伴聊天</a>
+                </div>
+            </li>
+            <li><a href="experiment.html"><i class="icon">🧪</i>实验招募</a></li>
+            <li class="dropdown">
+                <a href="community-resources.html" class="active"><i class="icon">📚</i>学习社区<span class="dropdown-icon">▼</span></a>
+                <div class="dropdown-content">
+                    <a href="personal-publish.html">个人发布</a>
+                    <a href="community-resources.html">社区资源</a>
+                    <a href="learningpath.html" class="active">学习路径</a>
+                </div>
+            </li>
+            <li><a href="tutor-matching.html"><i class="icon">👥</i>轻辅导</a></li>
+        </ul>
+        
+        <a href="login.html" class="login-btn">登录</a>
+    </nav>
+    
+    <!-- 主要内容区域 -->
+    <div class="container">
+        <div class="welcome-card">
+            <div class="welcome-header">
+                <img src="https://ts1.tc.mm.bing.net/th/id/R-C.413226704d6fb28423d6c7c44e20579c?rik=dY0cRjVHKMIUCQ&riu=http%3a%2f%2fimg.51miz.com%2fElement%2f00%2f18%2f81%2f44%2ff06713ff_E188144_9809375c.png!%2fquality%2f90%2funsharp%2ftrue%2fcompress%2ftrue%2fformat%2fpng&ehk=Ug1dzy9FlFGQGe8KL9yinE7%2fDDADIBvuD0z81KdUM1Q%3d&risl=&pid=ImgRaw&r=0" alt="用户头像" class="user-avatar">
+                <div>
+                    <h2 class="welcome-title">亲爱的语伴交流家，您好！</h2>
+                    <p class="welcome-subtitle">英语母语 | 中文水平：中级 | 文化爱好者</p>
+                </div>
+            </div>
+            
+            <div class="welcome-message">
+                <p>欢迎来到语e桥学习路径规划系统！我们提供两种学习路径供您选择：</p>
+                <p><strong>标准学习路径</strong>：为所有新用户设计的通用学习路径，涵盖中文学习的各个方面。</p>
+                <p><strong>个性化学习路径</strong>：根据您的聊天内容和兴趣爱好，AI为您量身定制的学习路径，重点突破俚语理解与文化认知障碍。</p>
+                <p>请选择您想查看的学习路径类型：</p>
+            </div>
+        </div>
+        
+        <div class="path-selector">
+            <div class="path-option active" data-path="standard">标准学习路径</div>
+            <div class="path-option" data-path="personalized">个性化学习路径</div>
+        </div>
+        
+        <!-- 标准学习路径 -->
+        <div class="path-content active" id="standard-path">
+            <div class="path-header">
+                <h1 class="path-title">中文学习标准路径</h1>
+                <p class="path-description">为所有中文学习者设计的全面学习路径，从基础到高级，系统性提升您的中文能力</p>
+            </div>
+            
+            <div class="path-stage">
+                <div class="stage-number">1</div>
+                <h2 class="stage-title">语音与发音基础</h2>
+                <div class="stage-duration"><i>⏱️</i> 预计时间：4-6周</div>
+                <div class="stage-goal">目标：掌握汉语拼音系统，能够准确发音声母、韵母和声调</div>
+                
+                <div class="stage-content">
+                    <div class="content-title">学习内容：</div>
+                    <ul class="content-list">
+                        <li>
+                            <strong>汉语拼音系统</strong>
+                            <ul>
+                                <li>声母（21个）、韵母（36个）和声调（4个+轻声）</li>
+                                <li>拼音规则与拼读技巧</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>发音练习</strong>
+                            <ul>
+                                <li>难点音素（如zh/ch/sh与z/c/s的区别）</li>
+                                <li>声调组合与变调规则（如"不"和"一"的变调）</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>基础听力训练</strong>
+                            <ul>
+                                <li>声调辨别练习</li>
+                                <li>简单词汇听辨</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="ai-example">
+                    <strong>学习建议：</strong><br>
+                    每天花15-20分钟进行发音练习，使用录音对比功能检查自己的发音。重点关注声调，因为声调错误是最容易导致沟通障碍的问题。
+                </div>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 100%;"></div>
+                </div>
+            </div>
+            
+            <div class="path-stage">
+                <div class="stage-number">2</div>
+                <h2 class="stage-title">基础词汇与语法</h2>
+                <div class="stage-duration"><i>⏱️</i> 预计时间：12-16周</div>
+                <div class="stage-goal">目标：掌握500-800个常用词汇，能够构建简单句子</div>
+                
+                <div class="stage-content">
+                    <div class="content-title">学习内容：</div>
+                    <ul class="content-list">
+                        <li>
+                            <strong>基础词汇</strong>
+                            <ul>
+                                <li>日常用语（问候、自我介绍、数字、时间等）</li>
+                                <li>常见名词（家庭、食物、交通、天气等）</li>
+                                <li>基本动词和形容词</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>基础语法结构</strong>
+                            <ul>
+                                <li>主谓宾结构</li>
+                                <li>疑问句（什么、谁、哪里、为什么等）</li>
+                                <li>否定句（不、没有）</li>
+                                <li>量词的基本用法</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>简单会话练习</strong>
+                            <ul>
+                                <li>购物对话</li>
+                                <li>点餐对话</li>
+                                <li>问路对话</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="ai-example">
+                    <strong>学习建议：</strong><br>
+                    使用情境记忆法学习词汇，将单词放入实际使用场景中。每学习10个新词，就用它们造5个完整的句子，加深记忆。
+                </div>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 85%;"></div>
+                </div>
+            </div>
+            
+            <div class="path-stage">
+                <div class="stage-number">3</div>
+                <h2 class="stage-title">中级会话与阅读</h2>
+                <div class="stage-duration"><i>⏱️</i> 预计时间：16-20周</div>
+                <div class="stage-goal">目标：掌握1500-2000个词汇，能够进行日常交流，阅读简单文章</div>
+                
+                <div class="stage-content">
+                    <div class="content-title">学习内容：</div>
+                    <ul class="content-list">
+                        <li>
+                            <strong>中级词汇扩展</strong>
+                            <ul>
+                                <li>工作与职业相关词汇</li>
+                                <li>情感与观点表达</li>
+                                <li>常见成语与俗语</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>中级语法</strong>
+                            <ul>
+                                <li>补语（结果补语、方向补语、可能补语）</li>
+                                <li>比较句</li>
+                                <li>复合句（因为...所以...、虽然...但是...）</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>阅读与听力训练</strong>
+                            <ul>
+                                <li>简短新闻与故事</li>
+                                <li>日常对话与访谈</li>
+                                <li>简单歌曲与电影片段</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="ai-example">
+                    <strong>学习建议：</strong><br>
+                    开始接触真实语言材料，如简单的中文新闻、博客或短视频。尝试每天用中文写日记，记录日常生活，巩固所学词汇和语法。
+                </div>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 40%;"></div>
+                </div>
+            </div>
+            
+            <div class="path-stage">
+                <div class="stage-number">4</div>
+                <h2 class="stage-title">高级表达与文化理解</h2>
+                <div class="stage-duration"><i>⏱️</i> 预计时间：24-30周</div>
+                <div class="stage-goal">目标：掌握3000+词汇，能够流利表达复杂观点，理解中国文化内涵</div>
+                
+                <div class="stage-content">
+                    <div class="content-title">学习内容：</div>
+                    <ul class="content-list">
+                        <li>
+                            <strong>高级词汇与表达</strong>
+                            <ul>
+                                <li>学术与专业词汇</li>
+                                <li>抽象概念表达</li>
+                                <li>常用成语与典故（100+）</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>高级语法与修辞</strong>
+                            <ul>
+                                <li>复杂句式（把字句、被字句等）</li>
+                                <li>委婉表达与含蓄表达</li>
+                                <li>修辞手法（比喻、排比、对偶等）</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>文化理解与应用</strong>
+                            <ul>
+                                <li>中国传统文化（节日、习俗、礼仪）</li>
+                                <li>当代中国社会与流行文化</li>
+                                <li>中西文化差异与跨文化交流</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="ai-example">
+                    <strong>学习建议：</strong><br>
+                    尝试阅读原版中文小说、观看中文电影和电视剧，不仅提高语言能力，也加深对中国文化的理解。参与中文讨论组或找中文语伴进行深度交流。
+                </div>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 10%;"></div>
+                </div>
+            </div>
+            
+            <div class="path-stage">
+                <div class="stage-number">5</div>
+                <h2 class="stage-title">专业应用与自我提升</h2>
+                <div class="stage-duration"><i>⏱️</i> 预计时间：持续学习</div>
+                <div class="stage-goal">目标：在专业领域使用中文，接近母语者水平</div>
+                
+                <div class="stage-content">
+                    <div class="content-title">学习内容：</div>
+                    <ul class="content-list">
+                        <li>
+                            <strong>专业领域中文</strong>
+                            <ul>
+                                <li>商务中文</li>
+                                <li>学术中文</li>
+                                <li>行业专业术语</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>高级写作</strong>
+                            <ul>
+                                <li>论文与报告写作</li>
+                                <li>商务信函与邮件</li>
+                                <li>创意写作</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>文学与艺术欣赏</strong>
+                            <ul>
+                                <li>古典文学入门</li>
+                                <li>现当代文学作品</li>
+                                <li>中国艺术与美学</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="ai-example">
+                    <strong>学习建议：</strong><br>
+                    选择一个专业领域深入学习相关中文，如商务、医学、法律或技术领域。尝试用中文撰写专业文章或报告，参加中文专业讨论或演讲。
+                </div>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 5%;"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 个性化学习路径 -->
+        <div class="path-content" id="personalized-path">
+            <div class="path-header">
+                <h1 class="path-title">AI驱动的中文学习路径</h1>
+                <p class="path-description">为英语母语的中文学习者量身定制，重点突破俚语理解与文化认知障碍，分为四个阶段实施</p>
+            </div>
+            
+            <div class="path-stage">
+                <div class="stage-number">1</div>
+                <h2 class="stage-title">文化认知筑基阶段</h2>
+                <div class="stage-duration"><i>⏱️</i> 预计时间：1-2周</div>
+                <div class="stage-goal">目标：建立基础文化认知框架，消除常见误解</div>
+                
+                <div class="stage-content">
+                    <div class="content-title">AI定制内容：</div>
+                    <ul class="content-list">
+                        <li>
+                            <strong>文化对比微课</strong>（每日10分钟）
+                            <ul>
+                                <li>中西方面子观对比："丢脸" vs "Lose face"的实际语境差异</li>
+                                <li>时间观念可视化图谱：直线型vs环状时间认知对语言的影响</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>沉浸式文化胶囊</strong>：
+                            <ul>
+                                <li>AR扫描日常物品（如红包）触发3D文化解说</li>
+                                <li>智能食谱教学：包饺子过程中学习"和面""擀皮"等动作词汇</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="ai-example">
+                    <strong>AI语伴介入示例：</strong><br>
+                    当您说"I'll give you face"时，AI会自动弹出对比卡片：<br>
+                    🤖 <strong>文化提示</strong>：中文"给面子"更多指维护他人尊严，英语"give face"常含贬义
+                </div>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 100%;"></div>
+                </div>
+            </div>
+            
+            <div class="path-stage">
+                <div class="stage-number">2</div>
+                <h2 class="stage-title">俚语解码阶段</h2>
+                <div class="stage-duration"><i>⏱️</i> 预计时间：3-6周</div>
+                <div class="stage-goal">目标：掌握200+高频俚语，理解语境潜规则</div>
+                
+                <div class="stage-content">
+                    <div class="content-title">智能学习系统：</div>
+                    <ul class="content-list">
+                        <li>
+                            <strong>方言热力图导航</strong>：
+                            <ul>
+                                <li>根据您所在地理位置（如选择北京）优先学习"局气""瓷实"等地域性俚语</li>
+                                <li>动态更新网络新语：如"yyds→永远的神"的演变路径</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>语境训练场</strong>：
+                            <ul>
+                                <li>模拟微信对话：区分"在吗"的潜台词（急事vs寒暄）</li>
+                                <li>弹幕文化实验室：解析B站"awsl""泪目"等场景化表达</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="ai-example">
+                    <strong>AI纠错案例：</strong><br>
+                    您输入："这个方案很宗教"<br>
+                    → AI提示：🤖 中文更常用"这个方案很佛系"，并延伸解释：<br>
+                    "佛系"源自日本→中国网络语义演变→英语对应"chill attitude"
+                </div>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 65%;"></div>
+                </div>
+            </div>
+            
+            <div class="path-stage">
+                <div class="stage-number">3</div>
+                <h2 class="stage-title">文化深潜阶段</h2>
+                <div class="stage-duration"><i>⏱️</i> 预计时间：7-12周</div>
+                <div class="stage-goal">目标：实现文化现象的本质理解</div>
+                
+                <div class="stage-content">
+                    <div class="content-title">创新学习形式：</div>
+                    <ul class="content-list">
+                        <li>
+                            <strong>虚拟文化场域</strong>：
+                            <ul>
+                                <li>春节模拟器：从"抢红包"到"春运"的完整文化体验</li>
+                                <li>武侠RPG游戏：通过任务理解"江湖义气""武功秘籍"的隐喻系统</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>争议话题思辨</strong>：
+                            <ul>
+                                <li>AI生成辩论场景：如"该不该问工资"的中西观点对抗模拟</li>
+                                <li>文化冰山分析工具：拆解"吃了吗"问候语的农耕文明根源</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="ai-example">
+                    <strong>AI增强工具：</strong><br>
+                    影视片段分析：观看《流浪地球》时，AI会自动标记"饱和式救援""火种计划"的文化集体主义映射
+                </div>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 30%;"></div>
+                </div>
+            </div>
+            
+            <div class="path-stage">
+                <div class="stage-number">4</div>
+                <h2 class="stage-title">自主应用阶段</h2>
+                <div class="stage-duration"><i>⏱️</i> 预计时间：12周+</div>
+                <div class="stage-goal">目标：成为文化桥梁构建者</div>
+                
+                <div class="stage-content">
+                    <div class="content-title">AI赋能实践：</div>
+                    <ul class="content-list">
+                        <li>
+                            <strong>UGC创作工坊</strong>：
+                            <ul>
+                                <li>用户制作"中西文化对照表情包"，AI优化语义准确性</li>
+                                <li>方言挑战赛：录制四川话版《哈利波特》片段，AI评估地道程度</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>智能文化导航</strong>：
+                            <ul>
+                                <li>实时商务场景指导：宴席座次AI纠正+祝酒辞生成</li>
+                                <li>网络舆情分析仪：解析微博热搜背后的集体情绪密码</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="ai-example">
+                    <strong>学习成果验证：</strong><br>
+                    文化敏感度雷达图量化提升：<br>
+                    俚语解码力：82% → 语境得体度：91%<br>
+                    文化透视度：76% → 跨文化调解力：88%
+                </div>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 10%;"></div>
+                </div>
+            </div>
+            
+            <div class="path-stage">
+                <div class="stage-number">5</div>
+                <h2 class="stage-title">AI系统技术支撑</h2>
+                
+                <div class="stage-content">
+                    <ul class="content-list">
+                        <li>
+                            <strong>文化知识图谱</strong>：
+                            <ul>
+                                <li>节点：3000+文化概念，标注西方对应参照点</li>
+                                <li>关系："谐音梗→春节禁忌→红色文化"的关联路径</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>动态评估模型</strong>：
+                            <ul>
+                                <li>通过对话中的"沉默时长/追问频率"检测文化困惑点</li>
+                                <li>基于LSTM预测下一阶段文化认知风险</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="ai-example">
+                    <strong>学习建议：</strong><br>
+                    该路径通过<strong>认知重构→解码训练→深度内化→创造输出</strong>的闭环设计，使学习过程本身就是文化探索之旅。建议每周进行AI学习力诊断，动态调整内容难度系数（Δ值维持在0.3-0.5最佳）。
+                </div>
+            </div>
+        </div>
+        
+        <button class="back-button" onclick="window.history.back()">返回 | Back</button>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化进度条动画
+            setTimeout(() => {
+                const progressBars = document.querySelectorAll('.progress-fill');
+                progressBars.forEach(bar => {
+                    const width = bar.style.width;
+                    bar.style.width = '0%';
+                    setTimeout(() => {
+                        bar.style.width = width;
+                    }, 500);
+                });
+            }, 1000);
+            
+            // 路径选择器
+            const pathOptions = document.querySelectorAll('.path-option');
+            const pathContents = document.querySelectorAll('.path-content');
+            
+            pathOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // 移除所有选项的active类
+                    pathOptions.forEach(opt => opt.classList.remove('active'));
+                    pathContents.forEach(content => content.classList.remove('active'));
+                    
+                    // 添加当前选项的active类
+                    this.classList.add('active');
+                    const pathId = this.getAttribute('data-path') + '-path';
+                    document.getElementById(pathId).classList.add('active');
+                    
+                    // 重新初始化进度条动画
+                    const progressBars = document.querySelectorAll('.active .progress-fill');
+                    progressBars.forEach(bar => {
+                        const width = bar.style.width;
+                        bar.style.width = '0%';
+                        setTimeout(() => {
+                            bar.style.width = width;
+                        }, 300);
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

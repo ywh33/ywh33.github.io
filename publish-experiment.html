@@ -1,0 +1,1633 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>发布实验 - 语e桥实验招募平台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        
+        :root {
+            --primary: #4361ee;
+            --primary-light: #eef2ff;
+            --secondary: #3ccf91;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --bg-light: #f9fafb;
+            --border-color: #e5e7eb;
+            --experiment-primary: #005792;
+            --experiment-light: #e1f5fe;
+            --warning: #FF4D4F;
+        }
+        
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            padding: 0 20px;
+        }
+        
+        /* 顶部导航栏 */
+        .top-nav {
+            background-color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            position: fixed;
+            width: 100%;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            left: 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin: 0 15px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+            padding: 8px 12px;
+            border-radius: 6px;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .nav-links a.active {
+            color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .nav-links i {
+            margin-right: 8px;
+        }
+        
+        .login-btn {
+            background-color: var(--primary);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .login-btn:hover {
+            background-color: #3051d3;
+            transform: translateY(-2px);
+        }
+        
+        /* 下拉菜单 */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            z-index: 1;
+            top: 100%;
+            left: 0;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        
+        .dropdown-content a {
+            color: var(--text-dark);
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: all 0.2s;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: var(--primary-light);
+            color: var(--primary);
+        }
+        
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+        .dropdown-icon {
+            margin-left: 5px;
+            font-size: 12px;
+        }
+
+        /* 主要内容区域 */
+        .main-content {
+            display: flex;
+            padding-top: 90px;
+            min-height: 100vh;
+            gap: 24px;
+        }
+        
+        /* 左侧导航栏 */
+        .sidebar {
+            width: 220px;
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+        
+        .sidebar-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--experiment-primary);
+            display: flex;
+            align-items: center;
+        }
+        
+        .sidebar-title i {
+            margin-right: 10px;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 10px;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            border-radius: 6px;
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-menu a:hover {
+            background-color: var(--experiment-light);
+            color: var(--experiment-primary);
+        }
+        
+        .sidebar-menu a.active {
+            background-color: var(--experiment-light);
+            color: var(--experiment-primary);
+        }
+        
+        .sidebar-menu i {
+            margin-right: 10px;
+            color: var(--experiment-primary);
+        }
+        
+        /* 内容区域 */
+        .content-area {
+            flex: 1;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .section-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--experiment-primary);
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 10px;
+        }
+        
+        .more-link {
+            color: var(--experiment-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .more-link i {
+            margin-left: 5px;
+        }
+        
+        /* 发布表单样式 */
+        .publish-form {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .form-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+        
+        .form-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            position: relative;
+        }
+        
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .form-step.active .step-number {
+            background-color: var(--experiment-primary);
+            color: white;
+        }
+        
+        .form-step.completed .step-number {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        .step-label {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .form-step.active .step-label {
+            color: var(--experiment-primary);
+            font-weight: 500;
+        }
+        
+        .step-line {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            width: 100%;
+            height: 2px;
+            background-color: #f0f0f0;
+            z-index: 1;
+        }
+        
+        .form-step:last-child .step-line {
+            display: none;
+        }
+        
+        .form-step.active .step-line, .form-step.completed .step-line {
+            background-color: var(--experiment-primary);
+        }
+        
+        .form-section {
+            display: none;
+        }
+        
+        .form-section.active {
+            display: block;
+        }
+        
+        .form-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        
+        .form-label .required {
+            color: var(--warning);
+            margin-left: 3px;
+        }
+        
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--experiment-primary);
+            box-shadow: 0 0 0 2px rgba(0, 87, 146, 0.2);
+        }
+        
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .form-radio-group, .form-checkbox-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 5px;
+        }
+        
+        .form-radio-label, .form-checkbox-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .form-radio, .form-checkbox {
+            margin-right: 5px;
+        }
+        
+        .form-hint {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .form-error {
+            color: var(--warning);
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .form-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        .form-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .form-btn.next {
+            background-color: var(--experiment-primary);
+            color: white;
+        }
+        
+        .form-btn.next:hover {
+            background-color: #004a7c;
+        }
+        
+        .form-btn.prev {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        
+        .form-btn.prev:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .form-btn.submit {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        .form-btn.submit:hover {
+            background-color: #3d8b40;
+        }
+        
+        .form-upload {
+            border: 2px dashed #ddd;
+            border-radius: 6px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .form-upload:hover {
+            border-color: var(--experiment-primary);
+        }
+        
+        .form-upload i {
+            font-size: 40px;
+            color: #999;
+            margin-bottom: 10px;
+        }
+        
+        .form-upload-hint {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .form-upload-subhint {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+        
+        .form-summary {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .summary-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .summary-title i {
+            margin-right: 10px;
+            color: var(--experiment-primary);
+        }
+        
+        .summary-row {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        
+        .summary-label {
+            font-weight: 500;
+            width: 120px;
+            flex-shrink: 0;
+        }
+        
+        .summary-value {
+            flex: 1;
+        }
+        
+        /* 滑动条样式 */
+        .slider-container {
+            width: 100%;
+            margin: 15px 0;
+        }
+        
+        .slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #e0e0e0;
+            outline: none;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--experiment-primary);
+            cursor: pointer;
+        }
+        
+        .slider::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--experiment-primary);
+            cursor: pointer;
+        }
+        
+        .slider-values {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .double-slider-container {
+            position: relative;
+            width: 100%;
+            height: 40px;
+        }
+        
+        .double-slider-track {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 100%;
+            height: 6px;
+            background-color: #e0e0e0;
+            border-radius: 3px;
+        }
+        
+        .double-slider-fill {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 6px;
+            background-color: var(--experiment-primary);
+            border-radius: 3px;
+        }
+        
+        .double-slider {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 100%;
+            -webkit-appearance: none;
+            appearance: none;
+            background: transparent;
+            pointer-events: none;
+        }
+        
+        .double-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--experiment-primary);
+            cursor: pointer;
+            pointer-events: auto;
+        }
+        
+        .double-slider::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--experiment-primary);
+            cursor: pointer;
+            pointer-events: auto;
+        }
+        
+        .double-slider-values {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .double-slider-current {
+            text-align: center;
+            font-weight: 500;
+            color: var(--experiment-primary);
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        
+        /* 模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 25px;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .modal-body {
+            margin-bottom: 20px;
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        .modal-btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .modal-btn.primary {
+            background-color: var(--experiment-primary);
+            color: white;
+        }
+        
+        .modal-btn.primary:hover {
+            background-color: #004a7c;
+        }
+        
+        .modal-btn.secondary {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        
+        .modal-btn.secondary:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .consent-checkbox {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+        
+        .consent-checkbox input {
+            margin-right: 10px;
+            margin-top: 3px;
+        }
+        
+        /* 匹配人数提示 */
+        .match-hint {
+            background-color: var(--experiment-light);
+            color: var(--experiment-primary);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            float: right;
+        }
+        
+        .match-hint i {
+            margin-right: 5px;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 900px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                position: static;
+                margin-bottom: 20px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .form-radio-group, .form-checkbox-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .form-buttons {
+                flex-direction: column-reverse;
+                gap: 10px;
+            }
+            
+            .form-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <nav class="top-nav">
+        <a href="index.html" class="logo">语e桥</a>
+        
+        <ul class="nav-links">
+            <li><a href="index.html"><i class="icon">🏠</i>首页</a></li>
+            <li><a href="languagepartner-search.html"><i class="icon">👫</i>语伴</a></li>
+            <li class="dropdown">
+                <a href="chat.html"><i class="icon">💬</i>聊天<span class="dropdown-icon">▼</span></a>
+                <div class="dropdown-content">
+                    <a href="ai-chat.html">AI语伴</a>
+                    <a href="chat.html">语伴聊天</a>
+                </div>
+            </li>
+            <li><a href="experiment.html" class="active"><i class="icon">🧪</i>实验招募</a></li>
+            <li class="dropdown">
+                <a href="community-resources.html"i class="icon">📚</i>学习社区<span class="dropdown-icon">▼</span></a>
+                <div class="dropdown-content">
+                    <a href="personal-publish.html">个人发布</a>
+                    <a href="community-resources.html">社区资源</a>
+                    <a href="learningpath.html">学习路径</a>
+                </div>
+            </li>
+            <li><a href="tutor-matching.html"><i class="icon">👥</i>轻辅导</a></li>
+        </ul>
+        
+        <a href="login.html" class="login-btn">登录</a>
+    </nav>
+    
+    <div class="container">
+        <div class="main-content">
+            <!-- 左侧导航栏 -->
+            <div class="sidebar">
+                <h2 class="sidebar-title"><i>🧪</i>实验招募</h2>
+                <ul class="sidebar-menu">
+                    <li><a href="experiment.html"><i>🔍</i>被试检索</a></li>
+                    <li><a href="experiment-detail.html"><i>📋</i>实验详情</a></li>
+                    <li><a href="publish-experiment.html" class="active"><i>📝</i>主试发布</a></li>
+                    <li><a href="my-profile.html"><i>👤</i>个人信息</a></li>
+                </ul>
+            </div>
+            
+            <!-- 内容区域 -->
+            <div class="content-area">
+                <div class="section-header">
+                    <h2 class="section-title"><i>📝</i>主试发布</h2>
+                </div>
+                
+                <div class="publish-form">
+                    <!-- 步骤导航 -->
+                    <div class="form-steps">
+                        <div class="form-step active" id="step1">
+                            <div class="step-number">1</div>
+                            <div class="step-label">实验信息</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="form-step" id="step2">
+                            <div class="step-number">2</div>
+                            <div class="step-label">被试筛选</div>
+                            <div class="step-line"></div>
+                        </div>
+                        <div class="form-step" id="step3">
+                            <div class="step-number">3</div>
+                            <div class="step-label">审核提交</div>
+                        </div>
+                    </div>
+                    
+                    <!-- 步骤1：实验信息 -->
+                    <div class="form-section active" id="section1">
+                        <h2 class="form-title">实验详情</h2>
+                        
+                        <div class="form-group">
+                            <label class="form-label">实验标题<span class="required">*</span></label>
+                            <input type="text" class="form-input" id="experimentTitle" maxlength="20" placeholder="请输入实验标题（20字以内）">
+                            <div class="form-hint">已输入 <span id="titleCount">0</span>/20 字</div>
+                            <div class="form-error" id="titleError">请输入实验标题</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">实验简介<span class="required">*</span></label>
+                            <textarea class="form-textarea" id="experimentDesc" maxlength="300" placeholder="请详细描述实验内容、目的和流程（300字以内）"></textarea>
+                            <div class="form-hint">已输入 <span id="descCount">0</span>/300 字</div>
+                            <div class="form-error" id="descError">请输入实验简介</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">实验类型<span class="required">*</span></label>
+                            <div class="form-radio-group">
+                                <label class="form-radio-label">
+                                    <input type="radio" name="experimentType" value="online" class="form-radio" checked>
+                                    线上实验
+                                </label>
+                                <label class="form-radio-label">
+                                    <input type="radio" name="experimentType" value="offline" class="form-radio">
+                                    线下实验
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group" id="locationGroup" style="display: none;">
+                            <label class="form-label">实验地点<span class="required">*</span></label>
+                            <input type="text" class="form-input" id="experimentLocation" placeholder="请输入实验地点（如：北京师范大学主楼A区504室）">
+                            <div class="form-error" id="locationError">请输入实验地点</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">实验时长<span class="required">*</span></label>
+                            <input type="text" class="form-input" id="experimentDuration" placeholder="请输入实验时长（如：约30分钟）">
+                            <div class="form-error" id="durationError">请输入实验时长</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="row">
+                                <div style="width: 48%; float: left;">
+                                    <label class="form-label">基础酬劳(元)<span class="required">*</span></label>
+                                    <input type="number" class="form-input" id="basePayment" placeholder="请输入基础酬劳金额">
+                                    <div class="form-error" id="paymentError">请输入有效的酬劳金额</div>
+                                </div>
+                                <div style="width: 48%; float: right;">
+                                    <label class="form-label">浮动酬劳说明</label>
+                                    <input type="text" class="form-input" id="extraPayment" placeholder="如：完成额外任务可获得10元奖励">
+                                </div>
+                                <div style="clear: both;"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">截止日期<span class="required">*</span></label>
+                            <input type="date" class="form-input" id="deadlineDate">
+                            <div class="form-error" id="deadlineError">请选择截止日期</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">招募人数<span class="required">*</span></label>
+                            <input type="number" class="form-input" id="participantCount" placeholder="请输入需要招募的被试人数">
+                            <div class="form-error" id="countError">请输入有效的招募人数</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">实验封面图</label>
+                            <div class="form-upload" id="imageUpload">
+                                <i>📤</i>
+                                <div class="form-upload-hint">点击或拖拽上传图片</div>
+                                <div class="form-upload-subhint">支持 JPG、PNG 格式，建议尺寸 800x400px</div>
+                            </div>
+                            <div id="imagePreview" style="display: none; margin-top: 15px; text-align: center;">
+                                <img src="/placeholder.svg" alt="封面预览" style="max-width: 100%; max-height: 200px; border-radius: 6px;">
+                                <button class="form-btn prev" style="margin-top: 10px;" id="removeImage">移除图片</button>
+                            </div>
+                            <input type="file" id="imageInput" accept="image/*" style="display: none;">
+                        </div>
+                        
+                        <div class="form-buttons">
+                            <div></div>
+                            <button class="form-btn next" id="nextBtn1">下一步</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 步骤2：被试筛选 -->
+                    <div class="form-section" id="section2">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <h2 class="form-title">被试筛选条件</h2>
+                            <div class="match-hint">
+                                <i>👥</i>
+                                预估匹配: <span id="matchCount">100</span> 人
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">性别</label>
+                            <div class="form-radio-group">
+                                <label class="form-radio-label">
+                                    <input type="radio" name="gender" value="all" class="form-radio" checked>
+                                    不限
+                                </label>
+                                <label class="form-radio-label">
+                                    <input type="radio" name="gender" value="male" class="form-radio">
+                                    男
+                                </label>
+                                <label class="form-radio-label">
+                                    <input type="radio" name="gender" value="female" class="form-radio">
+                                    女
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">年龄范围</label>
+                            <div class="double-slider-container">
+                                <div class="double-slider-track"></div>
+                                <div class="double-slider-fill" id="ageSliderFill" style="left: 18%; width: 42%;"></div>
+                                <input type="range" min="0" max="100" value="18" class="double-slider" id="ageSliderMin">
+                                <input type="range" min="0" max="100" value="60" class="double-slider" id="ageSliderMax">
+                            </div>
+                            <div class="double-slider-values">
+                                <span>0岁</span>
+                                <span>100岁</span>
+                            </div>
+                            <div class="double-slider-current">
+                                当前选择: <span id="ageRangeValue">18岁 - 60岁</span>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">国籍<span class="required">*</span></label>
+                            <select class="form-select" id="continentSelect">
+                                <option value="">选择大洲</option>
+                                <option value="asia">亚洲</option>
+                                <option value="europe">欧洲</option>
+                                <option value="america">美洲</option>
+                                <option value="africa">非洲</option>
+                                <option value="oceania">大洋洲</option>
+                            </select>
+                            
+                            <div id="countriesContainer" style="margin-top: 10px;">
+                                <div class="form-hint" id="countryHint">请先选择大洲</div>
+                                <div id="countryCheckboxes" style="display: none; margin-top: 10px;"></div>
+                            </div>
+                            <div class="form-error" id="countryError">请至少选择一个国家</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">母语<span class="required">*</span></label>
+                            <div class="form-checkbox-group" style="flex-wrap: wrap;">
+                                <label class="form-checkbox-label">
+                                    <input type="checkbox" name="language" value="english" class="form-checkbox">
+                                    英语
+                                </label>
+                                <label class="form-checkbox-label">
+                                    <input type="checkbox" name="language" value="french" class="form-checkbox">
+                                    法语
+                                </label>
+                                <label class="form-checkbox-label">
+                                    <input type="checkbox" name="language" value="german" class="form-checkbox">
+                                    德语
+                                </label>
+                                <label class="form-checkbox-label">
+                                    <input type="checkbox" name="language" value="spanish" class="form-checkbox">
+                                    西班牙语
+                                </label>
+                                <label class="form-checkbox-label">
+                                    <input type="checkbox" name="language" value="italian" class="form-checkbox">
+                                    意大利语
+                                </label>
+                                <label class="form-checkbox-label">
+                                    <input type="checkbox" name="language" value="russian" class="form-checkbox">
+                                    俄语
+                                </label>
+                                <label class="form-checkbox-label">
+                                    <input type="checkbox" name="language" value="japanese" class="form-checkbox">
+                                    日语
+                                </label>
+                                <label class="form-checkbox-label">
+                                    <input type="checkbox" name="language" value="korean" class="form-checkbox">
+                                    韩语
+                                </label>
+                            </div>
+                            <div class="form-error" id="languageError">请至少选择一种母语</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">HSK等级<span class="required">*</span></label>
+                            <div class="form-checkbox-group">
+                                <label class="form-checkbox-label">
+                                    <input type="checkbox" name="hsk" value="1" class="form-checkbox">
+                                    1级
+                                </label>
+                                <label class="form-checkbox-label">
+                                    <input type="checkbox" name="hsk" value="2" class="form-checkbox">
+                                    2级
+                                </label>
+                                <label class="form-checkbox-label">
+                                    <input type="checkbox" name="hsk" value="3" class="form-checkbox">
+                                    3级
+                                </label>
+                                <label class="form-checkbox-label">
+                                    <input type="checkbox" name="hsk" value="4" class="form-checkbox">
+                                    4级
+                                </label>
+                                <label class="form-checkbox-label">
+                                    <input type="checkbox" name="hsk" value="5" class="form-checkbox">
+                                    5级
+                                </label>
+                                <label class="form-checkbox-label">
+                                    <input type="checkbox" name="hsk" value="6" class="form-checkbox">
+                                    6级
+                                </label>
+                            </div>
+                            <div class="form-error" id="hskError">请至少选择一个HSK等级</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">其他要求</label>
+                            <textarea class="form-textarea" id="otherRequirements" placeholder="请输入其他特殊要求（如：需要有基本的汉语听力能力）"></textarea>
+                        </div>
+                        
+                        <div class="form-buttons">
+                            <button class="form-btn prev" id="prevBtn2">上一步</button>
+                            <button class="form-btn next" id="nextBtn2">下一步</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 步骤3：审核提交 -->
+                    <div class="form-section" id="section3">
+                        <h2 class="form-title">审核提交</h2>
+                        
+                        <div class="form-summary">
+                            <div class="summary-title">
+                                <i>📋</i>实验信息确认
+                            </div>
+                            
+                            <div class="summary-row">
+                                <div class="summary-label">实验标题:</div>
+                                <div class="summary-value" id="summaryTitle"></div>
+                            </div>
+                            
+                            <div class="summary-row">
+                                <div class="summary-label">实验类型:</div>
+                                <div class="summary-value" id="summaryType"></div>
+                            </div>
+                            
+                            <div class="summary-row" id="summaryLocationRow" style="display: none;">
+                                <div class="summary-label">实验地点:</div>
+                                <div class="summary-value" id="summaryLocation"></div>
+                            </div>
+                            
+                            <div class="summary-row">
+                                <div class="summary-label">实验时长:</div>
+                                <div class="summary-value" id="summaryDuration"></div>
+                            </div>
+                            
+                            <div class="summary-row">
+                                <div class="summary-label">酬劳:</div>
+                                <div class="summary-value" id="summaryPayment"></div>
+                            </div>
+                            
+                            <div class="summary-row">
+                                <div class="summary-label">截止日期:</div>
+                                <div class="summary-value" id="summaryDeadline"></div>
+                            </div>
+                            
+                            <div class="summary-row">
+                                <div class="summary-label">招募人数:</div>
+                                <div class="summary-value" id="summaryCount"></div>
+                            </div>
+                            
+                            <div class="summary-row">
+                                <div class="summary-label">实验简介:</div>
+                                <div class="summary-value" id="summaryDesc"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-summary">
+                            <div class="summary-title">
+                                <i>🔍</i>筛选条件确认
+                            </div>
+                            
+                            <div class="summary-row">
+                                <div class="summary-label">性别要求:</div>
+                                <div class="summary-value" id="summaryGender"></div>
+                            </div>
+                            
+                            <div class="summary-row">
+                                <div class="summary-label">年龄范围:</div>
+                                <div class="summary-value" id="summaryAge"></div>
+                            </div>
+                            
+                            <div class="summary-row">
+                                <div class="summary-label">国籍要求:</div>
+                                <div class="summary-value" id="summaryCountry"></div>
+                            </div>
+                            
+                            <div class="summary-row">
+                                <div class="summary-label">母语要求:</div>
+                                <div class="summary-value" id="summaryLanguage"></div>
+                            </div>
+                            
+                            <div class="summary-row">
+                                <div class="summary-label">HSK等级:</div>
+                                <div class="summary-value" id="summaryHSK"></div>
+                            </div>
+                            
+                            <div class="summary-row" id="summaryOtherRow" style="display: none;">
+                                <div class="summary-label">其他要求:</div>
+                                <div class="summary-value" id="summaryOther"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-summary" style="background-color: #fff9e6; border: 1px solid #ffe58f;">
+                            <div class="summary-title" style="color: #d48806;">
+                                <i>⚠️</i>伦理审核说明
+                            </div>
+                            
+                            <p style="margin-bottom: 15px;">您的实验将在提交后进入伦理审核流程，审核通过后才会正式发布。请确保您的实验符合以下要求：</p>
+                            
+                            <ul style="list-style-type: disc; padding-left: 20px; margin-bottom: 0;">
+                                <li style="margin-bottom: 8px;">实验不会对参与者造成身体或心理伤害</li>
+                                <li style="margin-bottom: 8px;">实验目的和流程已在实验简介中清晰说明</li>
+                                <li style="margin-bottom: 8px;">参与者的个人信息将被妥善保护</li>
+                                <li style="margin-bottom: 8px;">实验酬劳合理且与实验时长相符</li>
+                                <li>已准备好知情同意书供参与者阅读和签署</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="form-buttons">
+                            <button class="form-btn prev" id="prevBtn3">上一步</button>
+                            <button class="form-btn submit" id="submitBtn">提交审核</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 风险知情书模态框 -->
+    <div class="modal active" id="consentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">实验发布风险知情书</h3>
+                <button class="modal-close" id="closeModal">×</button>
+            </div>
+            <div class="modal-body">
+                <h4 style="margin-bottom: 10px;">实验伦理要求</h4>
+                <p style="margin-bottom: 15px;">作为实验发布者，您必须确保您的实验符合基本的伦理准则，不会对参与者造成身体或心理伤害。您需要向参与者提供清晰的实验目的、流程和风险说明，并获得他们的知情同意。</p>
+                
+                <h4 style="margin-bottom: 10px;">数据保护</h4>
+                <p style="margin-bottom: 15px;">您有责任保护参与者的个人信息和实验数据的安全。未经参与者同意，不得将其个人信息用于实验以外的目的或向第三方披露。</p>
+                
+                <h4 style="margin-bottom: 10px;">酬劳发放</h4>
+                <p style="margin-bottom: 15px;">您必须按照实验说明中承诺的金额和方式向完成实验的参与者发放酬劳。不得无故拖延或拒绝支付酬劳。</p>
+                
+                <h4 style="margin-bottom: 10px;">审核流程</h4>
+                <p style="margin-bottom: 15px;">您的实验将经过平台的伦理审核，审核通过后才能发布。如有必要，平台可能会要求您提供更多信息或修改实验设计。</p>
+                
+                <h4 style="margin-bottom: 10px;">责任声明</h4>
+                <p style="margin-bottom: 15px;">您对实验内容和结果负全部责任。如因实验设计或执行不当导致任何纠纷或损害，平台不承担相关责任。</p>
+                
+                <div class="consent-checkbox">
+                    <input type="checkbox" id="consentCheck">
+                    <label for="consentCheck">我已阅读并同意上述知情同意书的内容</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn secondary" id="cancelBtn">取消</button>
+                <button class="modal-btn primary" id="agreeBtn">同意并继续</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 风险知情书模态框
+        const consentModal = document.getElementById('consentModal');
+        const closeModal = document.getElementById('closeModal');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const agreeBtn = document.getElementById('agreeBtn');
+        const consentCheck = document.getElementById('consentCheck');
+        
+        closeModal.addEventListener('click', function() {
+            window.location.href = 'experiment.html';
+        });
+        
+        cancelBtn.addEventListener('click', function() {
+            window.location.href = 'experiment.html';
+        });
+        
+        agreeBtn.addEventListener('click', function() {
+            if (!consentCheck.checked) {
+                alert('请阅读并同意知情同意书');
+                return;
+            }
+            
+            consentModal.classList.remove('active');
+        });
+        
+        // 步骤切换
+        const step1 = document.getElementById('step1');
+        const step2 = document.getElementById('step2');
+        const step3 = document.getElementById('step3');
+        
+        const section1 = document.getElementById('section1');
+        const section2 = document.getElementById('section2');
+        const section3 = document.getElementById('section3');
+        
+        const nextBtn1 = document.getElementById('nextBtn1');
+        const nextBtn2 = document.getElementById('nextBtn2');
+        const prevBtn2 = document.getElementById('prevBtn2');
+        const prevBtn3 = document.getElementById('prevBtn3');
+        const submitBtn = document.getElementById('submitBtn');
+        
+        nextBtn1.addEventListener('click', function() {
+            // 验证第一步表单
+            if (validateStep1()) {
+                section1.classList.remove('active');
+                section2.classList.add('active');
+                
+                step1.classList.add('completed');
+                step2.classList.add('active');
+                
+                // 更新摘要信息
+                updateSummary();
+            }
+        });
+        
+        nextBtn2.addEventListener('click', function() {
+            // 验证第二步表单
+            if (validateStep2()) {
+                section2.classList.remove('active');
+                section3.classList.add('active');
+                
+                step2.classList.add('completed');
+                step3.classList.add('active');
+                
+                // 更新摘要信息
+                updateSummary();
+            }
+        });
+        
+        prevBtn2.addEventListener('click', function() {
+            section2.classList.remove('active');
+            section1.classList.add('active');
+            
+            step2.classList.remove('active');
+        });
+        
+        prevBtn3.addEventListener('click', function() {
+            section3.classList.remove('active');
+            section2.classList.add('active');
+            
+            step3.classList.remove('active');
+        });
+        
+        submitBtn.addEventListener('click', function() {
+            alert('您的实验已提交审核，请等待审核结果。');
+            window.location.href = 'experiment.html';
+        });
+        
+        // 表单验证
+        function validateStep1() {
+            let isValid = true;
+            
+            // 验证实验标题
+            const title = document.getElementById('experimentTitle').value.trim();
+            if (title === '') {
+                document.getElementById('titleError').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('titleError').style.display = 'none';
+            }
+            
+            // 验证实验简介
+            const desc = document.getElementById('experimentDesc').value.trim();
+            if (desc === '') {
+                document.getElementById('descError').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('descError').style.display = 'none';
+            }
+            
+            // 验证实验地点（如果是线下实验）
+            const type = document.querySelector('input[name="experimentType"]:checked').value;
+            if (type === 'offline') {
+                const location = document.getElementById('experimentLocation').value.trim();
+                if (location === '') {
+                    document.getElementById('locationError').style.display = 'block';
+                    isValid = false;
+                } else {
+                    document.getElementById('locationError').style.display = 'none';
+                }
+            }
+            
+            // 验证实验时长
+            const duration = document.getElementById('experimentDuration').value.trim();
+            if (duration === '') {
+                document.getElementById('durationError').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('durationError').style.display = 'none';
+            }
+            
+            // 验证基础酬劳
+            const payment = document.getElementById('basePayment').value.trim();
+            if (payment === '' || isNaN(payment) || Number(payment) <= 0) {
+                document.getElementById('paymentError').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('paymentError').style.display = 'none';
+            }
+            
+            // 验证截止日期
+            const deadline = document.getElementById('deadlineDate').value;
+            if (deadline === '') {
+                document.getElementById('deadlineError').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('deadlineError').style.display = 'none';
+            }
+            
+            // 验证招募人数
+            const count = document.getElementById('participantCount').value.trim();
+            if (count === '' || isNaN(count) || Number(count) <= 0) {
+                document.getElementById('countError').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('countError').style.display = 'none';
+            }
+            
+            return isValid;
+        }
+        
+        function validateStep2() {
+            let isValid = true;
+            
+            // 验证国籍
+            const selectedCountries = document.querySelectorAll('input[name="country"]:checked');
+            if (selectedCountries.length === 0) {
+                document.getElementById('countryError').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('countryError').style.display = 'none';
+            }
+            
+            // 验证母语
+            const selectedLanguages = document.querySelectorAll('input[name="language"]:checked');
+            if (selectedLanguages.length === 0) {
+                document.getElementById('languageError').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('languageError').style.display = 'none';
+            }
+            
+            // 验证HSK等级
+            const selectedHSK = document.querySelectorAll('input[name="hsk"]:checked');
+            if (selectedHSK.length === 0) {
+                document.getElementById('hskError').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('hskError').style.display = 'none';
+            }
+            
+            return isValid;
+        }
+        
+        // 更新摘要信息
+        function updateSummary() {
+            // 实验信息
+            document.getElementById('summaryTitle').textContent = document.getElementById('experimentTitle').value;
+            
+            const type = document.querySelector('input[name="experimentType"]:checked').value;
+            document.getElementById('summaryType').textContent = type === 'online' ? '线上实验' : '线下实验';
+            
+            if (type === 'offline') {
+                document.getElementById('summaryLocationRow').style.display = 'flex';
+                document.getElementById('summaryLocation').textContent = document.getElementById('experimentLocation').value;
+            } else {
+                document.getElementById('summaryLocationRow').style.display = 'none';
+            }
+            
+            document.getElementById('summaryDuration').textContent = document.getElementById('experimentDuration').value;
+            
+            const basePayment = document.getElementById('basePayment').value;
+            const extraPayment = document.getElementById('extraPayment').value;
+            document.getElementById('summaryPayment').textContent = `¥${basePayment} ${extraPayment ? `(${extraPayment})` : ''}`;
+            
+            const deadline = document.getElementById('deadlineDate').value;
+            document.getElementById('summaryDeadline').textContent = deadline;
+            
+            document.getElementById('summaryCount').textContent = `${document.getElementById('participantCount').value}人`;
+            
+            document.getElementById('summaryDesc').textContent = document.getElementById('experimentDesc').value;
+            
+            // 筛选条件
+            const gender = document.querySelector('input[name="gender"]:checked').value;
+            document.getElementById('summaryGender').textContent = gender === 'all' ? '不限' : gender === 'male' ? '男' : '女';
+            
+            document.getElementById('summaryAge').textContent = document.getElementById('ageRangeValue').textContent;
+            
+            // 国籍
+            const countries = [];
+            document.querySelectorAll('input[name="country"]:checked').forEach(function(checkbox) {
+                countries.push(checkbox.value);
+            });
+            document.getElementById('summaryCountry').textContent = countries.join(', ');
+            
+            // 母语
+            const languages = [];
+            document.querySelectorAll('input[name="language"]:checked').forEach(function(checkbox) {
+                languages.push(checkbox.parentElement.textContent.trim());
+            });
+            document.getElementById('summaryLanguage').textContent = languages.join(', ');
+            
+            // HSK等级
+            const hskLevels = [];
+            document.querySelectorAll('input[name="hsk"]:checked').forEach(function(checkbox) {
+                hskLevels.push(checkbox.parentElement.textContent.trim());
+            });
+            document.getElementById('summaryHSK').textContent = hskLevels.join(', ');
+            
+            // 其他要求
+            const otherRequirements = document.getElementById('otherRequirements').value.trim();
+            if (otherRequirements) {
+                document.getElementById('summaryOtherRow').style.display = 'flex';
+                document.getElementById('summaryOther').textContent = otherRequirements;
+            } else {
+                document.getElementById('summaryOtherRow').style.display = 'none';
+            }
+        }
+        
+        // 实验类型切换
+        const experimentTypeRadios = document.querySelectorAll('input[name="experimentType"]');
+        experimentTypeRadios.forEach(function(radio) {
+            radio.addEventListener('change', function() {
+                if (this.value === 'offline') {
+                    document.getElementById('locationGroup').style.display = 'block';
+                } else {
+                    document.getElementById('locationGroup').style.display = 'none';
+                }
+            });
+        });
+        
+        // 字数统计
+        const experimentTitle = document.getElementById('experimentTitle');
+        const titleCount = document.getElementById('titleCount');
+        
+        experimentTitle.addEventListener('input', function() {
+            titleCount.textContent = this.value.length;
+        });
+        
+        const experimentDesc = document.getElementById('experimentDesc');
+        const descCount = document.getElementById('descCount');
+        
+        experimentDesc.addEventListener('input', function() {
+            descCount.textContent = this.value.length;
+        });
+        
+        // 图片上传
+        const imageUpload = document.getElementById('imageUpload');
+        const imageInput = document.getElementById('imageInput');
+        const imagePreview = document.getElementById('imagePreview');
+        const removeImage = document.getElementById('removeImage');
+        
+        imageUpload.addEventListener('click', function() {
+            imageInput.click();
+        });
+        
+        imageInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    imagePreview.querySelector('img').src = e.target.result;
+                    imageUpload.style.display = 'none';
+                    imagePreview.style.display = 'block';
+                };
+                
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
+        
+        removeImage.addEventListener('click', function() {
+            imageInput.value = '';
+            imagePreview.style.display = 'none';
+            imageUpload.style.display = 'block';
+        });
+        
+        // 年龄滑动条
+        const ageSliderMin = document.getElementById('ageSliderMin');
+        const ageSliderMax = document.getElementById('ageSliderMax');
+        const ageSliderFill = document.getElementById('ageSliderFill');
+        const ageRangeValue = document.getElementById('ageRangeValue');
+        
+        function updateAgeSlider() {
+            const minVal = parseInt(ageSliderMin.value);
+            const maxVal = parseInt(ageSliderMax.value);
+            
+            if (minVal > maxVal) {
+                ageSliderMax.value = minVal;
+            }
+            
+            const minPercent = (minVal / 100) * 100;
+            const maxPercent = (parseInt(ageSliderMax.value) / 100) * 100;
+            
+            ageSliderFill.style.left = minPercent + '%';
+            ageSliderFill.style.width = (maxPercent - minPercent) + '%';
+            
+            ageRangeValue.textContent = minVal + '岁 - ' + ageSliderMax.value + '岁';
+        }
+        
+        ageSliderMin.addEventListener('input', updateAgeSlider);
+        ageSliderMax.addEventListener('input', updateAgeSlider);
+        
+        // 大洲和国家联动
+        const continentCountries = {
+            asia: ['中国', '日本', '韩国', '泰国', '越南'],
+            europe: ['英国', '法国', '德国', '意大利', '西班牙'],
+            america: ['美国', '加拿大', '墨西哥', '巴西', '阿根廷'],
+            africa: ['埃及', '南非', '尼日利亚', '肯尼亚', '摩洛哥'],
+            oceania: ['澳大利亚', '新西兰', '斐济', '巴布亚新几内亚']
+        };
+        
+        const continentSelect = document.getElementById('continentSelect');
+        const countryCheckboxes = document.getElementById('countryCheckboxes');
+        const countryHint = document.getElementById('countryHint');
+        
+        continentSelect.addEventListener('change', function() {
+            const selectedContinent = this.value;
+            
+            // 清空国家复选框
+            countryCheckboxes.innerHTML = '';
+            
+            if (selectedContinent) {
+                // 显示国家复选框
+                countryHint.style.display = 'none';
+                countryCheckboxes.style.display = 'block';
+                
+                // 添加对应大洲的国家
+                continentCountries[selectedContinent].forEach(country => {
+                    const label = document.createElement('label');
+                    label.className = 'form-checkbox-label';
+                    label.style.marginRight = '10px';
+                    label.style.marginBottom = '10px';
+                    label.style.display = 'inline-flex';
+                    
+                    const input = document.createElement('input');
+                    input.type = 'checkbox';
+                    input.name = 'country';
+                    input.value = country;
+                    input.className = 'form-checkbox';
+                    
+                    label.appendChild(input);
+                    label.appendChild(document.createTextNode(' ' + country));
+                    
+                    countryCheckboxes.appendChild(label);
+                });
+                
+                // 更新匹配人数
+                updateMatchCount();
+            } else {
+                // 隐藏国家复选框
+                countryHint.style.display = 'block';
+                countryCheckboxes.style.display = 'none';
+            }
+        });
+        
+        // 更新匹配人数
+        function updateMatchCount() {
+            // 这里应该是根据筛选条件计算匹配人数的逻辑
+            // 这里只是模拟一个随机数
+            const randomCount = Math.floor(Math.random() * 100) + 1;
+            document.getElementById('matchCount').textContent = randomCount;
+        }
+        
+        // 监听筛选条件变化，更新匹配人数
+        document.querySelectorAll('input[name="gender"], input[name="language"], input[name="hsk"]').forEach(function(input) {
+            input.addEventListener('change', updateMatchCount);
+        });
+        
+        ageSliderMin.addEventListener('input', updateMatchCount);
+        ageSliderMax.addEventListener('input', updateMatchCount);
+    </script>
+</body>
+</html>

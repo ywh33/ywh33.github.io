@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>语e桥 - 语伴轻辅导聊天</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        
+        :root {
+            --primary: #4361ee;
+            --primary-light: #eef2ff;
+            --secondary: #3ccf91;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --bg-light: #f9fafb;
+            --border-color: #e5e7eb;
+            --danger: #ef4444;
+            --danger-light: #fee2e2;
+        }
+        
+        body {
+            background-color: var(--bg-light);
+            padding-top: 60px; /* 为顶部导航栏留出空间 */
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* 顶部导航栏 */
+        .top-nav {
+            background-color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            position: fixed;
+            width: 100%;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            left: 0;
+            top: 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin: 0 15px;
+            position: relative;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+            padding: 8px 12px;
+            border-radius: 6px;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .nav-links a.active {
+            color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .nav-links i {
+            margin-right: 8px;
+        }
+        
+        /* 下拉菜单 */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            z-index: 1;
+            top: 100%;
+            left: 0;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        
+        .dropdown-content a {
+            color: var(--text-dark);
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: all 0.2s;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: var(--primary-light);
+            color: var(--primary);
+        }
+        
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+        .dropdown-icon {
+            margin-left: 5px;
+            font-size: 12px;
+        }
+        
+        /* 聊天容器 */
+        .chat-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            flex: 1;
+            gap: 20px;
+            height: calc(100vh - 60px);
+        }
+        
+        /* 聊天侧边栏 */
+        .chat-sidebar {
+            width: 280px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .tutor-profile {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .tutor-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--primary-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            color: var(--primary);
+            margin-right: 15px;
+            overflow: hidden;
+        }
+        
+        .tutor-info {
+            flex: 1;
+        }
+        
+        .tutor-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+        }
+        
+        .tutor-status {
+            font-size: 14px;
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--secondary);
+            margin-right: 5px;
+        }
+        
+        .session-info {
+            background-color: var(--bg-light);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .session-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        .session-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .session-label {
+            color: var(--text-light);
+        }
+        
+        .session-value {
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+        
+        .countdown-container {
+            background-color: var(--primary-light);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .countdown-label {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+        
+        .countdown-timer {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .countdown-timer.warning {
+            color: var(--danger);
+        }
+        
+        .sidebar-actions {
+            margin-top: auto;
+        }
+        
+        .sidebar-btn {
+            width: 100%;
+            padding: 12px 0;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            margin-bottom: 10px;
+        }
+        
+        .sidebar-btn:last-child {
+            margin-bottom: 0;
+        }
+        
+        .primary-btn {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .primary-btn:hover {
+            background-color: #3051d3;
+        }
+        
+        .secondary-btn {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+        }
+        
+        .secondary-btn:hover {
+            background-color: var(--primary-light);
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+        
+        /* 聊天主区域 */
+        .chat-main {
+            flex: 1;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .chat-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .chat-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--text-dark);
+        }
+        
+        .chat-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .chat-action-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+        
+        .chat-action-btn:hover {
+            background-color: var(--primary-light);
+            color: var(--primary);
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .message {
+            max-width: 70%;
+            padding: 12px 15px;
+            border-radius: 12px;
+            font-size: 14px;
+            line-height: 1.5;
+            position: relative;
+        }
+        
+        .message-time {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-top: 5px;
+            text-align: right;
+        }
+        
+        .message-incoming {
+            align-self: flex-start;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            border-bottom-left-radius: 4px;
+        }
+        
+        .message-outgoing {
+            align-self: flex-end;
+            background-color: var(--primary-light);
+            color: var(--primary);
+            border-bottom-right-radius: 4px;
+        }
+        
+        .system-message {
+            align-self: center;
+            background-color: var(--bg-light);
+            color: var(--text-light);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            max-width: 80%;
+            text-align: center;
+        }
+        
+        .chat-input-container {
+            padding: 15px 20px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 10px;
+        }
+        
+        .chat-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 14px;
+            resize: none;
+            outline: none;
+            transition: all 0.2s;
+        }
+        
+        .chat-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px var(--primary-light);
+        }
+        
+        .send-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 6px;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            font-size: 20px;
+        }
+        
+        .send-btn:hover {
+            background-color: #3051d3;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 1024px) {
+            .chat-container {
+                flex-direction: column;
+            }
+            
+            .chat-sidebar {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .chat-container {
+                padding: 10px;
+            }
+            
+            .message {
+                max-width: 85%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <nav class="top-nav">
+        <a href="index.html" class="logo">语e桥</a>
+        
+        <ul class="nav-links">
+            <li><a href="index.html"><i class="icon">🏠</i>首页</a></li>
+            <li><a href="languagepartner-search.html"><i class="icon">👫</i>语伴</a></li>
+            <li class="dropdown">
+                <a href="chat.html"><i class="icon">💬</i>聊天<span class="dropdown-icon">▼</span></a>
+                <div class="dropdown-content">
+                    <a href="ai-chat.html">AI语伴聊天</a>
+                    <a href="chat.html">语伴聊天</a>
+                </div>
+            </li>
+            <li><a href="experiment.html"><i class="icon">🧪</i>实验招募</a></li>
+            <li class="dropdown">
+                <a href="community-resources.html"><i class="icon">📚</i>学习社区<span class="dropdown-icon">▼</span></a>
+                <div class="dropdown-content">
+                    <a href="personal-publish.html">个人发布</a>
+                    <a href="community-resources.html">社区资源</a>
+                    <a href="learningpath.html">学习路径</a>
+                </div>
+            </li>
+            <li><a href="tutor-matching.html"><i class="icon">👥</i>轻辅导</a></li>
+            <li><a href="login.html">登录</a></li>
+        </ul>
+    </nav>
+    
+    <!-- 聊天容器 -->
+    <div class="chat-container">
+        <!-- 聊天侧边栏 -->
+        <div class="chat-sidebar">
+            <div class="tutor-profile">
+                <div class="tutor-avatar">
+                    <div class="avatar-text" id="tutorAvatarText">张</div>
+                </div>
+                <div class="tutor-info">
+                    <div class="tutor-name" id="tutorName">张明</div>
+                    <div class="tutor-status">
+                        <div class="status-dot"></div>
+                        在线
+                    </div>
+                </div>
+            </div>
+            
+            <div class="session-info">
+                <div class="session-item">
+                    <div class="session-label">辅导时间</div>
+                    <div class="session-value" id="sessionTime">60分钟</div>
+                </div>
+                <div class="session-item">
+                    <div class="session-label">开始时间</div>
+                    <div class="session-value" id="startTime">10:00</div>
+                </div>
+                <div class="session-item">
+                    <div class="session-label">结束时间</div>
+                    <div class="session-value" id="endTime">11:00</div>
+                </div>
+                <div class="session-item">
+                    <div class="session-label">费用</div>
+                    <div class="session-value" id="sessionPrice">¥36.00</div>
+                </div>
+            </div>
+            
+            <div class="countdown-container">
+                <div class="countdown-label">剩余时间</div>
+                <div class="countdown-timer" id="countdownTimer">60:00</div>
+            </div>
+            
+            <div class="sidebar-actions">
+                <button class="sidebar-btn primary-btn" id="extendBtn">延长辅导</button>
+                <button class="sidebar-btn secondary-btn" id="endBtn">结束辅导</button>
+            </div>
+        </div>
+        
+        <!-- 聊天主区域 -->
+        <div class="chat-main">
+            <div class="chat-header">
+                <div class="chat-title">汉语轻辅导聊天</div>
+                <div class="chat-actions">
+                    <button class="chat-action-btn" title="语音通话">📞</button>
+                    <button class="chat-action-btn" title="视频通话">📹</button>
+                    <button class="chat-action-btn" title="分享屏幕">💻</button>
+                </div>
+            </div>
+            
+            <div class="chat-messages" id="chatMessages">
+                <div class="system-message">
+                    辅导已开始，您可以开始与辅导者交流了
+                </div>
+                
+                <div class="message message-incoming">
+                    <div class="message-content">
+                        你好！我是你的汉语辅导老师。今天我们将进行一小时的汉语学习辅导。你有什么特别想学习的内容吗？
+                    </div>
+                    <div class="message-time">10:00</div>
+                </div>
+                
+                <div class="message message-outgoing">
+                    <div class="message-content">
+                        你好老师！我想练习日常对话和提高我的口语表达能力。
+                    </div>
+                    <div class="message-time">10:02</div>
+                </div>
+                
+                <div class="message message-incoming">
+                    <div class="message-content">
+                        很好！我们可以从简单的日常对话开始。你平时在什么场景下需要使用中文？比如购物、点餐或者与朋友聊天？
+                    </div>
+                    <div class="message-time">10:03</div>
+                </div>
+            </div>
+            
+            <div class="chat-input-container">
+                <textarea class="chat-input" id="chatInput" placeholder="输入消息..." rows="2"></textarea>
+                <button class="send-btn" id="sendBtn">➤</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取预约信息
+            const bookedTutor = localStorage.getItem('bookedTutor') || '张明';
+            const bookedTime = localStorage.getItem('bookedTime') || '周一 10:00';
+            const bookedPrice = localStorage.getItem('bookedPrice') || '¥36/小时';
+            
+            // 更新侧边栏信息
+            document.getElementById('tutorName').textContent = bookedTutor;
+            document.getElementById('tutorAvatarText').textContent = bookedTutor.charAt(0);
+            document.getElementById('sessionPrice').textContent = bookedPrice.replace('/小时', '');
+            
+            // 设置开始和结束时间
+            const timeMatch = bookedTime.match(/(\d+):(\d+)/);
+            let startHour = 10;
+            let startMinute = 0;
+            
+            if (timeMatch) {
+                startHour = parseInt(timeMatch[1]);
+                startMinute = parseInt(timeMatch[2]);
+            }
+            
+            const startTimeStr = `${startHour.toString().padStart(2, '0')}:${startMinute.toString().padStart(2, '0')}`;
+            const endHour = (startHour + 1) % 24;
+            const endTimeStr = `${endHour.toString().padStart(2, '0')}:${startMinute.toString().padStart(2, '0')}`;
+            
+            document.getElementById('startTime').textContent = startTimeStr;
+            document.getElementById('endTime').textContent = endTimeStr;
+            
+            // 设置倒计时
+            let totalSeconds = 60 * 60; // 60分钟
+            const countdownTimer = document.getElementById('countdownTimer');
+            
+            function updateCountdown() {
+                const minutes = Math.floor(totalSeconds / 60);
+                const seconds = totalSeconds % 60;
+                
+                countdownTimer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                // 最后5分钟倒计时变红
+                if (totalSeconds <= 300) {
+                    countdownTimer.classList.add('warning');
+                    countdownTimer.parentElement.style.backgroundColor = 'var(--danger-light)';
+                }
+                
+                if (totalSeconds <= 0) {
+                    clearInterval(countdownInterval);
+                    addSystemMessage('辅导时间已结束');
+                    return;
+                }
+                
+                totalSeconds--;
+            }
+            
+            const countdownInterval = setInterval(updateCountdown, 1000);
+            updateCountdown();
+            
+            // 聊天功能
+            const chatMessages = document.getElementById('chatMessages');
+            const chatInput = document.getElementById('chatInput');
+            const sendBtn = document.getElementById('sendBtn');
+            
+            function addMessage(content, isOutgoing = true) {
+                const now = new Date();
+                const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+                
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${isOutgoing ? 'message-outgoing' : 'message-incoming'}`;
+                
+                const contentDiv = document.createElement('div');
+                contentDiv.className = 'message-content';
+                contentDiv.textContent = content;
+                
+                const timeDiv = document.createElement('div');
+                timeDiv.className = 'message-time';
+                timeDiv.textContent = timeStr;
+                
+                messageDiv.appendChild(contentDiv);
+                messageDiv.appendChild(timeDiv);
+                
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            function addSystemMessage(content) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'system-message';
+                messageDiv.textContent = content;
+                
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            function sendMessage() {
+                const content = chatInput.value.trim();
+                if (!content) return;
+                
+                addMessage(content);
+                chatInput.value = '';
+                
+                // 模拟辅导者回复
+                setTimeout(() => {
+                    const responses = [
+                        "很好！你的表达很清晰。",
+                        "这个句子可以这样说更地道：...",
+                        "你的发音很标准，继续保持！",
+                        "让我们来练习一下这个语法点。",
+                        "你对这个话题有什么看法？",
+                        "这个词的用法需要注意一下。"
+                    ];
+                    
+                    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                    addMessage(randomResponse, false);
+                }, 1500);
+            }
+            
+            sendBtn.addEventListener('click', sendMessage);
+            
+            chatInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+            
+            // 延长辅导按钮
+            document.getElementById('extendBtn').addEventListener('click', function() {
+                if (confirm('确定要延长辅导时间30分钟吗？将额外收费。')) {
+                    totalSeconds += 30 * 60;
+                    document.getElementById('sessionTime').textContent = '90分钟';
+                    
+                    // 更新结束时间
+                    const endTimeParts = document.getElementById('endTime').textContent.split(':');
+                    let endHour = parseInt(endTimeParts[0]);
+                    let endMinute = parseInt(endTimeParts[1]);
+                    
+                    endMinute += 30;
+                    if (endMinute >= 60) {
+                        endHour = (endHour + 1) % 24;
+                        endMinute -= 60;
+                    }
+                    
+                    const newEndTime = `${endHour.toString().padStart(2, '0')}:${endMinute.toString().padStart(2, '0')}`;
+                    document.getElementById('endTime').textContent = newEndTime;
+                    
+                    // 更新价格
+                    const priceText = document.getElementById('sessionPrice').textContent;
+                    const price = parseInt(priceText.replace(/[^\d]/g, ''));
+                    const newPrice = Math.round(price * 1.5);
+                    document.getElementById('sessionPrice').textContent = `¥${newPrice}.00`;
+                    
+                    addSystemMessage('辅导时间已延长30分钟');
+                }
+            });
+            
+            // 结束辅导按钮
+            document.getElementById('endBtn').addEventListener('click', function() {
+                if (confirm('确定要提前结束辅导吗？')) {
+                    clearInterval(countdownInterval);
+                    countdownTimer.textContent = '00:00';
+                    addSystemMessage('辅导已提前结束');
+                    
+                    // 禁用输入框
+                    chatInput.disabled = true;
+                    sendBtn.disabled = true;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

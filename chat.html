@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>语e桥 - 聊天</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* 顶部导航栏 */
+        .top-nav {
+            background-color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            z-index: 100;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 22px;
+            font-weight: bold;
+            color: #4361ee;
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin: 0 15px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+            padding: 8px 12px;
+            border-radius: 6px;
+        }
+        
+        .nav-links a:hover {
+            color: #4361ee;
+            background-color: #eef2ff;
+        }
+        
+        .nav-links a.active {
+            color: #4361ee;
+            background-color: #eef2ff;
+        }
+        
+        .nav-links i {
+            margin-right: 8px;
+        }
+        
+        .login-btn {
+            background-color: #4361ee;
+            color: white;
+            padding: 10px 24px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: none; /* 隐藏登录按钮 */
+        }
+        
+        .login-btn:hover {
+            background-color: #3051d3;
+            transform: translateY(-2px);
+        }
+        /* 下拉菜单 */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            z-index: 1;
+            top: 100%;
+            left: 0;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        
+        .dropdown-content a {
+            color: var(--text-dark);
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: all 0.2s;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: var(--primary-light);
+            color: var(--primary);
+        }
+        
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+        .dropdown-icon {
+            margin-left: 5px;
+            font-size: 12px;
+        }
+        
+        /* 聊天容器 */
+        .chat-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        /* 左侧语伴列表 */
+        .chat-list {
+            width: 300px;
+            background-color: #f7f9fc;
+            border-right: 1px solid #e5e7eb;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .search-bar {
+            padding: 15px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+        }
+        
+        .search-input:focus {
+            border-color: #4361ee;
+        }
+        
+        .partner-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        .partner-item {
+            display: flex;
+            padding: 15px;
+            border-bottom: 1px solid #e5e7eb;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .partner-item:hover {
+            background-color: #eef2ff;
+        }
+        
+        .partner-item.active {
+            background-color: #eef2ff;
+        }
+        
+        .partner-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 15px;
+            object-fit: cover;
+        }
+        
+        .partner-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .partner-name {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .partner-flag {
+            margin-left: 5px;
+            font-size: 16px;
+        }
+        
+        .partner-status {
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .partner-language {
+            font-size: 12px;
+            color: #4361ee;
+            background-color: #eef2ff;
+            padding: 2px 8px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-top: 5px;
+        }
+        
+        /* 右侧聊天区域 */
+        .chat-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: white;
+        }
+        
+        /* 空状态 */
+        .empty-state {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #666;
+        }
+        
+        .empty-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            color: #e5e7eb;
+        }
+        
+        .empty-text {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .empty-subtext {
+            font-size: 14px;
+            color: #999;
+        }
+        
+        /* 聊天头部 */
+        .chat-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .header-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 15px;
+            object-fit: cover;
+        }
+        
+        .header-name {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 3px;
+        }
+        
+        .header-status {
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .header-actions {
+            display: flex;
+            align-items: center;
+        }
+        
+        .accept-btn {
+            background-color: #4361ee;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .accept-btn:hover {
+            background-color: #3051d3;
+        }
+        
+        .accept-btn:disabled {
+            background-color: #a0aec0;
+            cursor: not-allowed;
+        }
+        
+        /* 消息区域 */
+        .message-container {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #f9fafb;
+        }
+        
+        .system-message {
+            text-align: center;
+            margin: 10px 0;
+            font-size: 12px;
+            color: #666;
+            background-color: rgba(0, 0, 0, 0.05);
+            padding: 5px 10px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .message {
+            display: flex;
+            margin-bottom: 15px;
+            align-items: flex-start;
+        }
+        
+        .message.sent {
+            flex-direction: row-reverse;
+        }
+        
+        .message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            margin: 0 10px;
+            object-fit: cover;
+        }
+        
+        .message-content {
+            max-width: 70%;
+        }
+        
+        .message-bubble {
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 14px;
+            line-height: 1.5;
+            position: relative;
+        }
+        
+        .message.sent .message-bubble {
+            background-color: #4361ee;
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+        
+        .message.received .message-bubble {
+            background-color: #e5e7eb;
+            color: #333;
+            border-bottom-left-radius: 4px;
+        }
+        
+        .message-time {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+            text-align: right;
+        }
+        
+        .message.received .message-time {
+            text-align: left;
+        }
+        
+        /* 输入区域 */
+        .input-area {
+            padding: 15px 20px;
+            border-top: 1px solid #e5e7eb;
+            background-color: white;
+        }
+        
+        .input-toolbar {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        
+        .toolbar-btn {
+            background: none;
+            border: none;
+            font-size: 18px;
+            color: #666;
+            margin-right: 15px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .toolbar-btn:hover {
+            color: #4361ee;
+        }
+        
+        .message-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            resize: none;
+            font-size: 14px;
+            margin-bottom: 10px;
+            outline: none;
+        }
+        
+        .message-input:focus {
+            border-color: #4361ee;
+        }
+        
+        .input-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .message-counter {
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .send-btn {
+            background-color: #4361ee;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .send-btn:hover {
+            background-color: #3051d3;
+        }
+        
+        .send-btn:disabled {
+            background-color: #a0aec0;
+            cursor: not-allowed;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .chat-list {
+                position: absolute;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                z-index: 10;
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+            
+            .chat-list.active {
+                transform: translateX(0);
+            }
+            
+            .mobile-toggle {
+                display: block;
+                margin-right: 15px;
+                font-size: 24px;
+                cursor: pointer;
+            }
+            
+            .chat-header {
+                padding: 10px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <nav class="top-nav">
+        <a href="index.html" class="logo">语e桥</a>
+        
+        <ul class="nav-links">
+            <li><a href="index.html"><i class="icon">🏠</i>首页</a></li>
+            <li><a href="languagepartner-search.html"><i class="icon">👫</i>语伴</a></li>
+            <li class="dropdown">
+                <a href="chat.html"  class="active"><i class="icon">💬</i>聊天<span class="dropdown-icon">▼</span></a>
+                <div class="dropdown-content">
+                    <a href="ai-chat.html">AI语伴</a>
+                    <a href="chat.html">语伴聊天</a>
+                </div>
+            </li>
+            <li><a href="experiment.html"><i class="icon">🧪</i>实验招募</a></li>
+            <li class="dropdown">
+                <a href="community-resources.html"><i class="icon">📚</i>学习社区<span class="dropdown-icon">▼</span></a>
+                <div class="dropdown-content">
+                    <a href="personal-publish.html">个人发布</a>
+                    <a href="community-resources.html">社区资源</a>
+                    <a href="learningpath.html">学习路径</a>
+                </div>
+            </li>
+            <li><a href="#"><i class="icon">👥</i>轻辅导</a></li>
+        </ul>
+        
+        <a href="login.html" class="login-btn">登录</a>
+    </nav>
+    
+    <!-- 聊天容器 -->
+    <div class="chat-container">
+        <!-- 左侧语伴列表 -->
+        <div class="chat-list" id="chat-list">
+            <div class="search-bar">
+                <input type="text" class="search-input" placeholder="搜索语伴...">
+            </div>
+            <div class="partner-list" id="partner-list">
+                <!-- 语伴列表将通过JavaScript动态生成 -->
+            </div>
+        </div>
+        
+        <!-- 右侧聊天区域 -->
+        <div class="chat-main">
+            <!-- 空状态 -->
+            <div class="empty-state" id="empty-state">
+                <div class="empty-icon">💬</div>
+                <div class="empty-text">选择一个语伴开始聊天</div>
+                <div class="empty-subtext">或者在语伴页面找到新的语伴</div>
+            </div>
+            
+            <!-- 聊天界面 -->
+            <div id="chat-interface" style="display: none; height: 100%; display: flex; flex-direction: column;">
+                <div class="chat-header">
+                    <div class="header-info">
+                        <img src="https://via.placeholder.com/40" class="header-avatar" id="current-partner-avatar">
+                        <div>
+                            <div class="header-name" id="current-partner-name">语伴名称</div>
+                            <div class="header-status" id="partner-status">等待对方接受请求（剩余10条消息）</div>
+                        </div>
+                    </div>
+                    <div class="header-actions">
+                        <button class="accept-btn" id="accept-btn">接受成为语伴</button>
+                    </div>
+                </div>
+                
+                <div class="message-container" id="message-container">
+                    <!-- 消息内容将通过JavaScript动态生成 -->
+                </div>
+                
+                <div class="input-area">
+                    <div class="input-toolbar">
+                        <button class="toolbar-btn" title="发送图片">🖼️</button>
+                        <button class="toolbar-btn" title="发送表情">😊</button>
+                        <button class="toolbar-btn" title="发送文件">📎</button>
+                    </div>
+                    <textarea class="message-input" id="message-input" placeholder="输入消息..." rows="3"></textarea>
+                    <div class="input-footer">
+                        <div class="message-counter">剩余可发送：<span id="message-counter">10</span>条</div>
+                        <button class="send-btn" id="send-btn">发送</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 全局变量
+        let currentUser = null;
+        let currentPartner = null;
+        let partners = [];
+        let chatHistory = {};
+        
+        // 页面加载时执行
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取URL参数
+            const urlParams = new URLSearchParams(window.location.search);
+            const partnerName = urlParams.get('partner');
+            
+            // 加载语伴列表
+            loadPartners();
+            
+            // 如果URL中有语伴参数，打开对应聊天
+            if (partnerName) {
+                // 查找或创建语伴
+                let partner = partners.find(p => p.name === partnerName);
+                if (!partner) {
+                    // 创建新语伴
+                    partner = {
+                        name: partnerName,
+                        avatar: urlParams.get('avatar') || 'https://via.placeholder.com/50',
+                        flag: urlParams.get('flag') || '🇯🇵',
+                        language: urlParams.get('language') || '日语',
+                        accepted: false,
+                        messagesLeft: 10
+                    };
+                    
+                    // 添加到语伴列表
+                    partners.push(partner);
+                    savePartners();
+                    
+                    // 添加到DOM
+                    addPartnerToList(partner);
+                }
+                
+                // 打开聊天
+                openChat(partner);
+            }
+            
+            // 设置发送按钮事件
+            document.getElementById('send-btn').addEventListener('click', sendMessage);
+            
+            // 设置接受按钮事件
+            document.getElementById('accept-btn').addEventListener('click', acceptPartner);
+            
+            // 设置输入框回车发送
+            document.getElementById('message-input').addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+        });
+        
+
+        // 加载语伴列表
+        function loadPartners() {
+            const savedPartners = localStorage.getItem('chatPartners');
+            if (savedPartners) {
+                partners = JSON.parse(savedPartners);
+                
+                // 添加到DOM
+                partners.forEach(partner => {
+                    addPartnerToList(partner);
+                });
+            }
+            
+            // 加载聊天历史
+            const savedHistory = localStorage.getItem('chatHistory');
+            if (savedHistory) {
+                chatHistory = JSON.parse(savedHistory);
+            }
+        }
+        
+        // 保存语伴列表
+        function savePartners() {
+            localStorage.setItem('chatPartners', JSON.stringify(partners));
+        }
+        
+        // 添加语伴到列表
+        function addPartnerToList(partner) {
+            const partnerList = document.getElementById('partner-list');
+            
+            // 创建语伴项
+            const partnerItem = document.createElement('div');
+            partnerItem.className = 'partner-item';
+            partnerItem.setAttribute('data-partner', partner.name);
+            
+            // 使用真实头像或默认头像
+            const avatarSrc = partner.avatar.includes('placeholder') ? 
+                `https://ui-avatars.com/api/?name=${encodeURIComponent(partner.name)}&background=random&color=fff&size=50` : 
+                partner.avatar;
+            
+            partnerItem.innerHTML = `
+                <img src="${avatarSrc}" class="partner-avatar" alt="${partner.name}">
+                <div class="partner-info">
+                    <div class="partner-name">${partner.name} <span class="partner-flag">${partner.flag}</span></div>
+                    <div class="partner-status">${partner.accepted ? '已接受' : '等待接受'} | 剩余${partner.messagesLeft}条</div>
+                    <div class="partner-language">${partner.language || '日语'} (母语)</div>
+                </div>
+            `;
+            
+            partnerList.appendChild(partnerItem);
+            
+            // 添加点击事件
+            partnerItem.addEventListener('click', function() {
+                // 移除其他活跃状态
+                document.querySelectorAll('.partner-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                // 添加当前活跃状态
+                this.classList.add('active');
+                
+                // 打开聊天
+                const partnerName = this.getAttribute('data-partner');
+                const partner = partners.find(p => p.name === partnerName);
+                if (partner) {
+                    openChat(partner);
+                }
+            });
+        }
+        
+        // 打开聊天
+        function openChat(partner) {
+            // 设置当前语伴
+            currentPartner = partner;
+            
+            // 隐藏空状态，显示聊天界面
+            document.getElementById('empty-state').style.display = 'none';
+            document.getElementById('chat-interface').style.display = 'flex';
+            
+            // 更新聊天头部
+            document.getElementById('current-partner-name').textContent = partner.name;
+            
+            // 使用真实头像或默认头像
+            const avatarSrc = partner.avatar.includes('placeholder') ? 
+                `https://ui-avatars.com/api/?name=${encodeURIComponent(partner.name)}&background=random&color=fff&size=40` : 
+                partner.avatar;
+            
+            document.getElementById('current-partner-avatar').src = avatarSrc;
+            
+            // 更新状态
+            updatePartnerStatus();
+            
+            // 更新接受按钮状态
+            updateAcceptButton();
+            
+            // 加载聊天历史
+            loadMessages();
+            
+            // 设置对应的语伴项为活跃状态
+            document.querySelectorAll('.partner-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('data-partner') === partner.name) {
+                    item.classList.add('active');
+                }
+            });
+        }
+        
+        // 更新语伴状态
+        function updatePartnerStatus() {
+            if (!currentPartner) return;
+            
+            const statusText = currentPartner.accepted ? 
+                '已成为语伴' : 
+                `等待对方接受请求（剩余${currentPartner.messagesLeft}条消息）`;
+            
+            document.getElementById('partner-status').textContent = statusText;
+            document.getElementById('message-counter').textContent = currentPartner.messagesLeft;
+            
+            // 更新发送按钮状态
+            const sendBtn = document.getElementById('send-btn');
+            if (currentPartner.messagesLeft <= 0 && !currentPartner.accepted) {
+                sendBtn.disabled = true;
+            } else {
+                sendBtn.disabled = false;
+            }
+        }
+        
+        // 更新接受按钮状态
+        function updateAcceptButton() {
+            if (!currentPartner) return;
+            
+            const acceptBtn = document.getElementById('accept-btn');
+            
+            if (currentPartner.accepted) {
+                acceptBtn.textContent = '已接受';
+                acceptBtn.disabled = true;
+            } else {
+                acceptBtn.textContent = '接受成为语伴';
+                acceptBtn.disabled = false;
+            }
+        }
+        
+        // 加载消息历史
+        function loadMessages() {
+            if (!currentPartner) return;
+            
+            const messageContainer = document.getElementById('message-container');
+            messageContainer.innerHTML = '';
+            
+            // 添加系统消息
+            const systemMsg = document.createElement('div');
+            systemMsg.className = 'system-message';
+            systemMsg.textContent = currentPartner.accepted ? 
+                '你们已经成为语伴' : 
+                `你已发起语伴请求（${10 - currentPartner.messagesLeft}/10）`;
+            messageContainer.appendChild(systemMsg);
+            
+            // 加载历史消息
+            if (chatHistory[currentPartner.name]) {
+                chatHistory[currentPartner.name].forEach(msg => {
+                    if (msg.type === 'system') {
+                        addSystemMessage(msg.content, false);
+                    } else {
+                        addMessage(msg.content, msg.type, msg.time, false);
+                    }
+                });
+            }
+            
+            // 滚动到底部
+            scrollToBottom();
+        }
+        
+        // 添加系统消息
+        function addSystemMessage(content, save = true) {
+            const messageContainer = document.getElementById('message-container');
+            
+            const systemMsg = document.createElement('div');
+            systemMsg.className = 'system-message';
+            systemMsg.textContent = content;
+            
+            messageContainer.appendChild(systemMsg);
+            
+            // 保存到历史记录
+            if (save && currentPartner) {
+                saveMessageToHistory('system', content);
+            }
+            
+            // 滚动到底部
+            scrollToBottom();
+        }
+        
+        // 添加消息
+        function addMessage(content, type, time, save = true) {
+            const messageContainer = document.getElementById('message-container');
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            
+            const now = time || new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            
+            // 使用默认头像或当前语伴头像
+            let avatar;
+            if (type === 'sent') {
+                // 使用默认用户头像
+                avatar = 'https://ui-avatars.com/api/?name=Me&background=4361ee&color=fff&size=36';
+            } else {
+                // 使用语伴头像
+                avatar = currentPartner && currentPartner.avatar.includes('placeholder') ? 
+                    `https://ui-avatars.com/api/?name=${encodeURIComponent(currentPartner.name)}&background=random&color=fff&size=36` : 
+                    (currentPartner ? currentPartner.avatar : 'https://via.placeholder.com/36');
+            }
+            
+            messageDiv.innerHTML = `
+                <img src="${avatar}" class="message-avatar" alt="头像">
+                <div class="message-content">
+                    <div class="message-bubble">${content}</div>
+                    <div class="message-time">${now}</div>
+                </div>
+            `;
+            
+            messageContainer.appendChild(messageDiv);
+            
+            // 保存到历史记录
+            if (save && currentPartner) {
+                saveMessageToHistory(type, content);
+            }
+            
+            // 滚动到底部
+            scrollToBottom();
+        }
+        
+        // 保存消息到历史记录
+        function saveMessageToHistory(type, content) {
+            if (!currentPartner) return;
+            
+            // 初始化聊天历史
+            if (!chatHistory[currentPartner.name]) {
+                chatHistory[currentPartner.name] = [];
+            }
+            
+            // 添加消息
+            chatHistory[currentPartner.name].push({
+                type: type,
+                content: content,
+                time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+            });
+            
+            // 保存到localStorage
+            localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+        }
+        
+        // 发送消息
+        function sendMessage() {
+            if (!currentPartner) return;
+            
+            const messageInput = document.getElementById('message-input');
+            const content = messageInput.value.trim();
+            
+            if (!content) return;
+            
+            // 发送消息
+            addMessage(content, 'sent');
+            
+            // 清空输入框
+            messageInput.value = '';
+            
+            // 如果未接受，减少可用消息数
+            if (!currentPartner.accepted) {
+                currentPartner.messagesLeft--;
+                
+                // 更新语伴信息
+                const index = partners.findIndex(p => p.name === currentPartner.name);
+                if (index !== -1) {
+                    partners[index] = currentPartner;
+                    savePartners();
+                }
+                
+                // 更新状态
+                updatePartnerStatus();
+                
+                // 更新语伴列表显示
+                const partnerItem = document.querySelector(`.partner-item[data-partner="${currentPartner.name}"]`);
+                if (partnerItem) {
+                    const statusElement = partnerItem.querySelector('.partner-status');
+                    if (statusElement) {
+                        statusElement.textContent = `${currentPartner.accepted ? '已接受' : '等待接受'} | 剩余${currentPartner.messagesLeft}条`;
+                    }
+                }
+                
+                // 如果消息用完，添加系统提示
+                if (currentPartner.messagesLeft <= 0) {
+                    addSystemMessage('你的消息已用完，请等待对方接受请求后继续聊天');
+                }
+            }
+            
+            // 模拟回复
+            setTimeout(() => {
+                if (currentPartner) {
+                    const replies = [
+                        "你好！很高兴认识你。",
+                        "我正在学习中文，希望能和你交流。",
+                        "你能告诉我更多关于中国文化的事情吗？",
+                        "我喜欢中国的美食，特别是火锅！",
+                        "你有什么爱好？",
+                        "我们可以互相学习语言，这很有趣。"
+                    ];
+                    
+                    const randomReply = replies[Math.floor(Math.random() * replies.length)];
+                    addMessage(randomReply, 'received');
+                }
+            }, 1000);
+        }
+        
+        // 接受语伴请求
+        function acceptPartner() {
+            if (!currentPartner) return;
+            
+            // 更新语伴状态
+            currentPartner.accepted = true;
+            
+            // 更新语伴列表
+            const index = partners.findIndex(p => p.name === currentPartner.name);
+            if (index !== -1) {
+                partners[index] = currentPartner;
+                savePartners();
+            }
+            
+            // 更新状态
+            updatePartnerStatus();
+            
+            // 更新接受按钮状态
+            updateAcceptButton();
+            
+            // 更新语伴列表显示
+            const partnerItem = document.querySelector(`.partner-item[data-partner="${currentPartner.name}"]`);
+            if (partnerItem) {
+                const statusElement = partnerItem.querySelector('.partner-status');
+                if (statusElement) {
+                    statusElement.textContent = `已接受 | 剩余${currentPartner.messagesLeft}条`;
+                }
+            }
+            
+            // 添加系统消息
+            addSystemMessage('你已接受语伴请求，可以无限制聊天了！');
+        }
+        
+        // 滚动到底部
+        function scrollToBottom() {
+            const messageContainer = document.getElementById('message-container');
+            messageContainer.scrollTop = messageContainer.scrollHeight;
+        }
+    </script>
+</body>
+</html>
+

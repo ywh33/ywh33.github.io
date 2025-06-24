@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>语e桥 - 完善个人信息</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        
+        body {
+            min-height: 100vh;
+            background-color: #f5f5f5;
+        }
+        
+        /* 导航栏样式 - 已更新为与community-resources.html一致 */
+        :root {
+            --primary: #4361ee;
+            --primary-light: #eef2ff;
+            --secondary: #3ccf91;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --bg-light: #f9fafb;
+            --border-color: #e5e7eb;
+            --culture-red: #e53e3e;
+            --culture-gold: #d69e2e;
+        }
+        
+        /* 顶部导航栏 */
+        .top-nav {
+            background-color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            position: fixed;
+            width: 100%;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            left: 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin: 0 15px;
+            position: relative;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+            padding: 8px 12px;
+            border-radius: 6px;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .nav-links a.active {
+            color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .nav-links i {
+            margin-right: 8px;
+        }
+        
+        .login-btn {
+            background-color: var(--primary);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .login-btn:hover {
+            background-color: #3051d3;
+            transform: translateY(-2px);
+        }
+        
+        /* 下拉菜单 */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            z-index: 1;
+            top: 100%;
+            left: 0;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        
+        .dropdown-content a {
+            color: var(--text-dark);
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: all 0.2s;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: var(--primary-light);
+            color: var(--primary);
+        }
+        
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+        .dropdown-icon {
+            margin-left: 5px;
+            font-size: 12px;
+        }
+        
+        /* 主要内容区域 */
+        .main-content {
+            padding: 0 20px;
+            padding-top: 90px; /* 为固定导航栏留出空间 */
+        }
+        
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .header h1 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 16px;
+        }
+        
+        .divider {
+            height: 2px;
+            background-color: #4a3b8c;
+            margin: 20px 0;
+        }
+        
+        /* 表单容器 */
+        .form-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        
+        .form-section {
+            margin-bottom: 20px;
+        }
+        
+        .form-section-title {
+            font-weight: bold;
+            color: #4a3b8c;
+            margin-bottom: 15px;
+            font-size: 18px;
+            border-bottom: 2px solid #f0eef9;
+            padding-bottom: 5px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #555;
+            transition: color 0.3s;
+        }
+        
+        .form-input:focus + .form-label,
+        .form-select:focus + .form-label,
+        .form-textarea:focus + .form-label {
+            color: #4a3b8c;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .form-input:focus {
+            border-color: #4a3b8c;
+            box-shadow: 0 0 5px rgba(74, 59, 140, 0.2);
+            outline: none;
+        }
+        
+        .form-select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            background-color: white;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .form-select:focus {
+            border-color: #4a3b8c;
+            box-shadow: 0 0 5px rgba(74, 59, 140, 0.2);
+            outline: none;
+        }
+        
+        .form-textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 100px;
+            transition: all 0.3s;
+        }
+        
+        .form-textarea:focus {
+            border-color: #4a3b8c;
+            box-shadow: 0 0 5px rgba(74, 59, 140, 0.2);
+            outline: none;
+        }
+        
+        .username-display {
+            font-weight: bold;
+            padding: 10px;
+            background-color: #f0eef9;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            transition: background-color 0.3s;
+        }
+        
+        .username-display:hover {
+            background-color: #e5e2f5;
+        }
+        
+        /* 兴趣爱好部分 */
+        .interest-category {
+            font-weight: bold;
+            color: #4a3b8c;
+            margin: 10px 0 5px;
+            padding-bottom: 5px;
+        }
+        
+        .interest-options {
+            max-height: 150px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            scrollbar-width: thin;
+            scrollbar-color: #4a3b8c #f0eef9;
+        }
+        
+        .interest-options::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .interest-options::-webkit-scrollbar-track {
+            background: #f0eef9;
+        }
+        
+        .interest-options::-webkit-scrollbar-thumb {
+            background-color: #4a3b8c;
+            border-radius: 10px;
+        }
+        
+        .interest-option {
+            display: block;
+            margin-bottom: 5px;
+            transition: transform 0.2s;
+        }
+        
+        .interest-option:hover {
+            transform: translateX(5px);
+        }
+        
+        .interest-option input {
+            margin-right: 5px;
+            cursor: pointer;
+        }
+        
+        /* 语言水平部分 */
+        .language-section {
+            grid-column: span 3;
+        }
+        
+        .language-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .language-table th,
+        .language-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        
+        .language-table th {
+            background-color: #f0eef9;
+            color: #4a3b8c;
+        }
+        
+        .language-table tr {
+            transition: background-color 0.3s;
+        }
+        
+        .language-table tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .add-language-btn {
+            background-color: #4a3b8c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .add-language-btn:hover {
+            background-color: #3a2b7c;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .add-language-btn:active {
+            transform: translateY(0);
+        }
+        
+        .delete-btn {
+            background: none;
+            border: none;
+            color: #ff5252;
+            cursor: pointer;
+            transition: all 0.3s;
+            opacity: 0.7;
+        }
+        
+        .delete-btn:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+        
+        /* 提交按钮 */
+        .submit-btn {
+            display: block;
+            width: 200px;
+            margin: 20px auto 0;
+            padding: 12px;
+            background-color: #4a3b8c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        .submit-btn:hover {
+            background-color: #3a2b7c;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+        
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .required::after {
+            content: " *";
+            color: #ff5252;
+        }
+        
+        /* 悬浮图标 */
+        .floating-icons {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 100;
+        }
+        
+        .floating-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #666;
+            font-size: 20px;
+        }
+        
+        .floating-icon:hover {
+            transform: translateY(-5px) rotate(5deg);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            color: #4a3b8c;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 992px) {
+            .form-container {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .language-section {
+                grid-column: span 2;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .top-nav {
+                padding: 10px 20px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .form-container {
+                grid-template-columns: 1fr;
+                padding: 15px;
+            }
+            
+            .language-section {
+                grid-column: span 1;
+            }
+        }
+        
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .form-section {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        
+        .form-section:nth-child(1) { animation-delay: 0.1s; }
+        .form-section:nth-child(2) { animation-delay: 0.2s; }
+        .form-section:nth-child(3) { animation-delay: 0.3s; }
+        .language-section { animation-delay: 0.4s; }
+        
+        /* 提示工具 */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            margin-left: 5px;
+            color: #4a3b8c;
+            cursor: help;
+        }
+        
+        .tooltip .tooltip-text {
+            visibility: hidden;
+            width: 200px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 5px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 12px;
+            font-weight: normal;
+        }
+        
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        /* 添加抖动动画 */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+    </style>
+    <!-- 引入Font Awesome图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- 顶部导航栏 - 已更新为与community-resources.html一致 -->
+    <nav class="top-nav">
+        <a href="index.html" class="logo">语e桥</a>
+        
+        <ul class="nav-links">
+            <li><a href="index.html"><i class="icon">🏠</i>首页</a></li>
+            <li><a href="languagepartner-searchhtml"><i class="icon">👫</i>语伴</a></li>
+            <li class="dropdown">
+                <a href="chat.html"><i class="icon">💬</i>聊天<span class="dropdown-icon">▼</span></a>
+                <div class="dropdown-content">
+                    <a href="ai-chat.html">AI语伴</a>
+                    <a href="chat.html">语伴聊天</a>
+                </div>
+            </li>
+            <li><a href="experiment.html"><i class="icon">🧪</i>实验招募</a></li>
+            <li class="dropdown">
+                <a href="community-resources.html"><i class="icon">📚</i>学习社区<span class="dropdown-icon">▼</span></a>
+                <div class="dropdown-content">
+                    <a href="personal-publish.html">个人发布</a>
+                    <a href="community-resources.html">社区资源</a>
+                    <a href="learningpath.html">学习路径</a>
+                </div>
+            </li>
+            <li><a href="tutor-matching.html"><i class="icon">👥</i>轻辅导</a></li>
+        </ul>
+        
+        <a href="login.html" class="login-btn">登录</a>
+    </nav>
+    
+    <!-- 主要内容区域 -->
+    <div class="main-content">
+        <div class="header">
+            <h1>完善个人信息</h1>
+            <p>请填写以下信息，帮助我们为您匹配合适的语伴</p>
+        </div>
+        
+        <div class="divider"></div>
+        
+        <form id="profile-form">
+            <div class="form-container">
+                <!-- 左侧：个人基本信息 -->
+                <div class="form-section">
+                    <div class="form-section-title">个人基本信息</div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">用户名</label>
+                        <div class="username-display">用户123456</div>
+                        <small style="color: #666; font-size: 12px;">用户名已在注册时设置，无法修改</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">个人照片</label>
+                        <input type="file" class="form-input" accept="image/*" id="profile-photo">
+                        <div id="photo-preview" style="width: 100px; height: 100px; border-radius: 50%; background-color: #f0eef9; margin-top: 10px; display: flex; justify-content: center; align-items: center; overflow: hidden;">
+                            <i class="fas fa-user" style="font-size: 50px; color: #ddd;"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">性别</label>
+                        <select class="form-select" id="gender">
+                            <option value="">请选择</option>
+                            <option value="male">男</option>
+                            <option value="female">女</option>
+                            <option value="other">其他</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">年龄段</label>
+                        <select class="form-select" id="age-range">
+                            <option value="">请选择</option>
+                            <option value="under18">18岁以下</option>
+                            <option value="18-25">18-25岁</option>
+                            <option value="26-35">26-35岁</option>
+                            <option value="36-45">36-45岁</option>
+                            <option value="above45">45岁以上</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">国籍</label>
+                        <select class="form-select" id="nationality">
+                            <option value="">请选择</option>
+                            <option value="china">中国</option>
+                            <option value="usa">美国</option>
+                            <option value="uk">英国</option>
+                            <option value="japan">日本</option>
+                            <option value="korea">韩国</option>
+                            <option value="france">法国</option>
+                            <option value="germany">德国</option>
+                            <option value="canada">加拿大</option>
+                            <option value="australia">澳大利亚</option>
+                            <option value="russia">俄罗斯</option>
+                            <option value="spain">西班牙</option>
+                            <option value="italy">意大利</option>
+                            <option value="other">其他</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label required">目标学习语言</label>
+                        <select class="form-select" id="target-language">
+                            <option value="">请选择</option>
+                            <option value="chinese">中文</option>
+                            <option value="english">英语</option>
+                            <option value="japanese">日语</option>
+                            <option value="korean">韩语</option>
+                            <option value="french">法语</option>
+                            <option value="german">德语</option>
+                            <option value="spanish">西班牙语</option>
+                            <option value="russian">俄语</option>
+                            <option value="other">其他</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- 中间：个性和兴趣 -->
+                <div class="form-section">
+                    <div class="form-section-title">个性和兴趣</div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">MBTI性格类型 <span class="tooltip"><i class="fas fa-question-circle"></i><span class="tooltip-text">MBTI是一种性格分类方法，帮助了解自己的性格特点</span></span></label>
+                        <select class="form-select" id="mbti">
+                            <option value="">请选择</option>
+                            <option value="INTJ">INTJ - 建筑师</option>
+                            <option value="INTP">INTP - 逻辑学家</option>
+                            <option value="ENTJ">ENTJ - 指挥官</option>
+                            <option value="ENTP">ENTP - 辩论家</option>
+                            <option value="INFJ">INFJ - 提倡者</option>
+                            <option value="INFP">INFP - 调停者</option>
+                            <option value="ENFJ">ENFJ - 主人公</option>
+                            <option value="ENFP">ENFP - 活动家</option>
+                            <option value="ISTJ">ISTJ - 物流师</option>
+                            <option value="ISFJ">ISFJ - 守卫者</option>
+                            <option value="ESTJ">ESTJ - 总经理</option>
+                            <option value="ESFJ">ESFJ - 执政官</option>
+                            <option value="ISTP">ISTP - 鉴赏家</option>
+                            <option value="ISFP">ISFP - 探险家</option>
+                            <option value="ESTP">ESTP - 企业家</option>
+                            <option value="ESFP">ESFP - 表演者</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">用户自我介绍</label>
+                        <textarea class="form-textarea" id="self-intro" placeholder="简单介绍一下自己，包括兴趣爱好、学习目标等..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">兴趣爱好 <span class="tooltip"><i class="fas fa-question-circle"></i><span class="tooltip-text">选择您感兴趣的话题，有助于匹配志同道合的语伴</span></span></label>
+                        
+                        <div class="interest-category">学术类兴趣</div>
+                        <div class="interest-options">
+                            <label class="interest-option"><input type="checkbox" name="academic_interests" value="language_learning"> 语言学习</label>
+                            <label class="interest-option"><input type="checkbox" name="academic_interests" value="literature"> 文学阅读</label>
+                            <label class="interest-option"><input type="checkbox" name="academic_interests" value="history"> 历史研究</label>
+                            <label class="interest-option"><input type="checkbox" name="academic_interests" value="philosophy"> 哲学思考</label>
+                            <label class="interest-option"><input type="checkbox" name="academic_interests" value="science"> 科学探索</label>
+                            <label class="interest-option"><input type="checkbox" name="academic_interests" value="math_logic"> 数学与逻辑</label>
+                            <label class="interest-option"><input type="checkbox" name="academic_interests" value="programming"> 编程与计算机科学</label>
+                            <label class="interest-option"><input type="checkbox" name="academic_interests" value="art_appreciation"> 艺术鉴赏</label>
+                            <label class="interest-option"><input type="checkbox" name="academic_interests" value="psychology"> 心理学</label>
+                            <label class="interest-option"><input type="checkbox" name="academic_interests" value="education"> 教育与教学</label>
+                        </div>
+                        
+                        <div class="interest-category">社交娱乐类兴趣</div>
+                        <div class="interest-options">
+                            <label class="interest-option"><input type="checkbox" name="social_interests" value="travel"> 旅行</label>
+                            <label class="interest-option"><input type="checkbox" name="social_interests" value="sports"> 运动健身</label>
+                            <label class="interest-option"><input type="checkbox" name="social_interests" value="music"> 音乐</label>
+                            <label class="interest-option"><input type="checkbox" name="social_interests" value="movies"> 电影与电视剧</label>
+                            <label class="interest-option"><input type="checkbox" name="social_interests" value="food_cooking"> 美食与烹饪</label>
+                            <label class="interest-option"><input type="checkbox" name="social_interests" value="photography"> 摄影</label>
+                            <label class="interest-option"><input type="checkbox" name="social_interests" value="dance"> 舞蹈</label>
+                            <label class="interest-option"><input type="checkbox" name="social_interests" value="gaming"> 电子游戏</label>
+                            <label class="interest-option"><input type="checkbox" name="social_interests" value="social_gathering"> 社交聚会</label>
+                            <label class="interest-option"><input type="checkbox" name="social_interests" value="pets"> 宠物</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 右侧：语言水平 -->
+                <div class="form-section">
+                    <div class="form-section-title required">语言水平</div>
+                    <button type="button" class="add-language-btn" id="add-language"><i class="fas fa-plus"></i> 添加语言</button>
+                    
+                    <table class="language-table" id="language-table">
+                        <thead>
+                            <tr>
+                                <th width="40%">语种</th>
+                                <th width="40%">达标水平</th>
+                                <th width="20%">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <select class="form-select language-select" required>
+                                        <option value="">请选择语言</option>
+                                        <option value="chinese">中文</option>
+                                        <option value="english">英语</option>
+                                        <option value="japanese">日语</option>
+                                        <option value="korean">韩语</option>
+                                        <option value="french">法语</option>
+                                        <option value="german">德语</option>
+                                        <option value="spanish">西班牙语</option>
+                                        <option value="russian">俄语</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="form-select proficiency-select" required>
+                                        <option value="">请选择水平</option>
+                                        <option value="beginner">初级 (A1-A2)</option>
+                                        <option value="intermediate">中级 (B1-B2)</option>
+                                        <option value="advanced">高级 (C1-C2)</option>
+                                        <option value="native">母语水平</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <button type="button" class="delete-btn"><i class="fas fa-trash-alt"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <button type="submit" class="submit-btn"><i class="fas fa-save"></i> 保存信息</button>
+        </form>
+    </div>
+    
+    <!-- 悬浮图标 -->
+    <div class="floating-icons">
+        <a href="/" class="floating-icon">
+            <i class="fas fa-home"></i>
+        </a>
+        <div class="floating-icon" id="settings-icon">
+            <i class="fas fa-cog"></i>
+        </div>
+    </div>
+    
+    <script>
+        // 照片预览功能
+        document.getElementById('profile-photo').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const preview = document.getElementById('photo-preview');
+                    preview.innerHTML = `<img src="${event.target.result}" style="width: 100%; height: 100%; object-fit: cover;">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        // 添加语言行
+        document.getElementById('add-language').addEventListener('click', function() {
+            const table = document.getElementById('language-table');
+            const tbody = table.querySelector('tbody');
+            const newRow = document.createElement('tr');
+            
+            newRow.innerHTML = `
+                <td>
+                    <select class="form-select language-select" required>
+                        <option value="">请选择语言</option>
+                        <option value="chinese">中文</option>
+                        <option value="english">英语</option>
+                        <option value="japanese">日语</option>
+                        <option value="korean">韩语</option>
+                        <option value="french">法语</option>
+                        <option value="german">德语</option>
+                        <option value="spanish">西班牙语</option>
+                        <option value="russian">俄语</option>
+                    </select>
+                </td>
+                <td>
+                    <select class="form-select proficiency-select" required>
+                        <option value="">请选择水平</option>
+                        <option value="beginner">初级 (A1-A2)</option>
+                        <option value="intermediate">中级 (B1-B2)</option>
+                        <option value="advanced">高级 (C1-C2)</option>
+                        <option value="native">母语水平</option>
+                    </select>
+                </td>
+                <td>
+                    <button type="button" class="delete-btn"><i class="fas fa-trash-alt"></i></button>
+                </td>
+            `;
+            
+            tbody.appendChild(newRow);
+            
+            // 为新添加的删除按钮添加事件监听
+            const deleteBtn = newRow.querySelector('.delete-btn');
+            deleteBtn.addEventListener('click', function() {
+                tbody.removeChild(newRow);
+            });
+            
+            // 添加动画效果
+            newRow.style.opacity = '0';
+            newRow.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                newRow.style.transition = 'all 0.5s ease';
+                newRow.style.opacity = '1';
+                newRow.style.transform = 'translateY(0)';
+            }, 10);
+        });
+        
+        // 为已有的删除按钮添加事件监听
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const row = this.closest('tr');
+                row.style.transition = 'all 0.5s ease';
+                row.style.opacity = '0';
+                row.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    row.parentNode.removeChild(row);
+                }, 500);
+            });
+        });
+        
+        // 设置图标点击功能
+        document.getElementById('settings-icon').addEventListener('click', function() {
+            this.classList.add('fa-spin');
+            setTimeout(() => {
+                this.classList.remove('fa-spin');
+                alert('设置功能即将上线！');
+            }, 1000);
+        });
+        
+        // 表单提交处理
+        document.getElementById('profile-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // 检查目标语言
+            const targetLanguage = document.getElementById('target-language');
+            if (!targetLanguage.value) {
+                targetLanguage.style.borderColor = '#ff5252';
+                targetLanguage.style.boxShadow = '0 0 5px rgba(255, 82, 82, 0.2)';
+                
+                // 添加抖动动画
+                targetLanguage.style.animation = 'shake 0.5s';
+                setTimeout(() => {
+                    targetLanguage.style.animation = '';
+                }, 500);
+                
+                alert('请选择目标学习语言');
+                return;
+            } else {
+                targetLanguage.style.borderColor = '#4a3b8c';
+                targetLanguage.style.boxShadow = '0 0 5px rgba(74, 59, 140, 0.2)';
+            }
+            
+            // 检查语言水平表格
+            const languageSelects = document.querySelectorAll('.language-select');
+            const proficiencySelects = document.querySelectorAll('.proficiency-select');
+            
+            if (languageSelects.length === 0) {
+                alert('请至少添加一种语言水平');
+                return;
+            }
+            
+            let isValid = true;
+            
+            languageSelects.forEach((select, index) => {
+                if (!select.value) {
+                    select.style.borderColor = '#ff5252';
+                    select.style.boxShadow = '0 0 5px rgba(255, 82, 82, 0.2)';
+                    select.style.animation = 'shake 0.5s';
+                    setTimeout(() => {
+                        select.style.animation = '';
+                    }, 500);
+                    isValid = false;
+                } else {
+                    select.style.borderColor = '#4a3b8c';
+                    select.style.boxShadow = '0 0 5px rgba(74, 59, 140, 0.2)';
+                }
+                
+                if (!proficiencySelects[index].value) {
+                    proficiencySelects[index].style.borderColor = '#ff5252';
+                    proficiencySelects[index].style.boxShadow = '0 0 5px rgba(255, 82, 82, 0.2)';
+                    proficiencySelects[index].style.animation = 'shake 0.5s';
+                    setTimeout(() => {
+                        proficiencySelects[index].style.animation = '';
+                    }, 500);
+                    isValid = false;
+                } else {
+                    proficiencySelects[index].style.borderColor = '#4a3b8c';
+                    proficiencySelects[index].style.boxShadow = '0 0 5px rgba(74, 59, 140, 0.2)';
+                }
+            });
+            
+            if (!isValid) {
+                alert('请完善所有语言水平信息');
+                return;
+            }
+            
+            // 添加提交成功动画
+            const submitBtn = document.querySelector('.submit-btn');
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 保存中...';
+            submitBtn.disabled = true;
+            
+            setTimeout(() => {
+                submitBtn.innerHTML = '<i class="fas fa-check"></i> 保存成功！';
+                submitBtn.style.backgroundColor = '#4CAF50';
+                
+                setTimeout(() => {
+                    alert('个人信息保存成功！即将跳转到首页...');
+                    // 实际应用中这里会提交表单数据到服务器
+                    // 然后重定向到首页或其他页面
+                    // window.location.href = '/home';
+                }, 1000);
+            }, 1500);
+        });
+    </script>
+</body>
+</html>

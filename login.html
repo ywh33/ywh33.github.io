@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>语e桥 - 登录/注册</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        
+        body {
+            min-height: 100vh;
+            background-color: #f5f5f5;
+            position: relative;
+        }
+        
+        /* 背景图片样式 */
+        .bg-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+            opacity: 0.9;
+        }
+        
+        /* 顶部导航栏 */
+        .top-nav {
+            background-color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            position: fixed;
+            width: 100%;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            left: 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin: 0 15px;
+            position: relative;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+            padding: 8px 12px;
+            border-radius: 6px;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .nav-links a.active {
+            color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .nav-links i {
+            margin-right: 8px;
+        }
+        
+        .login-btn {
+            background-color: var(--primary);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .login-btn:hover {
+            background-color: #3051d3;
+            transform: translateY(-2px);
+        }
+
+        /* 下拉菜单 */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            z-index: 1;
+            top: 100%;
+            left: 0;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        
+        .dropdown-content a {
+            color: var(--text-dark);
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: all 0.2s;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: var(--primary-light);
+            color: var(--primary);
+        }
+        
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+        .dropdown-icon {
+            margin-left: 5px;
+            font-size: 12px;
+        }
+        
+        /* 认证容器样式 */
+        .auth-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            width: 800px;
+            max-width: 90%;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* 左侧登录引导 */
+        .login-section {
+            flex: 1;
+            background-color: #4361ee;
+            padding: 40px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .login-section h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+        
+        .login-section p {
+            margin: 20px 0;
+        }
+        
+        .login-link {
+            color: white;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .login-link i {
+            margin-left: 5px;
+        }
+        
+        .login-btn-alt {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+            border-radius: 50px;
+            padding: 10px 40px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        
+        .login-btn-alt:hover {
+            background-color: white;
+            color: #4361ee;
+        }
+        
+        /* 注册表单部分 */
+        .register-section {
+            flex: 1;
+            background-color: white;
+            padding: 40px;
+        }
+        
+        .register-section h2 {
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: none;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .verification-code {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .verification-code .form-input {
+            flex: 1;
+        }
+        
+        .get-code-btn {
+            background-color: transparent;
+            color: #4361ee;
+            border: none;
+            padding: 0;
+            font-size: 14px;
+            cursor: pointer;
+            white-space: nowrap;
+            text-decoration: underline;
+        }
+        
+        .register-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #4361ee;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        
+        .register-btn:hover {
+            background-color: #3051d3;
+        }
+        
+        /* 头像选择部分 */
+        .avatar-selection {
+            display: none;
+            margin-top: 20px;
+        }
+        
+        .avatar-selection h3 {
+            margin-bottom: 15px;
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .avatar-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .avatar-option {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            overflow: hidden;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .avatar-option:hover {
+            transform: scale(1.1);
+        }
+        
+        .avatar-option.selected {
+            border-color: #4361ee;
+        }
+        
+        .avatar-option img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 10px 20px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .auth-container {
+                flex-direction: column;
+                width: 95%;
+            }
+            
+            .login-section, .register-section {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 背景图片 -->
+    <img src="https://source.unsplash.com/random/1920x1080/?interior,light" alt="背景" class="bg-image">
+    
+    <!-- 顶部导航栏 -->
+    <nav class="top-nav">
+        <a href="index.html" class="logo">语e桥</a>
+        
+        <ul class="nav-links">
+            <li><a href="index.html"><i class="icon">🏠</i>首页</a></li>
+            <li><a href="languagepartner-search.html"><i class="icon">👫</i>语伴</a></li>
+            <li class="dropdown">
+                <a href="chat.html"><i class="icon">💬</i>聊天<span class="dropdown-icon">▼</span></a>
+                <div class="dropdown-content">
+                    <a href="ai-chat.html">AI语伴</a>
+                    <a href="chat.html">语伴聊天</a>
+                </div>
+            </li>
+            <li><a href="experiment.html"><i class="icon">🧪</i>实验招募</a></li>
+            <li class="dropdown">
+                <a href="community-resources.html" class="active"><i class="icon">📚</i>学习社区<span class="dropdown-icon">▼</span></a>
+                <div class="dropdown-content">
+                    <a href="personal-publish.html">个人发布</a>
+                    <a href="community-resources.html">社区资源</a>
+                    <a href="learningpath.html">学习路径</a>
+                </div>
+            </li>
+            <li><a href="tutor-matching.html"><i class="icon">👥</i>轻辅导</a></li>
+        </ul>
+        
+        <a href="login.html" class="login-btn">登录</a>
+    </nav>
+    
+    <!-- 注册界面 -->
+    <div class="auth-container" id="register-container">
+        <!-- 左侧登录引导 -->
+        <div class="login-section">
+            <h2>已有帐号?</h2>
+            <a href="#" class="login-link" id="show-login">
+                请登录 <i class="icon">→</i>
+            </a>
+            
+            <button class="login-btn-alt" id="login-btn">登录</button>
+        </div>
+        
+        <!-- 右侧注册表单 -->
+        <div class="register-section">
+            <h2>注册</h2>
+            <form id="register-form">
+                <div class="form-group">
+                    <label for="username">用户名</label>
+                    <input type="text" id="username" class="form-input" placeholder="">
+                </div>
+                <div class="form-group">
+                    <label for="contact">邮箱/手机号</label>
+                    <input type="text" id="contact" class="form-input" placeholder="">
+                </div>
+                <div class="form-group">
+                    <label for="verification">验证码</label>
+                    <div class="verification-code">
+                        <input type="text" id="verification" class="form-input" placeholder="">
+                        <button type="button" class="get-code-btn">获取验证码</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="password">密码</label>
+                    <input type="password" id="password" class="form-input" placeholder="">
+                </div>
+                
+                <!-- 头像选择部分 -->
+                <div class="avatar-selection" id="avatar-selection">
+                    <h3>选择头像</h3>
+                    <div class="avatar-options">
+                        <div class="avatar-option" data-avatar="https://tse3-mm.cn.bing.net/th/id/OIP-C.XiVe2vqgz_z7-Nm5s8ArmAHaHa?rs=1&pid=ImgDetMain">
+                            <img src="https://tse3-mm.cn.bing.net/th/id/OIP-C.XiVe2vqgz_z7-Nm5s8ArmAHaHa?rs=1&pid=ImgDetMain" alt="头像1">
+                        </div>
+                        <div class="avatar-option" data-avatar="https://tse4-mm.cn.bing.net/th/id/OIP-C.nl9yVbmyNehMDsb6FhcGDgHaEB?rs=1&pid=ImgDetMain">
+                            <img src="https://tse4-mm.cn.bing.net/th/id/OIP-C.nl9yVbmyNehMDsb6FhcGDgHaEB?rs=1&pid=ImgDetMain" alt="头像2">
+                        </div>
+                        <div class="avatar-option" data-avatar="https://img95.699pic.com/photo/40159/5136.jpg_wh860.jpg">
+                            <img src="https://img95.699pic.com/photo/40159/5136.jpg_wh860.jpg" alt="头像3">
+                        </div>
+                        <div class="avatar-option" data-avatar="https://media.gettyimages.com/id/170365411/photo/revelers-gather-for-hong-kong-boat-carnival.jpg?b=1&s=594x594&w=0&k=20&c=lDkDWr2j6cbHOQremFFoduUM2EMpbGNLlrhdEMt-KOg=">
+                            <img src="https://media.gettyimages.com/id/170365411/photo/revelers-gather-for-hong-kong-boat-carnival.jpg?b=1&s=594x594&w=0&k=20&c=lDkDWr2j6cbHOQremFFoduUM2EMpbGNLlrhdEMt-KOg=" alt="头像4">
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="register-btn" id="register-submit-btn">注册</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- 登录界面 (默认隐藏) -->
+    <div class="auth-container" id="login-container" style="display: none;">
+        <!-- 左侧注册引导 -->
+        <div class="login-section">
+            <h2>没有帐号?</h2>
+            <a href="#" class="login-link" id="show-register">
+                立即注册 <i class="icon">→</i>
+            </a>
+            <button class="login-btn-alt" id="register-btn">注册</button>
+        </div>
+        
+        <!-- 右侧登录表单 -->
+        <div class="register-section">
+            <h2>登录</h2>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-username">用户名/邮箱/手机号</label>
+                    <input type="text" id="login-username" class="form-input" placeholder="">
+                </div>
+                <div class="form-group">
+                    <label for="login-password">密码</label>
+                    <input type="password" id="login-password" class="form-input" placeholder="">
+                </div>
+                <div style="text-align: right; margin-bottom: 20px;">
+                    <a href="#" style="color: #666; text-decoration: none; font-size: 14px;">修改密码?</a>
+                </div>
+                <button type="submit" class="register-btn" id="login-submit-btn">登录</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // 获取元素
+        const loginContainer = document.getElementById('login-container');
+        const registerContainer = document.getElementById('register-container');
+        const showLoginBtn = document.getElementById('show-login');
+        const showRegisterBtn = document.getElementById('show-register');
+        const loginBtn = document.getElementById('login-btn');
+        const registerBtn = document.getElementById('register-btn');
+        const avatarSelection = document.getElementById('avatar-selection');
+        
+        // 显示登录界面
+        function showLoginView() {
+            registerContainer.style.display = 'none';
+            loginContainer.style.display = 'flex';
+        }
+        
+        // 显示注册界面
+        function showRegisterView() {
+            loginContainer.style.display = 'none';
+            registerContainer.style.display = 'flex';
+        }
+        
+        // 添加事件监听器
+        showLoginBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            showLoginView();
+        });
+        
+        loginBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            showLoginView();
+        });
+        
+        showRegisterBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            showRegisterView();
+        });
+        
+        registerBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            showRegisterView();
+        });
+        
+        // 注册表单验证
+        document.getElementById('register-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const contact = document.getElementById('contact').value.trim();
+            const verification = document.getElementById('verification').value.trim();
+            const password = document.getElementById('password').value.trim();
+            
+            if (!username) {
+                alert('请输入用户名');
+                return;
+            }
+            
+            if (!contact) {
+                alert('请输入邮箱或手机号');
+                return;
+            }
+            
+            if (!verification) {
+                alert('请输入验证码');
+                return;
+            }
+            
+            if (!password) {
+                alert('请输入密码');
+                return;
+            }
+            
+            // 显示头像选择
+            avatarSelection.style.display = 'block';
+            document.getElementById('register-submit-btn').textContent = '完成注册';
+            
+            // 如果已经选择了头像，则完成注册并跳转
+            if (document.querySelector('.avatar-option.selected')) {
+                const selectedAvatar = document.querySelector('.avatar-option.selected').getAttribute('data-avatar');
+                handleRegistration(username, selectedAvatar);
+            }
+        });
+        
+        // 头像选择功能
+        const avatarOptions = document.querySelectorAll('.avatar-option');
+        avatarOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                // 移除其他选中状态
+                avatarOptions.forEach(opt => opt.classList.remove('selected'));
+                // 添加当前选中状态
+                this.classList.add('selected');
+                
+                // 如果表单已经验证过，直接完成注册
+                if (avatarSelection.style.display === 'block') {
+                    const username = document.getElementById('username').value.trim();
+                    const selectedAvatar = this.getAttribute('data-avatar');
+                    handleRegistration(username, selectedAvatar);
+                }
+            });
+        });
+        
+        // 登录表单处理 - 修改后的登录逻辑
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('login-username').value.trim();
+            const password = document.getElementById('login-password').value.trim();
+            
+            if (!username) {
+                alert('请输入用户名');
+                return;
+            }
+            
+            if (!password) {
+                alert('请输入密码');
+                return;
+            }
+            
+            // 模拟登录验证过程
+            console.log('正在验证登录信息...');
+            
+            // 这里可以添加实际的登录验证逻辑
+            // 例如：发送请求到服务器验证用户名和密码
+            
+            // 模拟登录成功
+            //alert('登录成功！即将跳转到首页...');
+            
+            // 跳转到首页
+            window.location.href = 'index.html';
+        });
+        
+        // 处理注册完成
+        function handleRegistration(username, avatar) {
+            console.log('注册用户:', username);
+            console.log('选择头像:', avatar);
+            
+            // 这里可以添加实际的注册逻辑
+            // 例如：发送用户数据到服务器
+            
+            alert('注册成功！即将跳转到首页...');
+            
+            // 跳转到首页
+            window.location.href = 'index.html';
+        }
+        
+        // 获取验证码按钮功能
+        const getCodeBtn = document.querySelector('.get-code-btn');
+        getCodeBtn.addEventListener('click', function() {
+            const contactInput = document.getElementById('contact');
+            const contactValue = contactInput.value.trim();
+            
+            if (!contactValue) {
+                alert('请先输入邮箱或手机号');
+                return;
+            }
+            
+            // 模拟发送验证码
+            let countdown = 60;
+            const originalText = this.textContent;
+            this.disabled = true;
+            
+            const timer = setInterval(() => {
+                this.textContent = `${countdown}秒后重试`;
+                countdown--;
+                
+                if (countdown < 0) {
+                    clearInterval(timer);
+                    this.textContent = originalText;
+                    this.disabled = false;
+                }
+            }, 1000);
+            
+            // 模拟验证码（实际应用中不应该这样做）
+            setTimeout(() => {
+                console.log('模拟验证码: 123456');
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

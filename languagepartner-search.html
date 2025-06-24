@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>语e桥 - 语伴搜索</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        
+        :root {
+            --primary: #4361ee;
+            --primary-light: #eef2ff;
+            --secondary: #3ccf91;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --bg-light: #f9fafb;
+            --border-color: #e5e7eb;
+        }
+        
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            padding: 0 20px;
+        }
+        
+        /* 顶部导航栏 - 修复左侧显示问题 */
+        .top-nav {
+            background-color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            position: fixed;
+            width: 100%;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            left: 0; /* 确保导航栏从最左侧开始 */
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin: 0 15px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+            padding: 8px 12px;
+            border-radius: 6px;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .nav-links a.active {
+            color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .nav-links i {
+            margin-right: 8px;
+        }
+        
+        .login-btn {
+            background-color: var(--primary);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .login-btn:hover {
+            background-color: #3051d3;
+            transform: translateY(-2px);
+        }
+
+        /* 下拉菜单 */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            z-index: 1;
+            top: 100%;
+            left: 0;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        
+        .dropdown-content a {
+            color: var(--text-dark);
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: all 0.2s;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: var(--primary-light);
+            color: var(--primary);
+        }
+        
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+        .dropdown-icon {
+            margin-left: 5px;
+            font-size: 12px;
+        }
+        
+        /* 主要内容区域 */
+        .main-content {
+            display: flex;
+            padding-top: 90px;
+            min-height: 100vh;
+            gap: 24px;
+        }
+        
+        /* 搜索过滤器侧边栏 */
+        .filter-sidebar {
+            width: 280px;
+            background-color: white;
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+        
+        .filter-group {
+            margin-bottom: 24px;
+            position: relative; /* 为悬浮框定位 */
+        }
+        
+        .filter-title {
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text-dark);
+        }
+        
+        .filter-title i {
+            margin-right: 10px;
+            color: var(--primary);
+        }
+        
+        .filter-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .filter-option {
+            background-color: var(--bg-light);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative; /* 为悬浮框定位 */
+        }
+        
+        .filter-option:hover {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .filter-option.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        /* 国家选择弹出框 */
+        .country-popup {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 300px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            z-index: 20;
+            display: none;
+            margin-top: 10px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .country-popup.active {
+            display: block;
+        }
+        
+        .country-popup-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--primary);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
+        }
+        
+        .country-list {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .country-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .country-item:hover {
+            background-color: var(--primary-light);
+        }
+        
+        .country-item.selected {
+            background-color: var(--primary-light);
+            color: var(--primary);
+            font-weight: 500;
+        }
+        
+        .country-item:before {
+            content: "•";
+            margin-right: 5px;
+            color: var(--primary);
+        }
+        
+        /* 搜索结果区域 */
+        .search-results {
+            flex: 1;
+        }
+        
+        .search-container {
+            position: relative;
+            margin-bottom: 24px;
+        }
+        
+        .search-bar {
+            display: flex;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: white;
+        }
+        
+        .search-input-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            padding: 5px 10px;
+            gap: 5px;
+        }
+        
+        .search-tag {
+            background-color: var(--primary-light);
+            color: var(--primary);
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            margin: 2px;
+        }
+        
+        .search-tag-remove {
+            margin-left: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .search-input {
+            flex: 1;
+            min-width: 100px;
+            padding: 8px 5px;
+            border: none;
+            font-size: 16px;
+            outline: none;
+        }
+        
+        .search-button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0 24px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .search-button:hover {
+            background-color: #3051d3;
+        }
+        
+        /* 语伴卡片网格 */
+        .partner-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .partner-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
+            border: 1px solid var(--border-color);
+        }
+        
+        .partner-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+            border-color: var(--primary);
+        }
+        
+        .partner-header {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .partner-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--primary-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+            font-size: 24px;
+            color: var(--primary);
+        }
+        
+        .partner-header-info {
+            flex: 1;
+        }
+        
+        .partner-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--text-dark);
+        }
+        
+        .partner-country {
+            display: flex;
+            align-items: center;
+            color: var(--text-light);
+            font-size: 14px;
+        }
+        
+        .partner-country img {
+            width: 20px;
+            height: 14px;
+            margin-right: 6px;
+            border-radius: 2px;
+        }
+        
+        .partner-flag {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 30px;
+            height: 20px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .partner-flag img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .partner-body {
+            padding: 20px;
+        }
+        
+        .partner-info-item {
+            display: flex;
+            margin-bottom: 12px;
+            align-items: center;
+        }
+        
+        .partner-info-icon {
+            width: 24px;
+            color: var(--primary);
+            margin-right: 10px;
+        }
+        
+        .partner-info-text {
+            font-size: 14px;
+            color: var(--text-light);
+        }
+        
+        .partner-languages {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .partner-language {
+            background-color: var(--primary-light);
+            color: var(--primary);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        
+        .partner-language.native {
+            background-color: #e6f7ef;
+            color: var(--secondary);
+        }
+        
+        .partner-language.target {
+            background-color: #fff3e0;
+            color: #f57c00;
+        }
+        
+        .partner-button {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            padding: 10px 0;
+            border-radius: 6px;
+            width: 100%;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 15px; /* 增加与语言信息的间距 */
+        }
+        
+        .partner-button:hover {
+            background-color: #2bb67f;
+            transform: translateY(-2px);
+        }
+        
+        /* 弹窗样式 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal {
+            background-color: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 400px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(20px);
+            transition: all 0.3s;
+        }
+        
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+        
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+        }
+        
+        .modal-content {
+            margin-bottom: 20px;
+            color: var(--text-light);
+            font-size: 15px;
+            line-height: 1.5;
+        }
+        
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        .modal-button {
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .modal-button.cancel {
+            background-color: #f1f5f9;
+            color: var(--text-dark);
+            border: 1px solid #e2e8f0;
+        }
+        
+        .modal-button.confirm {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+        }
+        
+        .modal-button:hover {
+            transform: translateY(-2px);
+        }
+        
+        /* 浮动按钮 */
+        .floating-buttons {
+            position: fixed;
+            right: 30px;
+            bottom: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 90;
+        }
+        
+        .floating-button {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: all 0.3s;
+            color: var(--primary);
+            font-size: 20px;
+        }
+        
+        .floating-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+        
+        .floating-button.home {
+            background-color: #fff8e1;
+            color: #ffa000;
+        }
+        
+        .floating-button.language {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 900px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .filter-sidebar {
+                width: 100%;
+                position: static;
+            }
+            
+            .partner-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+            
+            .country-popup {
+                width: 100%;
+            }
+            
+            .country-list {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .partner-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .top-nav {
+                padding: 12px 15px;
+            }
+            
+            .nav-links li {
+                margin: 0 5px;
+            }
+            
+            .nav-links a {
+                padding: 6px 8px;
+                font-size: 14px;
+            }
+            
+            .login-btn {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+            
+            .floating-buttons {
+                right: 20px;
+                bottom: 20px;
+            }
+            
+            .country-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <nav class="top-nav">
+        <a href="index.html" class="logo">语e桥</a>
+        
+        <ul class="nav-links">
+            <li><a href="index.html"><i class="icon">🏠</i>首页</a></li>
+            <li><a href="languagepartner-search.html" class="active"><i class="icon">👫</i>语伴</a></li>
+            <li class="dropdown">
+                <a href="chat.html"><i class="icon">💬</i>聊天<span class="dropdown-icon">▼</span></a>
+                <div class="dropdown-content">
+                    <a href="ai-chat.html">AI语伴</a>
+                    <a href="chat.html">语伴聊天</a>
+                </div>
+            </li>
+            <li><a href="experiment.html"><i class="icon">🧪</i>实验招募</a></li>
+            <li class="dropdown">
+                <a href="community-resources.html"><i class="icon">📚</i>学习社区<span class="dropdown-icon">▼</span></a>
+                <div class="dropdown-content">
+                    <a href="personal-publish.html">个人发布</a>
+                    <a href="community-resources.html">社区资源</a>
+                    <a href="learningpath.html">学习路径</a>
+                </div>
+            </li>
+            <li><a href="tutor-matching.html"><i class="icon">👥</i>轻辅导</a></li>
+        </ul>
+        
+        <a href="login.html" class="login-btn">登录</a>
+    </nav>
+    
+    <div class="container">
+        <div class="main-content">
+            <!-- 搜索过滤器侧边栏 -->
+            <div class="filter-sidebar">
+                <div class="filter-group">
+                    <div class="filter-title">
+                        <i class="icon">👤</i>性别
+                    </div>
+                    <div class="filter-options">
+                        <button class="filter-option" data-filter="gender" data-value="男">男</button>
+                        <button class="filter-option active" data-filter="gender" data-value="女">女</button>
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <div class="filter-title">
+                        <i class="icon">🕒</i>年龄
+                    </div>
+                    <div class="filter-options">
+                        <button class="filter-option" data-filter="age" data-value="18以下">18以下</button>
+                        <button class="filter-option active" data-filter="age" data-value="18-25">18-25</button>
+                        <button class="filter-option" data-filter="age" data-value="26-35">26-35</button>
+                        <button class="filter-option" data-filter="age" data-value="36-45">36-45</button>
+                        <button class="filter-option" data-filter="age" data-value="45以上">45以上</button>
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <div class="filter-title">
+                        <i class="icon">🌍</i>地区
+                    </div>
+                    <div class="filter-options">
+                        <button class="filter-option continent-option" data-filter="continent" data-value="亚洲" data-continent="asia">亚洲</button>
+                        <button class="filter-option continent-option active" data-filter="continent" data-value="欧洲" data-continent="europe">欧洲</button>
+                        <button class="filter-option continent-option" data-filter="continent" data-value="北美洲" data-continent="namerica">北美洲</button>
+                        <button class="filter-option continent-option" data-filter="continent" data-value="南美洲" data-continent="samerica">南美洲</button>
+                        <button class="filter-option continent-option" data-filter="continent" data-value="非洲" data-continent="africa">非洲</button>
+                        <button class="filter-option continent-option" data-filter="continent" data-value="大洋洲" data-continent="oceania">大洋洲</button>
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <div class="filter-title">
+                        <i class="icon">🗣️</i>语言
+                    </div>
+                    <div class="filter-options">
+                        <button class="filter-option" data-filter="language" data-value="英语">英语</button>
+                        <button class="filter-option" data-filter="language" data-value="日语">日语</button>
+                        <button class="filter-option" data-filter="language" data-value="韩语">韩语</button>
+                        <button class="filter-option active" data-filter="language" data-value="法语">法语</button>
+                        <button class="filter-option" data-filter="language" data-value="德语">德语</button>
+                        <button class="filter-option" data-filter="language" data-value="西班牙语">西班牙语</button>
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <div class="filter-title">
+                        <i class="icon">📊</i>水平
+                    </div>
+                    <div class="filter-options">
+                        <button class="filter-option" data-filter="level" data-value="初级">初级</button>
+                        <button class="filter-option active" data-filter="level" data-value="中级">中级</button>
+                        <button class="filter-option" data-filter="level" data-value="高级">高级</button>
+                        <button class="filter-option" data-filter="level" data-value="母语水平">母语水平</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 搜索结果区域 -->
+            <div class="search-results">
+                <div class="search-container">
+                    <div class="search-bar">
+                        <div class="search-input-wrapper" id="search-input-wrapper">
+                            <!-- 搜索标签会动态添加到这里 -->
+                            <input type="text" class="search-input" placeholder="搜索语伴..." id="search-input">
+                        </div>
+                        <button class="search-button" id="search-button">搜索</button>
+                    </div>
+                    
+                    <!-- 国家选择弹出框 -->
+                    <div class="country-popup" id="country-popup">
+                        <div class="country-popup-title" id="country-popup-title">选择国家</div>
+                        <div class="country-list" id="country-list">
+                            <!-- 国家列表会动态添加到这里 -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="partner-grid" id="partner-grid">
+                    <div class="partner-card" data-gender="女" data-age="30" data-continent="欧洲" data-country="法国" data-language="法语" data-level="中级">
+                        <div class="partner-header">
+                            <div class="partner-avatar">SD</div>
+                            <div class="partner-header-info">
+                                <h3 class="partner-name">Sophie Dupont</h3>
+                                <div class="partner-country">
+                                    <img src="https://iknow-pic.cdn.bcebos.com/3801213fb80e7bec73f363e82c2eb9389b506b89" alt="法国国旗">
+                                    法国
+                                </div>
+                            </div>
+                        </div>
+                        <div class="partner-body">
+                            <div class="partner-info-item">
+                                <div class="partner-info-icon">🕒</div>
+                                <div class="partner-info-text">30岁</div>
+                                <div class="partner-info-icon">👤</div>
+                                <div class="partner-info-text">女</div>
+                            </div>
+                            <div class="partner-languages">
+                                <div class="partner-language native">法语 (母语)</div>
+                                <div class="partner-language target">中文 (学习中)</div>
+                            </div>
+                            <button class="partner-button" data-name="Sophie Dupont" data-avatar="https://via.placeholder.com/60" data-flag="🇫🇷" data-language="法语">成为语伴</button>
+                        </div>
+                    </div>
+                    
+                    <div class="partner-card" data-gender="男" data-age="24" data-continent="北美洲" data-country="美国" data-language="英语" data-level="中级">
+                        <div class="partner-header">
+                            <div class="partner-avatar">JS</div>
+                            <div class="partner-header-info">
+                                <h3 class="partner-name">John Smith</h3>
+                                <div class="partner-country">
+                                    <img src="https://iknow-pic.cdn.bcebos.com/203fb80e7bec54e71ed47a17ba389b504fc26afa" alt="美国国旗">
+                                    美国
+                                </div>
+                            </div>
+                        </div>
+                        <div class="partner-body">
+                            <div class="partner-info-item">
+                                <div class="partner-info-icon">🕒</div>
+                                <div class="partner-info-text">24岁</div>
+                                <div class="partner-info-icon">👤</div>
+                                <div class="partner-info-text">男</div>
+                            </div>
+                            <div class="partner-languages">
+                                <div class="partner-language native">英语 (母语)</div>
+                                <div class="partner-language target">中文 (学习中)</div>
+                            </div>
+                            <button class="partner-button" data-name="John Smith" data-avatar="https://via.placeholder.com/60" data-flag="🇺🇸" data-language="英语">成为语伴</button>
+                        </div>
+                    </div>
+                    
+                    <div class="partner-card" data-gender="男" data-age="27" data-continent="欧洲" data-country="意大利" data-language="意大利语" data-level="初级">
+                        <div class="partner-header">
+                            <div class="partner-avatar">MR</div>
+                            <div class="partner-header-info">
+                                <h3 class="partner-name">Marco Rossi</h3>
+                                <div class="partner-country">
+                                    <img src="https://tu.zhongwen.wiki/images/qiuwenbaike/zh/0/03/Flag_of_Italy.svg" alt="意大利国旗">
+                                    意大利
+                                </div>
+                            </div>
+                        </div>
+                        <div class="partner-body">
+                            <div class="partner-info-item">
+                                <div class="partner-info-icon">🕒</div>
+                                <div class="partner-info-text">27岁</div>
+                                <div class="partner-info-icon">👤</div>
+                                <div class="partner-info-text">男</div>
+                            </div>
+                            <div class="partner-languages">
+                                <div class="partner-language native">意大利语 (母语)</div>
+                                <div class="partner-language target">中文 (学习中)</div>
+                            </div>
+                            <button class="partner-button" data-name="Marco Rossi" data-avatar="https://via.placeholder.com/60" data-flag="🇮🇹" data-language="意大利语">成为语伴</button>
+                        </div>
+                    </div>
+                    
+                    <div class="partner-card" data-gender="男" data-age="32" data-continent="欧洲" data-country="德国" data-language="德语" data-level="高级">
+                        <div class="partner-header">
+                            <div class="partner-avatar">HM</div>
+                            <div class="partner-header-info">
+                                <h3 class="partner-name">Hans Mueller</h3>
+                                <div class="partner-country">
+                                    <img src="https://iknow-pic.cdn.bcebos.com/b999a9014c086e06da735f4201087bf40bd1cbe4" alt="德国国旗">
+                                    德国
+                                </div>
+                            </div>
+                        </div>
+                        <div class="partner-body">
+                            <div class="partner-info-item">
+                                <div class="partner-info-icon">🕒</div>
+                                <div class="partner-info-text">32岁</div>
+                                <div class="partner-info-icon">👤</div>
+                                <div class="partner-info-text">男</div>
+                            </div>
+                            <div class="partner-languages">
+                                <div class="partner-language native">德语 (母语)</div>
+                                <div class="partner-language target">中文 (学习中)</div>
+                            </div>
+                            <button class="partner-button" data-name="Hans Mueller" data-avatar="https://via.placeholder.com/60" data-flag="🇩🇪" data-language="德语">成为语伴</button>
+                        </div>
+                    </div>
+                    
+                    <div class="partner-card" data-gender="女" data-age="22" data-continent="亚洲" data-country="日本" data-language="日语" data-level="高级">
+                        <div class="partner-header">
+                            <div class="partner-avatar">YT</div>
+                            <div class="partner-header-info">
+                                <h3 class="partner-name">山田花子</h3>
+                                <div class="partner-country">
+                                    <img src="https://iknow-pic.cdn.bcebos.com/7acb0a46f21fbe09807fa11d68600c338744ad92" alt="日本国旗">
+                                    日本
+                                </div>
+                            </div>
+                        </div>
+                        <div class="partner-body">
+                            <div class="partner-info-item">
+                                <div class="partner-info-icon">🕒</div>
+                                <div class="partner-info-text">22岁</div>
+                                <div class="partner-info-icon">👤</div>
+                                <div class="partner-info-text">女</div>
+                            </div>
+                            <div class="partner-languages">
+                                <div class="partner-language native">日语 (母语)</div>
+                                <div class="partner-language target">中文 (学习中)</div>
+                            </div>
+                            <button class="partner-button" data-name="山田花子" data-avatar="https://via.placeholder.com/60" data-flag="🇯🇵" data-language="日语">成为语伴</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 浮动按钮 -->
+    <div class="floating-buttons">
+        <a href="index.html" class="floating-button home">🏠</a>
+        <div class="floating-button language">🌐</div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // 获取DOM元素
+            const filterOptions = document.querySelectorAll('.filter-option');
+            const continentOptions = document.querySelectorAll('.continent-option');
+            const searchInput = document.getElementById('search-input');
+            const searchButton = document.getElementById('search-button');
+            const searchInputWrapper = document.getElementById('search-input-wrapper');
+            const partnerGrid = document.getElementById('partner-grid');
+            const partnerCards = document.querySelectorAll('.partner-card');
+            const partnerButtons = document.querySelectorAll('.partner-button');
+            
+            // 当前筛选条件
+            const currentFilters = {
+                gender: '女',
+                age: '18-25',
+                continent: '欧洲',
+                country: '',
+                language: '法语',
+                level: '中级'
+            };
+            
+            // 国家数据
+            const countries = {
+                asia: [
+                    '中国', '日本', '韩国', '印度', '泰国', '越南', '新加坡', '马来西亚', 
+                    '印度尼西亚', '菲律宾', '蒙古', '尼泊尔', '孟加拉国', '斯里兰卡', 
+                    '巴基斯坦', '阿富汗', '伊朗', '伊拉克', '沙特阿拉伯', '阿联酋',
+                    '以色列', '土耳其', '哈萨克斯坦', '乌兹别克斯坦', '塔吉克斯坦'
+                ],
+                europe: [
+                    '法国', '德国', '英国', '意大利', '西班牙', '葡萄牙', '瑞士', '奥地利', 
+                    '荷兰', '比利时', '卢森堡', '瑞典', '挪威', '芬兰', '丹麦', '冰岛', 
+                    '爱尔兰', '波兰', '捷克', '斯洛伐克', '匈牙利', '罗马尼亚', '保加利亚', 
+                    '希腊', '俄罗斯', '乌克兰', '白俄罗斯', '立陶宛', '拉脱维亚', '爱沙尼亚'
+                ],
+                namerica: [
+                    '美国', '加拿大', '墨西哥', '古巴', '牙买加', '巴拿马', '哥斯达黎加', 
+                    '多米尼加共和国', '海地', '巴哈马', '特立尼达和多巴哥', '格林纳达', 
+                    '圣卢西亚', '圣文森特和格林纳丁斯', '巴巴多斯', '安提瓜和巴布达', 
+                    '圣基茨和尼维斯', '萨尔瓦多', '洪都拉斯', '尼加拉瓜', '危地马拉', '伯利兹'
+                ],
+                samerica: [
+                    '巴西', '阿根廷', '智利', '秘鲁', '哥伦比亚', '委内瑞拉', '厄瓜多尔', 
+                    '玻利维亚', '巴拉圭', '乌拉圭', '圭亚那', '苏里南', '法属圭亚那'
+                ],
+                africa: [
+                    '埃及', '南非', '尼日利亚', '肯尼亚', '摩洛哥', '加纳', '埃塞俄比亚', 
+                    '坦桑尼亚', '阿尔及利亚', '突尼斯', '利比亚', '苏丹', '南苏丹', '乌干达', 
+                    '卢旺达', '刚果民主共和国', '刚果共和国', '安哥拉', '纳米比亚', '博茨瓦纳', 
+                    '津巴布韦', '莫桑比克', '马达加斯加', '毛里求斯', '塞舌尔', '喀麦隆', 
+                    '尼日尔', '马里', '塞内加尔', '科特迪瓦', '加蓬'
+                ],
+                oceania: [
+                    '澳大利亚', '新西兰', '斐济', '巴布亚新几内亚', '所罗门群岛', '瓦努阿图', 
+                    '萨摩亚', '基里巴斯', '汤加', '密克罗尼西亚', '马绍尔群岛', '帕劳', '图瓦卢', 
+                    '瑙鲁'
+                ]
+            };
+            
+            
+            // 更新搜索标签
+            function updateSearchTags() {
+                // 清除现有标签，保留搜索输入框
+                const inputField = searchInput;
+                searchInputWrapper.innerHTML = '';
+                searchInputWrapper.appendChild(inputField);
+                
+                // 添加新标签
+                for (const key in currentFilters) {
+                    if (currentFilters[key]) {
+                        const tag = document.createElement('div');
+                        tag.className = 'search-tag';
+                        tag.innerHTML = `${currentFilters[key]} <span class="search-tag-remove" data-filter="${key}">×</span>`;
+                        searchInputWrapper.insertBefore(tag, inputField);
+                    }
+                }
+                
+                // 添加标签删除事件
+                const removeBtns = document.querySelectorAll('.search-tag-remove');
+                removeBtns.forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const filter = this.getAttribute('data-filter');
+                        currentFilters[filter] = '';
+                        
+                        // 取消对应过滤器的选中状态
+                        document.querySelectorAll(`[data-filter="${filter}"].active`).forEach(el => {
+                            el.classList.remove('active');
+                        });
+                        
+                        updateSearchTags();
+                        filterPartners();
+                    });
+                });
+            }
+            
+            // 过滤语伴卡片
+            function filterPartners() {
+                let visibleCount = 0;
+                
+                partnerCards.forEach(card => {
+                    let visible = true;
+                    
+                    // 检查每个筛选条件
+                    for (const key in currentFilters) {
+                        const filterValue = currentFilters[key];
+                        if (!filterValue) continue; // 如果没有设置筛选值，跳过
+            
+                        // 特殊处理年龄范围
+                        if (key === 'age') {
+                            const cardAge = parseInt(card.getAttribute('data-age'));
+                            if (isNaN(cardAge)) {
+                                visible = false;
+                                break;
+                            }
+
+                            // 根据年龄范围筛选
+                            if (filterValue === '18以下' && cardAge >= 18) {
+                                visible = false;
+                                break;
+                            } else if (filterValue === '18-25' && (cardAge < 18 || cardAge > 25)) {
+                                visible = false;
+                                break;
+                            } else if (filterValue === '26-35' && (cardAge < 26 || cardAge > 35)) {
+                                visible = false;
+                                break;
+                            } else if (filterValue === '36-45' && (cardAge < 36 || cardAge > 45)) {
+                                visible = false;
+                                break;
+                            } else if (filterValue === '45以上' && cardAge <= 45) {
+                                visible = false;
+                                break;
+                            }
+                        }
+                        // 特殊处理大洲和国家
+                        else if (key === 'continent' && card.getAttribute('data-country')) {
+                            const country = card.getAttribute('data-country');
+                            const continent = filterValue;
+
+                            // 检查国家是否属于该大洲
+                            let countryInContinent = false;
+                            for (const cont in countries) {
+                                if (cont === getContientCode(continent) && countries[cont].includes(country)) {
+                                    countryInContinent = true;
+                                    break;
+                                }
+                            }
+
+                            if (!countryInContinent) {
+                                visible = false;
+                                break;
+                            }
+                        }
+                        // 其他筛选条件使用精确匹配
+                        else if (card.getAttribute(`data-${key}`) !== filterValue) {
+                            visible = false;
+                            break;
+                        }
+                    }
+                    
+                    // 检查搜索框中的文本
+                    const searchText = searchInput.value.toLowerCase().trim();
+                    if (searchText) {
+                        const name = card.querySelector('.partner-name').textContent.toLowerCase();
+                        const country = card.getAttribute('data-country').toLowerCase();
+                        const language = card.getAttribute('data-language').toLowerCase();
+                        
+                        if (!name.includes(searchText) && !country.includes(searchText) && !language.includes(searchText)) {
+                            visible = false;
+                        }
+                    }
+                    
+                    // 设置卡片显示状态
+                    if (visible) {
+                        card.style.display = '';
+                        visibleCount++;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+                
+                // 如果没有匹配的结果，显示提示
+                if (visibleCount === 0) {
+                    // 检查是否已存在提示元素
+                    let noResultsEl = document.getElementById('no-results');
+                    if (!noResultsEl) {
+                        noResultsEl = document.createElement('div');
+                        noResultsEl.id = 'no-results';
+                        noResultsEl.style.textAlign = 'center';
+                        noResultsEl.style.padding = '30px';
+                        noResultsEl.style.color = '#666';
+                        noResultsEl.style.fontSize = '16px';
+                        partnerGrid.appendChild(noResultsEl);
+                    }
+                    noResultsEl.textContent = '没有找到匹配的语伴，请尝试其他筛选条件';
+                    noResultsEl.style.display = 'block';
+                } else {
+                    // 隐藏提示元素
+                    const noResultsEl = document.getElementById('no-results');
+                    if (noResultsEl) {
+                        noResultsEl.style.display = 'none';
+                    }
+                }
+            }
+            
+            // 获取大洲代码
+            function getContientCode(continentName) {
+                const continentMap = {
+                    '亚洲': 'asia',
+                    '欧洲': 'europe',
+                    '北美洲': 'namerica',
+                    '南美洲': 'samerica',
+                    '非洲': 'africa',
+                    '大洋洲': 'oceania'
+                };
+                return continentMap[continentName] || '';
+            }
+            
+            // 显示国家选择弹出框
+            function showCountryPopup(continent) {
+                const continentCode = getContientCode(continent);
+                if (!continentCode || !countries[continentCode]) return;
+                
+                // 设置标题
+                const countryPopupTitle = document.getElementById('country-popup-title');
+                countryPopupTitle.textContent = `${continent}国家`;
+                
+                // 清空并填充国��列表
+                const countryList = document.getElementById('country-list');
+                countryList.innerHTML = '';
+                countries[continentCode].forEach(country => {
+                    const item = document.createElement('div');
+                    item.className = 'country-item';
+                    if (currentFilters.country === country) {
+                        item.classList.add('selected');
+                    }
+                    item.textContent = country;
+                    item.setAttribute('data-country', country);
+                    countryList.appendChild(item);
+                    
+                    // 添加点击事件
+                    item.addEventListener('click', function() {
+                        const selectedCountry = this.getAttribute('data-country');
+                        currentFilters.country = selectedCountry;
+                        updateSearchTags();
+                        document.getElementById('country-popup').classList.remove('active');
+                        filterPartners();
+                    });
+                });
+                
+                // 显示弹出框
+                const countryPopup = document.getElementById('country-popup');
+                countryPopup.classList.add('active');
+                
+                // 计算弹出框位置
+                const searchBarRect = document.querySelector('.search-bar').getBoundingClientRect();
+                countryPopup.style.top = `${searchBarRect.bottom + window.scrollY}px`;
+                countryPopup.style.left = `${searchBarRect.left}px`;
+                countryPopup.style.width = `${searchBarRect.width}px`;
+            }
+            
+            // 初始化搜索标签
+            updateSearchTags();
+            
+            // 添加过滤器选项的点击事件
+            filterOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const filter = this.getAttribute('data-filter');
+                    const value = this.getAttribute('data-value');
+                    
+                    // 在同一组内切换选中状态
+                    const parent = this.parentElement;
+                    parent.querySelectorAll('.filter-option').forEach(opt => {
+                        opt.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    
+                    // 更新当前筛选条件
+                    currentFilters[filter] = value;
+                    
+                    // 如果是大洲选项，显示国家选择弹出框
+                    if (filter === 'continent') {
+                        showCountryPopup(value);
+                    } else {
+                        // 更新搜索标签
+                        updateSearchTags();
+                        // 过滤语伴
+                        filterPartners();
+                    }
+                });
+            });
+            
+            // 点击页面其他地方关闭国家选择弹出框
+            document.addEventListener('click', function(e) {
+                const countryPopup = document.getElementById('country-popup');
+                if (!e.target.closest('.continent-option') && 
+                    !e.target.closest('#country-popup') && 
+                    countryPopup.classList.contains('active')) {
+                    countryPopup.classList.remove('active');
+                }
+            });
+            
+            // 搜索按钮点击事件
+            searchButton.addEventListener('click', function() {
+                filterPartners();
+            });
+            
+            // 搜索输入框回车事件
+            searchInput.addEventListener('keyup', function(e) {
+                if (e.key === 'Enter') {
+                    filterPartners();
+                }
+            });
+            
+            // 修改语伴按钮点击事件，移除登录检查
+            partnerButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const name = this.getAttribute('data-name');
+                    const avatar = this.getAttribute('data-avatar');
+                    const flag = this.getAttribute('data-flag');
+                    const language = this.getAttribute('data-language');
+                    
+                    // 直接跳转到聊天页面，不检查登录状态
+                    window.location.href = `chat.html?partner=${encodeURIComponent(name)}&avatar=${encodeURIComponent(avatar)}&flag=${encodeURIComponent(flag)}&language=${encodeURIComponent(language)}`;
+                });
+            });
+            
+            // 语言切换按钮点击事件
+            const languageButton = document.querySelector('.floating-button.language');
+            languageButton.addEventListener('click', function() {
+                alert('切换语言功能即将上线');
+            });
+            
+            // 初始过滤
+            filterPartners();
+        });
+
+        // 移除登录按钮相关代码
+        // 将登录按钮改为普通链接
+        const loginBtn = document.getElementById('login-btn');
+        if (loginBtn) {
+            loginBtn.style.display = 'none'; // 隐藏登录按钮
+        }
+    </script>
+</body>
+</html>
+

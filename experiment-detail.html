@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>实验详情 - 语e桥实验招募平台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        
+        :root {
+            --primary: #4361ee;
+            --primary-light: #eef2ff;
+            --secondary: #3ccf91;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --bg-light: #f9fafb;
+            --border-color: #e5e7eb;
+            --experiment-primary: #005792;
+            --experiment-light: #e1f5fe;
+            --warning: #FF4D4F;
+        }
+        
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            padding: 0 20px;
+        }
+        
+        /* 顶部导航栏 */
+        .top-nav {
+            background-color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            position: fixed;
+            width: 100%;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            left: 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin: 0 15px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+            padding: 8px 12px;
+            border-radius: 6px;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .nav-links a.active {
+            color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .nav-links i {
+            margin-right: 8px;
+        }
+        
+        .login-btn {
+            background-color: var(--primary);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .login-btn:hover {
+            background-color: #3051d3;
+            transform: translateY(-2px);
+        }
+        /* 下拉菜单 */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            z-index: 1;
+            top: 100%;
+            left: 0;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        
+        .dropdown-content a {
+            color: var(--text-dark);
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: all 0.2s;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: var(--primary-light);
+            color: var(--primary);
+        }
+        
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+        .dropdown-icon {
+            margin-left: 5px;
+            font-size: 12px;
+        }
+        
+        /* 主要内容区域 */
+        .main-content {
+            display: flex;
+            padding-top: 90px;
+            min-height: 100vh;
+            gap: 24px;
+        }
+        
+        /* 左侧导航栏 */
+        .sidebar {
+            width: 220px;
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+        
+        .sidebar-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--experiment-primary);
+            display: flex;
+            align-items: center;
+        }
+        
+        .sidebar-title i {
+            margin-right: 10px;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 10px;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            border-radius: 6px;
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-menu a:hover {
+            background-color: var(--experiment-light);
+            color: var(--experiment-primary);
+        }
+        
+        .sidebar-menu a.active {
+            background-color: var(--experiment-light);
+            color: var(--experiment-primary);
+        }
+        
+        .sidebar-menu i {
+            margin-right: 10px;
+            color: var(--experiment-primary);
+        }
+        
+        /* 内容区域 */
+        .content-area {
+            flex: 1;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .section-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--experiment-primary);
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 10px;
+        }
+        
+        .more-link {
+            color: var(--experiment-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .more-link i {
+            margin-left: 5px;
+        }
+        
+        /* 实验详情样式 */
+        .experiment-detail {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .detail-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-right: 15px;
+            color: var(--text-dark);
+        }
+        
+        .detail-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            color: white;
+        }
+        
+        .detail-badge.online {
+            background-color: #2196F3;
+        }
+        
+        .detail-badge.offline {
+            background-color: #4CAF50;
+        }
+        
+        .detail-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 15px;
+        }
+        
+        .detail-meta-item {
+            display: flex;
+            align-items: center;
+            font-size: 15px;
+            color: #666;
+        }
+        
+        .detail-meta-item i {
+            margin-right: 8px;
+            color: #666;
+        }
+        
+        .detail-progress {
+            margin: 20px 0;
+        }
+        
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: var(--experiment-primary);
+            border-radius: 4px;
+        }
+        
+        .detail-section {
+            margin-bottom: 25px;
+        }
+        
+        .detail-section-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+            display: flex;
+            align-items: center;
+        }
+        
+        .detail-section-title i {
+            margin-right: 10px;
+            color: var(--experiment-primary);
+        }
+        
+        .detail-description {
+            line-height: 1.6;
+            color: #444;
+            margin-bottom: 20px;
+        }
+        
+        /* 折叠面板 */
+        .accordion {
+            margin-bottom: 20px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .accordion-header {
+            background-color: #f9f9f9;
+            padding: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .accordion-header:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .accordion-content {
+            padding: 15px;
+            display: none;
+            border-top: 1px solid #eee;
+        }
+        
+        .accordion.active .accordion-content {
+            display: block;
+        }
+        
+        .accordion-icon {
+            transition: transform 0.3s;
+        }
+        
+        .accordion.active .accordion-icon {
+            transform: rotate(180deg);
+        }
+        
+        .requirement-item {
+            margin-bottom: 10px;
+            display: flex;
+        }
+        
+        .requirement-label {
+            font-weight: 500;
+            width: 100px;
+            flex-shrink: 0;
+        }
+        
+        .deadline-alert {
+            background-color: #fff2f0;
+            border: 1px solid #ffccc7;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .deadline-alert i {
+            color: var(--warning);
+            margin-right: 10px;
+            font-size: 18px;
+            margin-top: 2px;
+        }
+        
+        .deadline-alert-content h4 {
+            color: var(--warning);
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .deadline-alert-content p {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .detail-payment {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .payment-icon {
+            font-size: 24px;
+            color: var(--experiment-primary);
+            margin-right: 15px;
+        }
+        
+        .payment-amount {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--experiment-primary);
+            margin-right: 10px;
+        }
+        
+        .payment-extra {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .detail-contact {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        
+        .contact-icon {
+            font-size: 20px;
+            color: #666;
+            margin-right: 15px;
+        }
+        
+        .contact-email {
+            margin-right: 15px;
+            font-weight: 500;
+        }
+        
+        .copy-btn {
+            padding: 6px 12px;
+            background-color: #f0f0f0;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+        }
+        
+        .copy-btn:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .copy-btn i {
+            margin-right: 5px;
+        }
+        
+        .signup-btn {
+            display: block;
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto;
+            padding: 15px;
+            background-color: var(--experiment-primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .signup-btn:hover {
+            background-color: #004a7c;
+        }
+        
+        .signup-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .detail-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        /* 模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 25px;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .modal-body {
+            margin-bottom: 20px;
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        .modal-btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .modal-btn.primary {
+            background-color: var(--experiment-primary);
+            color: white;
+        }
+        
+        .modal-btn.primary:hover {
+            background-color: #004a7c;
+        }
+        
+        .modal-btn.secondary {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        
+        .modal-btn.secondary:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .consent-checkbox {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+        
+        .consent-checkbox input {
+            margin-right: 10px;
+            margin-top: 3px;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 900px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                position: static;
+                margin-bottom: 20px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .detail-title {
+                font-size: 24px;
+            }
+            
+            .detail-meta {
+                gap: 15px;
+            }
+            
+            .payment-amount {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <a href="index.html" class="logo">语e桥</a>
+        
+        <ul class="nav-links">
+            <li><a href="index.html"><i class="icon">🏠</i>首页</a></li>
+            <li><a href="languagepartner-search.html"><i class="icon">👫</i>语伴</a></li>
+            <li class="dropdown">
+                <a href="chat.html"><i class="icon">💬</i>聊天<span class="dropdown-icon">▼</span></a>
+                <div class="dropdown-content">
+                    <a href="ai-chat.html">AI语伴</a>
+                    <a href="chat.html">语伴聊天</a>
+                </div>
+            </li>
+            <li><a href="experiment.html" class="active"><i class="icon">🧪</i>实验招募</a></li>
+            <li class="dropdown">
+                <a href="community-resources.html"><i class="icon">📚</i>学习社区<span class="dropdown-icon">▼</span></a>
+                <div class="dropdown-content">
+                    <a href="personal-publish.html">个人发布</a>
+                    <a href="community-resources.html">社区资源</a>
+                    <a href="learningpath.html">学习路径</a>
+                </div>
+            </li>
+            <li><a href="tutor-matching.html"><i class="icon">👥</i>轻辅导</a></li>
+        </ul>
+        
+        <a href="login.html" class="login-btn">登录</a>
+    </nav>
+    
+    <div class="container">
+        <div class="main-content">
+            <!-- 左侧导航栏 -->
+            <div class="sidebar">
+                <h2 class="sidebar-title"><i>🧪</i>实验招募</h2>
+                <ul class="sidebar-menu">
+                    <li><a href="experiment.html"><i>🔍</i>被试检索</a></li>
+                    <li><a href="experiment-detail.html" class="active"><i>📋</i>实验详情</a></li>
+                    <li><a href="publish-experiment.html"><i>📝</i>主试发布</a></li>
+                    <li><a href="my-profile.html"><i>👤</i>个人信息</a></li>
+                </ul>
+            </div>
+            
+            <!-- 内容区域 -->
+            <div class="content-area">
+                <div class="section-header">
+                    <h2 class="section-title"><i>📋</i>实验详情</h2>
+                    <a href="experiment.html" class="more-link">返回列表<i>→</i></a>
+                </div>
+                
+                <div class="experiment-detail">
+                    <!-- 实验标题 -->
+                    <div class="detail-header">
+                        <h1 class="detail-title">汉语二语学习者语音感知实验</h1>
+                        <span class="detail-badge online">线上实验</span>
+                    </div>
+                    
+                    <!-- 实验元数据 -->
+                    <div class="detail-meta">
+                        <div class="detail-meta-item">
+                            <i>👥</i>
+                            <span>已报名: 15/30人</span>
+                        </div>
+                        <div class="detail-meta-item">
+                            <i>📅</i>
+                            <span>截止日期: 2025-05-15</span>
+                        </div>
+                        <div class="detail-meta-item">
+                            <i>⏱️</i>
+                            <span>时长: 约40分钟</span>
+                        </div>
+                    </div>
+                    
+                    <!-- 进度条 -->
+                    <div class="detail-progress">
+                        <div class="progress-header">
+                            <span>招募进度</span>
+                            <span>15/30</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 50%;"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- 实验要求（折叠面板） -->
+                    <div class="accordion" id="requirementsAccordion">
+                        <div class="accordion-header">
+                            <span>实验要求</span>
+                            <i>⬇️</i>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="requirement-item">
+                                <div class="requirement-label">国籍:</div>
+                                <div>美国, 英国, 加拿大</div>
+                            </div>
+                            <div class="requirement-item">
+                                <div class="requirement-label">母语:</div>
+                                <div>英语</div>
+                            </div>
+                            <div class="requirement-item">
+                                <div class="requirement-label">HSK等级:</div>
+                                <div>4级或以上</div>
+                            </div>
+                            <div class="requirement-item">
+                                <div class="requirement-label">年龄范围:</div>
+                                <div>18-30岁</div>
+                            </div>
+                            <div class="requirement-item">
+                                <div class="requirement-label">其他要求:</div>
+                                <div>需要有基本的汉语听力能力，能够区分不同的声调。</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 截止时间提醒 -->
+                    <div class="deadline-alert">
+                        <i>⚠️</i>
+                        <div class="deadline-alert-content">
+                            <h4>招募即将截止</h4>
+                            <p>该实验将在 15 天后结束招募，请尽快报名。</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 实验简介 -->
+                    <div class="detail-section">
+                        <h2 class="detail-section-title"><i>ℹ️</i>实验简介</h2>
+                        <p class="detail-description">
+                            本实验旨在研究非汉语母语者对汉语声调的感知能力。参与者需要完成一系列听辨任务，判断所听到的汉语音节的声调类型。实验全程约40分钟，将通过在线平台进行。
+                        </p>
+                        <p class="detail-description">
+                            您将听到一系列汉语单音节词，需要判断每个音节的声调（一声、二声、三声或四声）。实验分为训练阶段和测试阶段，训练阶段会提供反馈，测试阶段不提供反馈。
+                        </p>
+                        <p class="detail-description">
+                            参与本实验不需要特殊设备，只需要一台电脑和耳机。请确保您在安静的环境中进行实验，以便能够清晰地听到声音。
+                        </p>
+                    </div>
+                    
+                    <!-- 酬劳详情 -->
+                    <div class="detail-payment">
+                        <i class="payment-icon">💰</i>
+                        <div>
+                            <span class="payment-amount">¥30</span>
+                            <span class="payment-extra">完成额外任务可获得10元奖励</span>
+                        </div>
+                    </div>
+                    
+                    <!-- 联系方式 -->
+                    <div class="detail-contact">
+                        <i class="contact-icon">✉️</i>
+                        <span class="contact-email">zhang@bnu.edu.cn</span>
+                        <button class="copy-btn" id="copyBtn">
+                            <i>📋</i>复制
+                        </button>
+                    </div>
+                    
+                    <!-- 报名按钮 -->
+                    <button class="signup-btn" id="signupBtn">立即报名</button>
+                    
+                    <!-- 实验者信息 -->
+                    <div class="detail-footer">
+                        <p>实验负责人: 张教授</p>
+                        <p>某某大学语言科学院</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 知情同意书模态框 -->
+    <div class="modal" id="consentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">实验知情同意书</h3>
+                <button class="modal-close" id="closeModal">×</button>
+            </div>
+            <div class="modal-body">
+                <h4 style="margin-bottom: 10px;">实验目的</h4>
+                <p style="margin-bottom: 15px;">本实验旨在研究汉语二语学习者语音感知相关的语言学习过程。您的参与将有助于我们更好地理解语言学习的机制和规律。</p>
+                
+                <h4 style="margin-bottom: 10px;">实验流程</h4>
+                <p style="margin-bottom: 15px;">实验预计耗时40分钟。您将被要求完成一系列听辨任务，判断所听到的汉语音节的声调类型。</p>
+                
+                <h4 style="margin-bottom: 10px;">风险与不适</h4>
+                <p style="margin-bottom: 15px;">本实验不涉及任何身体或心理风险。如果您在实验过程中感到疲劳或不适，可以随时休息或退出实验。</p>
+                
+                <h4 style="margin-bottom: 10px;">数据保密</h4>
+                <p style="margin-bottom: 15px;">您的个人信息和实验数据将被严格保密，仅用于学术研究目的。在发表研究成果时，我们不会披露任何可能识别您身份的信息。</p>
+                
+                <h4 style="margin-bottom: 10px;">自愿参与</h4>
+                <p style="margin-bottom: 15px;">您的参与完全是自愿的。您有权在任何时候退出实验，且不会因此受到任何惩罚或损失应得的利益。</p>
+                
+                <h4 style="margin-bottom: 10px;">酬劳</h4>
+                <p style="margin-bottom: 15px;">完成实验后，您将获得¥30的酬劳，完成额外任务可获得10元奖励。</p>
+                
+                <h4 style="margin-bottom: 10px;">联系方式</h4>
+                <p style="margin-bottom: 15px;">如有任何问题或疑虑，请联系实验负责人：张教授（zhang@bnu.edu.cn）。</p>
+                
+                <div class="consent-checkbox">
+                    <input type="checkbox" id="consentCheck">
+                    <label for="consentCheck">我已阅读并同意上述知情同意书的内容</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn secondary" id="cancelBtn">取消</button>
+                <button class="modal-btn primary" id="confirmBtn">确认报名</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 折叠面板
+        document.getElementById('requirementsAccordion').addEventListener('click', function() {
+            this.classList.toggle('active');
+        });
+        
+        // 复制联系方式
+        document.getElementById('copyBtn').addEventListener('click', function() {
+            const email = 'zhang@bnu.edu.cn';
+            navigator.clipboard.writeText(email).then(() => {
+                this.innerHTML = '<i>✓</i>已复制';
+                setTimeout(() => {
+                    this.innerHTML = '<i>📋</i>复制';
+                }, 2000);
+            });
+        });
+        
+        // 报名按钮
+        document.getElementById('signupBtn').addEventListener('click', function() {
+            document.getElementById('consentModal').classList.add('active');
+        });
+        
+        // 关闭模态框
+        document.getElementById('closeModal').addEventListener('click', function() {
+            document.getElementById('consentModal').classList.remove('active');
+        });
+        
+        document.getElementById('cancelBtn').addEventListener('click', function() {
+            document.getElementById('consentModal').classList.remove('active');
+        });
+        
+        // 确认报名
+        document.getElementById('confirmBtn').addEventListener('click', function() {
+            const consentChecked = document.getElementById('consentCheck').checked;
+            
+            if (!consentChecked) {
+                alert('请阅读并同意知情同意书');
+                return;
+            }
+            
+            // 这里应该发送报名请求到服务器
+            alert('报名成功！实验者将会通过邮件联系您。');
+            document.getElementById('consentModal').classList.remove('active');
+        });
+    </script>
+</body>
+</html>

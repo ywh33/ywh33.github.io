@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>语e桥 - 实验招募平台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        
+        :root {
+            --primary: #4361ee;
+            --primary-light: #eef2ff;
+            --secondary: #3ccf91;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --bg-light: #f9fafb;
+            --border-color: #e5e7eb;
+            --experiment-primary: #4361ee;
+            --experiment-light: #eef2ff;
+            --warning: #FF4D4F;
+        }
+        
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            padding: 0 20px;
+        }
+        
+        /* 顶部导航栏 */
+        .top-nav {
+            background-color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            position: fixed;
+            width: 100%;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            left: 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin: 0 15px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+            padding: 8px 12px;
+            border-radius: 6px;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .nav-links a.active {
+            color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .nav-links i {
+            margin-right: 8px;
+        }
+        
+        .login-btn {
+            background-color: var(--primary);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .login-btn:hover {
+            background-color: #3051d3;
+            transform: translateY(-2px);
+        }
+        
+        /* 下拉菜单 */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            z-index: 1;
+            top: 100%;
+            left: 0;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        
+        .dropdown-content a {
+            color: var(--text-dark);
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: all 0.2s;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: var(--primary-light);
+            color: var(--primary);
+        }
+        
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+        .dropdown-icon {
+            margin-left: 5px;
+            font-size: 12px;
+        }
+
+        /* 主要内容区域 */
+        .main-content {
+            display: flex;
+            padding-top: 90px;
+            min-height: 100vh;
+            gap: 24px;
+        }
+        
+        /* 左侧导航栏 */
+        .sidebar {
+            width: 220px;
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+        
+        .sidebar-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--experiment-primary);
+            display: flex;
+            align-items: center;
+        }
+        
+        .sidebar-title i {
+            margin-right: 10px;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 10px;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            border-radius: 6px;
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-menu a:hover {
+            background-color: var(--experiment-light);
+            color: var(--experiment-primary);
+        }
+        
+        .sidebar-menu a.active {
+            background-color: var(--experiment-light);
+            color: var(--experiment-primary);
+        }
+        
+        .sidebar-menu i {
+            margin-right: 10px;
+            color: var(--experiment-primary);
+        }
+        
+        /* 内容区域 */
+        .content-area {
+            flex: 1;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .section-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--experiment-primary);
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 10px;
+        }
+        
+        .more-link {
+            color: var(--experiment-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .more-link i {
+            margin-left: 5px;
+        }
+        
+        /* 筛选区 */
+        .filter-section {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        /* 新的筛选样式 - 类似语伴搜索页面 */
+        .filter-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        .filter-title {
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text-dark);
+        }
+        
+        .filter-title i {
+            margin-right: 10px;
+            color: var(--experiment-primary);
+        }
+        
+        .filter-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .filter-option {
+            background-color: var(--bg-light);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+        
+        .filter-option:hover {
+            border-color: var(--experiment-primary);
+            background-color: var(--experiment-light);
+        }
+        
+        .filter-option.active {
+            background-color: var(--experiment-primary);
+            color: white;
+            border-color: var(--experiment-primary);
+        }
+        
+        /* 搜索栏 */
+        .search-container {
+            margin-bottom: 20px;
+        }
+        
+        .search-bar {
+            display: flex;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: white;
+        }
+        
+        .search-input-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 12px 5px;
+            border: none;
+            font-size: 16px;
+            outline: none;
+        }
+        
+        .search-button {
+            background-color: var(--experiment-primary);
+            color: white;
+            border: none;
+            padding: 0 24px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .search-button:hover {
+            background-color: #3051d3;
+        }
+        
+        /* 实验列表 */
+        .experiment-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .experiment-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            border: 1px solid var(--border-color);
+        }
+        
+        .experiment-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-color: var(--experiment-primary);
+        }
+        
+        .experiment-card.disabled {
+            opacity: 0.7;
+        }
+        
+        .experiment-card.disabled::after {
+            content: "不符合条件";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            color: #666;
+            z-index: 2;
+        }
+        
+        .experiment-card.ended::after {
+            content: "已结束";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            color: #666;
+            z-index: 2;
+        }
+        
+        .experiment-header {
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .experiment-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-right: 10px;
+            line-height: 1.4;
+        }
+        
+        .experiment-badge {
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            color: white;
+            background-color: #4CAF50;
+            white-space: nowrap;
+        }
+        
+        .experiment-badge.online {
+            background-color: #2196F3;
+        }
+        
+        .experiment-badge.offline {
+            background-color: #4CAF50;
+        }
+        
+        .experiment-badge.ended {
+            background-color: #9e9e9e;
+        }
+        
+        .experiment-content {
+            padding: 15px;
+        }
+        
+        .experiment-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .experiment-participants {
+            display: flex;
+            align-items: center;
+        }
+        
+        .experiment-participants i {
+            margin-right: 5px;
+            color: #666;
+        }
+        
+        .progress-bar {
+            height: 6px;
+            background-color: #e0e0e0;
+            border-radius: 3px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: var(--experiment-primary);
+            border-radius: 3px;
+        }
+        
+        .experiment-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .experiment-price {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--experiment-primary);
+        }
+        
+        .experiment-deadline {
+            display: flex;
+            align-items: center;
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .experiment-deadline i {
+            margin-right: 5px;
+        }
+        
+        .experiment-deadline.urgent {
+            color: var(--warning);
+        }
+        
+        .experiment-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-top: 15px;
+            background-color: var(--experiment-primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        
+        .experiment-btn:hover {
+            background-color: #3051d3;
+        }
+        
+        .experiment-card.disabled .experiment-btn,
+        .experiment-card.ended .experiment-btn {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 900px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                position: static;
+                margin-bottom: 20px;
+            }
+            
+            .experiment-cards {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .experiment-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .top-nav {
+                padding: 12px 15px;
+            }
+            
+            .nav-links li {
+                margin: 0 5px;
+            }
+            
+            .nav-links a {
+                padding: 6px 8px;
+                font-size: 14px;
+            }
+            
+            .login-btn {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <a href="index2.html" class="logo">语e桥</a>
+        
+        <ul class="nav-links">
+            <li><a href="index.html"><i class="icon">🏠</i>首页</a></li>
+            <li><a href="languagepartner-search.html"><i class="icon">👫</i>语伴</a></li>
+            <li class="dropdown">
+                <a href="chat.html"><i class="icon">💬</i>聊天<span class="dropdown-icon">▼</span></a>
+                <div class="dropdown-content">
+                    <a href="ai-chat.html">AI语伴</a>
+                    <a href="chat.html">语伴聊天</a>
+                </div>
+            </li>
+            <li><a href="experiment.html" class="active"><i class="icon">🧪</i>实验招募</a></li>
+            <li class="dropdown">
+                <a href="community-resources.html"><i class="icon">📚</i>学习社区<span class="dropdown-icon">▼</span></a>
+                <div class="dropdown-content">
+                    <a href="personal-publish.html">个人发布</a>
+                    <a href="community-resources.html">社区资源</a>
+                    <a href="learningpath.html">学习路径</a>
+                </div>
+            </li>
+            <li><a href="tutor-matching.html"><i class="icon">👥</i>轻辅导</a></li>
+        </ul>
+        
+        <a href="login.html" class="login-btn">登录</a>
+    </nav>
+    
+    <div class="container">
+        <div class="main-content">
+            <!-- 左侧导航栏 -->
+            <div class="sidebar">
+                <h2 class="sidebar-title"><i>🧪</i>实验招募</h2>
+                <ul class="sidebar-menu">
+                    <li><a href="experiment.html" class="active"><i>🔍</i>被试检索</a></li>
+                    <li><a href="experiment-detail.html"><i>📋</i>实验详情</a></li>
+                    <li><a href="publish-experiment.html"><i>📝</i>主试发布</a></li>
+                    <li><a href="my-profile.html"><i>👤</i>个人信息</a></li>
+                </ul>
+            </div>
+            
+            <!-- 内容区域 -->
+            <div class="content-area">
+                <div class="section-header">
+                    <h2 class="section-title"><i>🔍</i>被试检索</h2>
+                    <a href="#" class="more-link">更多<i>→</i></a>
+                </div>
+                
+                <!-- 搜索栏 -->
+                <div class="search-container">
+                    <div class="search-bar">
+                        <div class="search-input-wrapper">
+                            <input type="text" class="search-input" placeholder="搜索实验标题、关键词..." id="searchInput">
+                        </div>
+                        <button class="search-button" id="searchButton">搜索</button>
+                    </div>
+                </div>
+                
+                <!-- 筛选区 - 新的样式 -->
+                <div class="filter-section">
+                    <!-- 性别筛选 -->
+                    <div class="filter-group">
+                        <div class="filter-title">
+                            <i>👤</i>性别要求
+                        </div>
+                        <div class="filter-options" data-filter="gender">
+                            <button class="filter-option active" data-value="all">不限</button>
+                            <button class="filter-option" data-value="male">男</button>
+                            <button class="filter-option" data-value="female">女</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 年龄筛选 -->
+                    <div class="filter-group">
+                        <div class="filter-title">
+                            <i>🕒</i>年龄范围
+                        </div>
+                        <div class="filter-options" data-filter="age">
+                            <button class="filter-option active" data-value="all">不限</button>
+                            <button class="filter-option" data-value="0-18">18以下</button>
+                            <button class="filter-option" data-value="18-25">18-25</button>
+                            <button class="filter-option" data-value="26-35">26-35</button>
+                            <button class="filter-option" data-value="36-45">36-45</button>
+                            <button class="filter-option" data-value="45+">45以上</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 地区筛选 -->
+                    <div class="filter-group">
+                        <div class="filter-title">
+                            <i>🌍</i>地区
+                        </div>
+                        <div class="filter-options" data-filter="continent">
+                            <button class="filter-option active" data-value="all">不限</button>
+                            <button class="filter-option" data-value="asia">亚洲</button>
+                            <button class="filter-option" data-value="europe">欧洲</button>
+                            <button class="filter-option" data-value="namerica">北美洲</button>
+                            <button class="filter-option" data-value="samerica">南美洲</button>
+                            <button class="filter-option" data-value="africa">非洲</button>
+                            <button class="filter-option" data-value="oceania">大洋洲</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 语言筛选 -->
+                    <div class="filter-group">
+                        <div class="filter-title">
+                            <i>🗣️</i>母语
+                        </div>
+                        <div class="filter-options" data-filter="language">
+                            <button class="filter-option active" data-value="all">不限</button>
+                            <button class="filter-option" data-value="english">英语</button>
+                            <button class="filter-option" data-value="french">法语</button>
+                            <button class="filter-option" data-value="german">德语</button>
+                            <button class="filter-option" data-value="spanish">西班牙语</button>
+                            <button class="filter-option" data-value="italian">意大利语</button>
+                            <button class="filter-option" data-value="russian">俄语</button>
+                            <button class="filter-option" data-value="japanese">日语</button>
+                            <button class="filter-option" data-value="korean">韩语</button>
+                        </div>
+                    </div>
+                    
+                    <!-- HSK等级筛选 -->
+                    <div class="filter-group">
+                        <div class="filter-title">
+                            <i>📊</i>HSK等级
+                        </div>
+                        <div class="filter-options" data-filter="hsk">
+                            <button class="filter-option active" data-value="all">不限</button>
+                            <button class="filter-option" data-value="1">1级</button>
+                            <button class="filter-option" data-value="2">2级</button>
+                            <button class="filter-option" data-value="3">3级</button>
+                            <button class="filter-option" data-value="4">4级</button>
+                            <button class="filter-option" data-value="5">5级</button>
+                            <button class="filter-option" data-value="6">6级</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 实验类型筛选 -->
+                    <div class="filter-group">
+                        <div class="filter-title">
+                            <i>🧪</i>实验类型
+                        </div>
+                        <div class="filter-options" data-filter="type">
+                            <button class="filter-option active" data-value="all">不限</button>
+                            <button class="filter-option" data-value="online">线上实验</button>
+                            <button class="filter-option" data-value="offline">线下实验</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 酬劳筛选 -->
+                    <div class="filter-group">
+                        <div class="filter-title">
+                            <i>💰</i>实验酬劳
+                        </div>
+                        <div class="filter-options" data-filter="payment">
+                            <button class="filter-option active" data-value="all">不限</button>
+                            <button class="filter-option" data-value="0-10">0-10元</button>
+                            <button class="filter-option" data-value="10-30">10-30元</button>
+                            <button class="filter-option" data-value="30-50">30-50元</button>
+                            <button class="filter-option" data-value="50+">50元以上</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 实验列表 -->
+                <div class="experiment-cards" id="experimentList">
+                    <!-- 实验卡片1 -->
+                    <div class="experiment-card" data-gender="all" data-age="18-25,26-35" data-continent="europe,namerica" data-language="english" data-hsk="4,5,6" data-type="online" data-payment="30-50">
+                        <div class="experiment-header">
+                            <h3 class="experiment-title">汉语二语学习者语音感知实验</h3>
+                            <span class="experiment-badge online">线上</span>
+                        </div>
+                        <div class="experiment-content">
+                            <div class="experiment-info">
+                                <div class="experiment-participants">
+                                    <i>👥</i> 15/30人
+                                </div>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 50%;"></div>
+                            </div>
+                            <div class="experiment-footer">
+                                <div class="experiment-price">¥30</div>
+                                <div class="experiment-deadline">
+                                    <i>⏱️</i> 剩余15天
+                                </div>
+                            </div>
+                            <a href="experiment-detail.html?id=1" class="experiment-btn">查看详情</a>
+                        </div>
+                    </div>
+                    
+                    <!-- 实验卡片2 -->
+                    <div class="experiment-card" data-gender="all" data-age="18-25,26-35" data-continent="europe,namerica" data-language="english,french" data-hsk="4,5,6" data-type="offline" data-payment="50+">
+                        <div class="experiment-header">
+                            <h3 class="experiment-title">汉语声调习得研究</h3>
+                            <span class="experiment-badge offline">线下</span>
+                        </div>
+                        <div class="experiment-content">
+                            <div class="experiment-info">
+                                <div class="experiment-participants">
+                                    <i>👥</i> 8/20人
+                                </div>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 40%;"></div>
+                            </div>
+                            <div class="experiment-footer">
+                                <div class="experiment-price">¥50</div>
+                                <div class="experiment-deadline">
+                                    <i>⏱️</i> 剩余20天
+                                </div>
+                            </div>
+                            <a href="experiment-detail.html?id=2" class="experiment-btn">查看详情</a>
+                        </div>
+                    </div>
+                    
+                    <!-- 实验卡片3 -->
+                    <div class="experiment-card" data-gender="all" data-age="18-25,26-35,36-45" data-continent="asia,europe" data-language="english,japanese,korean" data-hsk="3,4,5" data-type="online" data-payment="10-30">
+                        <div class="experiment-header">
+                            <h3 class="experiment-title">汉语语法结构理解测试</h3>
+                            <span class="experiment-badge online">线上</span>
+                        </div>
+                        <div class="experiment-content">
+                            <div class="experiment-info">
+                                <div class="experiment-participants">
+                                    <i>👥</i> 22/25人
+                                </div>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 88%;"></div>
+                            </div>
+                            <div class="experiment-footer">
+                                <div class="experiment-price">¥25</div>
+                                <div class="experiment-deadline urgent">
+                                    <i>⏱️</i> 剩余3天
+                                </div>
+                            </div>
+                            <a href="experiment-detail.html?id=3" class="experiment-btn">查看详情</a>
+                        </div>
+                    </div>
+                    
+                    <!-- 实验卡片4 (已结束) -->
+                    <div class="experiment-card ended" data-gender="all" data-age="18-25" data-continent="asia" data-language="japanese,korean" data-hsk="2,3" data-type="online" data-payment="10-30">
+                        <div class="experiment-header">
+                            <h3 class="experiment-title">汉字识别与记忆研究</h3>
+                            <span class="experiment-badge ended">已结束</span>
+                        </div>
+                        <div class="experiment-content">
+                            <div class="experiment-info">
+                                <div class="experiment-participants">
+                                    <i>👥</i> 40/40人
+                                </div>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 100%;"></div>
+                            </div>
+                            <div class="experiment-footer">
+                                <div class="experiment-price">¥20</div>
+                                <div class="experiment-deadline">
+                                    <i>⏱️</i> 已结束
+                                </div>
+                            </div>
+                            <a href="experiment-detail.html?id=4" class="experiment-btn">查看详情</a>
+                        </div>
+                    </div>
+                    
+                    <!-- 实验卡片5 -->
+                    <div class="experiment-card" data-gender="all" data-age="18-25,26-35,36-45" data-continent="europe" data-language="english,french,german" data-hsk="5,6" data-type="offline" data-payment="50+">
+                        <div class="experiment-header">
+                            <h3 class="experiment-title">中文阅读理解能力测试</h3>
+                            <span class="experiment-badge offline">线下</span>
+                        </div>
+                        <div class="experiment-content">
+                            <div class="experiment-info">
+                                <div class="experiment-participants">
+                                    <i>👥</i> 5/15人
+                                </div>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 33%;"></div>
+                            </div>
+                            <div class="experiment-footer">
+                                <div class="experiment-price">¥60</div>
+                                <div class="experiment-deadline">
+                                    <i>⏱️</i> 剩余25天
+                                </div>
+                            </div>
+                            <a href="experiment-detail.html?id=5" class="experiment-btn">查看详情</a>
+                        </div>
+                    </div>
+                    
+                    <!-- 实验卡片6 -->
+                    <div class="experiment-card" data-gender="female" data-age="18-25" data-continent="asia" data-language="japanese,korean" data-hsk="3,4" data-type="online" data-payment="30-50">
+                        <div class="experiment-header">
+                            <h3 class="experiment-title">汉语词汇习得研究</h3>
+                            <span class="experiment-badge online">线上</span>
+                        </div>
+                        <div class="experiment-content">
+                            <div class="experiment-info">
+                                <div class="experiment-participants">
+                                    <i>👥</i> 12/30人
+                                </div>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 40%;"></div>
+                            </div>
+                            <div class="experiment-footer">
+                                <div class="experiment-price">¥35</div>
+                                <div class="experiment-deadline">
+                                    <i>⏱️</i> 剩余18天
+                                </div>
+                            </div>
+                            <a href="experiment-detail.html?id=6" class="experiment-btn">查看详情</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 当前筛选条件
+        const currentFilters = {
+            gender: 'all',
+            age: 'all',
+            continent: 'all',
+            language: 'all',
+            hsk: 'all',
+            type: 'all',
+            payment: 'all'
+        };
+        
+        // 筛选选项点击事件
+        const filterOptions = document.querySelectorAll('.filter-option');
+        filterOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                const filterGroup = this.parentElement;
+                const filterType = filterGroup.getAttribute('data-filter');
+                const filterValue = this.getAttribute('data-value');
+                
+                // 更新当前筛选条件
+                currentFilters[filterType] = filterValue;
+                
+                // 更新选中状态
+                filterGroup.querySelectorAll('.filter-option').forEach(opt => {
+                    opt.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // 应用筛选
+                applyFilters();
+            });
+        });
+        
+        // 搜索按钮点击事件
+        document.getElementById('searchButton').addEventListener('click', function() {
+            applyFilters();
+        });
+        
+        // 搜索输入框回车事件
+        document.getElementById('searchInput').addEventListener('keyup', function(e) {
+            if (e.key === 'Enter') {
+                applyFilters();
+            }
+        });
+        
+        // 应用筛选函数
+        function applyFilters() {
+            const searchText = document.getElementById('searchInput').value.toLowerCase();
+            const experimentCards = document.querySelectorAll('.experiment-card');
+            
+            experimentCards.forEach(card => {
+                let visible = true;
+                
+                // 检查搜索文本
+                if (searchText) {
+                    const title = card.querySelector('.experiment-title').textContent.toLowerCase();
+                    if (!title.includes(searchText)) {
+                        visible = false;
+                    }
+                }
+                
+                // 检查性别筛选
+                if (currentFilters.gender !== 'all') {
+                    const cardGender = card.getAttribute('data-gender');
+                    if (cardGender !== currentFilters.gender && cardGender !== 'all') {
+                        visible = false;
+                    }
+                }
+                
+                // 检查年龄筛选
+                if (currentFilters.age !== 'all') {
+                    const cardAges = card.getAttribute('data-age').split(',');
+                    if (!cardAges.includes(currentFilters.age)) {
+                        visible = false;
+                    }
+                }
+                
+                // 检查地区筛选
+                if (currentFilters.continent !== 'all') {
+                    const cardContinents = card.getAttribute('data-continent').split(',');
+                    if (!cardContinents.includes(currentFilters.continent)) {
+                        visible = false;
+                    }
+                }
+                
+                // 检查语言筛选
+                if (currentFilters.language !== 'all') {
+                    const cardLanguages = card.getAttribute('data-language').split(',');
+                    if (!cardLanguages.includes(currentFilters.language)) {
+                        visible = false;
+                    }
+                }
+                
+                // 检查HSK等级筛选
+                if (currentFilters.hsk !== 'all') {
+                    const cardHSK = card.getAttribute('data-hsk').split(',');
+                    if (!cardHSK.includes(currentFilters.hsk)) {
+                        visible = false;
+                    }
+                }
+                
+                // 检查实验类型筛选
+                if (currentFilters.type !== 'all') {
+                    const cardType = card.getAttribute('data-type');
+                    if (cardType !== currentFilters.type) {
+                        visible = false;
+                    }
+                }
+                
+                // 检查酬劳筛选
+                if (currentFilters.payment !== 'all') {
+                    const cardPayment = card.getAttribute('data-payment');
+                    if (cardPayment !== currentFilters.payment) {
+                        visible = false;
+                    }
+                }
+                
+                // 设置卡片显示状态
+                if (visible) {
+                    card.style.display = '';
+                    card.classList.remove('disabled');
+                } else {
+                    card.style.display = 'none';
+                    card.classList.add('disabled');
+                }
+            });
+            
+            // 检查是否有可见的卡片
+            const visibleCards = document.querySelectorAll('.experiment-card[style=""]');
+            if (visibleCards.length === 0) {
+                // 如果没有可见卡片，显示提示信息
+                let noResultsEl = document.getElementById('no-results');
+                if (!noResultsEl) {
+                    noResultsEl = document.createElement('div');
+                    noResultsEl.id = 'no-results';
+                    noResultsEl.style.textAlign = 'center';
+                    noResultsEl.style.padding = '30px';
+                    noResultsEl.style.color = '#666';
+                    noResultsEl.style.backgroundColor = 'white';
+                    noResultsEl.style.borderRadius = '10px';
+                    noResultsEl.style.margin = '20px 0';
+                    noResultsEl.innerHTML = '<div style="font-size: 48px; margin-bottom: 10px;">🔍</div><div>没有找到符合条件的实验，请尝试其他筛选条件</div>';
+                    document.getElementById('experimentList').appendChild(noResultsEl);
+                } else {
+                    noResultsEl.style.display = 'block';
+                }
+            } else {
+                // 隐藏提示信息
+                const noResultsEl = document.getElementById('no-results');
+                if (noResultsEl) {
+                    noResultsEl.style.display = 'none';
+                }
+            }
+        }
+    </script>
+</body>
+</html>

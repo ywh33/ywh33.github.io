@@ -1,0 +1,1643 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>语e桥 - 首页</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        
+        :root {
+            --primary: #4361ee;
+            --primary-light: #eef2ff;
+            --secondary: #3ccf91;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --bg-light: #f9fafb;
+            --border-color: #e5e7eb;
+        }
+        
+        body {
+            background-color: white;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        /* 顶部导航栏 */
+        .top-nav {
+            background-color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            position: fixed;
+            width: 100%;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            left: 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin: 0 15px;
+            position: relative;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+            padding: 8px 12px;
+            border-radius: 6px;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .nav-links a.active {
+            color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .nav-links i {
+            margin-right: 8px;
+        }
+        
+        .login-btn {
+            background-color: var(--primary);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: none; /* 隐藏登录按钮 */
+        }
+        
+        .login-btn:hover {
+            background-color: #3051d3;
+            transform: translateY(-2px);
+        }
+        
+        /* 下拉菜单 */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            z-index: 1;
+            top: 100%;
+            left: 0;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        
+        .dropdown-content a {
+            color: var(--text-dark);
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: all 0.2s;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: var(--primary-light);
+            color: var(--primary);
+        }
+        
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+        .dropdown-icon {
+            margin-left: 5px;
+            font-size: 12px;
+        }
+        
+        /* 顶部插画背景 https://www.blcu.edu.cn/picture/0/330deeb68dbb41588aa4a607d7dd3d00.png*/
+        .hero-section {
+            height: 400px;
+            background-image: url('2.jpg');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+        
+        .user-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: var(--primary-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 0px;
+            font-size: 40px;
+            color: var(--primary);
+            overflow: hidden;
+            
+        }
+        /*object-fit: cover;*/
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+        
+        .hero-title {
+            font-size: 48px;
+            margin-bottom: 20px;
+            z-index: 2;
+        }
+        
+        .hero-subtitle {
+            font-size: 20px;
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 10px 30px;
+            border-radius: 30px;
+            z-index: 2;
+        }
+        
+        /* 主要内容区域 */
+        .main-content {
+            display: flex;
+            margin-top: 40px;
+            padding: 20px;
+        }
+        
+        /* 侧边栏 */
+        .sidebar {
+            width: 300px;
+            margin-right: 30px;
+        }
+        
+        .profile-card {
+            background: linear-gradient(135deg, #e1f5fe, #bbdefb);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .profile-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .profile-pic {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            background-color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            border: 4px solid white;
+        }
+        
+        .profile-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #2c3e50;
+        }
+        
+        .profile-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.5);
+            padding: 10px;
+            border-radius: 10px;
+            transition: transform 0.2s;
+        }
+        
+        .stat-item:hover {
+            transform: scale(1.05);
+        }
+        
+        .stat-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #4a89dc;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #666666;
+        }
+        
+        .friends-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 20px;
+            width: 100%;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            font-weight: bold;
+        }
+        
+        .friends-btn:hover {
+            background-color: #3d8b40;
+            transform: translateY(-2px);
+        }
+        
+        /* 内容区域 */
+        .content-area {
+            flex: 1;
+        }
+        
+        .announcement-box {
+            background: linear-gradient(to right, #fff9c4, #fffde7);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            border-left: 4px solid #fbc02d;
+            transition: transform 0.3s;
+        }
+        
+        .announcement-box:hover {
+            transform: translateY(-3px);
+        }
+        
+        .announcement-icon {
+            margin-right: 15px;
+            color: #fbc02d;
+            font-size: 24px;
+        }
+        
+        .announcement-text {
+            flex: 1;
+            color: #5d4037;
+        }
+        
+        
+        .resources-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .resources-title {
+            display: flex;
+            align-items: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .resources-title i {
+            margin-right: 10px;
+            color: #FF5722;
+        }
+        
+        .more-link {
+            color: #333;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .more-link i {
+            margin-right: 5px;
+        }
+        
+        /* 语伴推荐卡片 - 水平布局，每行3个 */
+        .partner-cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .partner-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            width: calc(33.33% - 14px); /* 3 cards per row with gap */
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .partner-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .partner-nationality {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid white;
+            z-index: 3;
+            background-color: white;
+        }
+
+        .partner-nationality img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        
+        .partner-content {
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .partner-name {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            margin-top: 15px;
+        }
+        
+        .partner-info {
+            margin-bottom: 12px;
+            width: 100%;
+        }
+        
+        .partner-language {
+            font-size: 13px;
+            margin-bottom: 3px;
+            color: #555;
+        }
+        
+        .partner-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 6px 15px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: background-color 0.3s;
+        }
+        
+        .partner-button:hover {
+            background-color: #3d8b40;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 900px) {
+            .partner-card {
+                width: calc(50% - 10px); /* 2 cards per row */
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .partner-card {
+                width: 100%; /* 1 card per row */
+            }
+            
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 30px;
+            }
+        }
+        
+        /* 右侧浮动按钮 */
+        .floating-menu {
+            position: fixed;
+            right: 20px;
+            bottom: 100px;
+        }
+        
+        .floating-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .floating-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .floating-btn i {
+            font-size: 24px;
+            margin-top: 10px;
+        }
+
+        /* AI语伴聊天机器人样式 */
+        .ai-companion-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #4361ee;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .ai-companion-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .ai-companion-icon {
+            width: 32px;
+            height: 32px;
+        }
+
+        .ai-companion-chat {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 350px;
+            height: 450px; /* 减小高度 */
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 999;
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            max-height: 80vh; /* 确保在小屏幕上不会太高 */
+        }
+
+        .ai-companion-chat.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .ai-chat-header {
+            padding: 15px;
+            background-color: #4361ee;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .ai-chat-title {
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        .ai-chat-title img {
+            width: 24px;
+            height: 24px;
+            margin-right: 8px;
+        }
+
+        .ai-chat-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .ai-chat-tabs {
+            display: flex;
+            background-color: #f0f4ff;
+        }
+
+        .ai-chat-tab {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .ai-chat-tab.active {
+            border-bottom-color: #4361ee;
+            color: #4361ee;
+            font-weight: bold;
+        }
+
+        .ai-chat-content {
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .ai-chat-tab-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 15px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .ai-chat-tab-content.active {
+            display: block;
+        }
+
+        .ai-chat-messages {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .ai-message {
+            display: flex;
+            max-width: 80%;
+        }
+
+        .ai-message.ai {
+            align-self: flex-start;
+        }
+
+        .ai-message.user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .ai-message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            margin: 0 8px;
+            flex-shrink: 0;
+        }
+
+        .ai-message-bubble {
+            padding: 10px 15px;
+            border-radius: 18px;
+            background-color: #f0f4ff;
+            position: relative;
+        }
+
+        .ai-message.user .ai-message-bubble {
+            background-color: #4361ee;
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .ai-message.ai .ai-message-bubble {
+            background-color: #f0f4ff;
+            border-bottom-left-radius: 4px;
+        }
+
+        .ai-cultural-note {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #fff8e1;
+            border-left: 4px solid #ffc107;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .ai-cultural-note-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .ai-cultural-note-title img {
+            width: 16px;
+            height: 16px;
+            margin-right: 5px;
+        }
+
+        .ai-chat-input {
+            padding: 15px;
+            border-top: 1px solid #e5e7eb;
+            background-color: white;
+        }
+
+        .ai-input-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .ai-text-input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #e5e7eb;
+            border-radius: 20px;
+            outline: none;
+            resize: none;
+            height: 40px;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+
+        .ai-text-input:focus {
+            border-color: #4361ee;
+        }
+
+        .ai-send-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #4361ee;
+            color: white;
+            border: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .ai-send-button:hover {
+            background-color: #3051d3;
+        }
+
+        .ai-input-tools {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .ai-input-tools-left {
+            display: flex;
+            gap: 10px;
+        }
+
+        .ai-tool-button {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .ai-tool-button img {
+            width: 16px;
+            height: 16px;
+            margin-right: 4px;
+        }
+
+        /* 学习资源标签页样式 */
+        .ai-learn-resources {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .ai-resource-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .ai-resource-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #4361ee;
+        }
+
+        .ai-resource-description {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .ai-resource-link {
+            color: #4361ee;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        /* 个人资料标签页样式 */
+        .ai-profile-info {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .ai-profile-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .ai-profile-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+        }
+
+        .ai-profile-name {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .ai-profile-level {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .ai-profile-stats {
+            display: flex;
+            justify-content: space-between;
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .ai-stat-item {
+            text-align: center;
+        }
+
+        .ai-stat-value {
+            font-weight: bold;
+            color: #4361ee;
+            font-size: 18px;
+        }
+
+        .ai-stat-label {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .ai-profile-interests {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .ai-profile-section-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .ai-interest-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .ai-interest-tag {
+            background-color: #f0f4ff;
+            color: #4361ee;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+        }
+
+        /* 打字动画 */
+        .ai-typing {
+            display: flex;
+            gap: 5px;
+            padding: 10px;
+            align-self: flex-start;
+        }
+
+        .ai-typing-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #4361ee;
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: typing-animation 1.4s infinite ease-in-out both;
+        }
+
+        .ai-typing-dot:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .ai-typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .ai-typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing-animation {
+            0%, 80%, 100% {
+                transform: scale(0.6);
+            }
+            40% {
+                transform: scale(1);
+            }
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 480px) {
+            .ai-companion-chat {
+                width: calc(100% - 40px);
+                height: 60vh;
+            }
+        }
+    </style>
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 顶部导航栏 -->
+        <nav class="top-nav">
+            <a href="index.html" class="logo">语e桥</a>
+            
+            <ul class="nav-links">
+                <li><a href="index.html" class="active"><i class="icon">🏠</i>首页</a></li>
+                <li><a href="languagepartner-search.html"><i class="icon">👫</i>语伴</a></li>
+                <li class="dropdown">
+                    <a href="chat.html"><i class="icon">💬</i>聊天<span class="dropdown-icon">▼</span></a>
+                    <div class="dropdown-content">
+                        <a href="ai-chat.html">AI语伴聊天</a>
+                        <a href="chat.html">语伴聊天</a>
+                    </div>
+                </li> 
+                <li><a href="experiment.html"><i class="icon">🧪</i>实验招募</a></li>
+                <li class="dropdown">
+                    <a href="community-resources.html"><i class="icon">📚</i>学习社区<span class="dropdown-icon">▼</span></a>
+                    <div class="dropdown-content">
+                        <a href="personal-publish.html">个人发布</a>
+                        <a href="community-resources.html">社区资源</a>
+                        <a href="learningpath.html">学习路径</a>
+                    </div>
+                </li>
+                <li><a href="tutor-matching.html"><i class="icon">👥</i>轻辅导</a></li>
+                <li><a href="login.html">登录</a></li>
+            </ul>
+        </nav>
+        
+        <!-- 顶部插画背景 -->
+        <section class="hero-section">
+            <h1 class="hero-title">语e桥</h1>
+            <div class="hero-subtitle">欢迎访问语伴匹配平台！</div>
+        </section>
+        
+        <!-- 主要内容区域 -->
+        <div class="main-content">
+            <!-- 侧边栏 -->
+            <div class="sidebar">
+                <div class="profile-card">
+                    <div class="profile-pic">
+                        <div class="user-avatar">
+                            <img src="https://ts1.tc.mm.bing.net/th/id/R-C.413226704d6fb28423d6c7c44e20579c?rik=dY0cRjVHKMIUCQ&riu=http%3a%2f%2fimg.51miz.com%2fElement%2f00%2f18%2f81%2f44%2ff06713ff_E188144_9809375c.png!%2fquality%2f90%2funsharp%2ftrue%2fcompress%2ftrue%2fformat%2fpng&ehk=Ug1dzy9FlFGQGe8KL9yinE7%2fDDADIBvuD0z81KdUM1Q%3d&risl=&pid=ImgRaw&r=0" alt="用户头像">
+                        </div>
+                    </div>
+                    <h2 class="profile-name">语伴交流家</h2>
+                    
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">4</div>
+                            <div class="stat-label">文章</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">6</div>
+                            <div class="stat-label">分类</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">128</div>
+                            <div class="stat-label">访问量</div>
+                        </div>
+                    </div>
+                    
+                    <button class="friends-btn">转发邀请好友</button>
+                </div>
+            </div>
+            
+            <!-- 内容区域 -->
+            <div class="content-area">
+                <div class="announcement-box">
+                    <div class="announcement-icon">🔊</div>
+                    <div class="announcement-text">
+                        请文明使用语伴交友平台，共创清朗交友环境！
+                    </div>
+                </div>
+                
+                
+                <div class="resources-header">
+                    <div class="resources-title">
+                        <i class="icon">🌐</i>语伴推荐
+                    </div>
+                    <a href="languagepartner-search.html" class="more-link">
+                        <i class="icon">➕</i>MORE>>
+                    </a>
+                </div>
+                
+                <!-- 语伴推荐卡片 - 水平布局，每行3个 -->
+                <div class="partner-cards">
+                    <div class="partner-card">
+                        <!-- 国旗标识 -->
+                        <div class="partner-nationality">
+                            <img src="https://iknow-pic.cdn.bcebos.com/7acb0a46f21fbe09807fa11d68600c338744ad92" alt="日本国旗">
+                        </div>
+                        
+                        <div class="partner-content">
+                            <!-- 姓名 -->
+                            <h3 class="partner-name">山田花子</h3>
+                            
+                            <!-- 语言信息 -->
+                            <div class="partner-info">
+                                <p class="partner-language">母语: 日语</p>
+                                <p class="partner-language">学习: 中文</p>
+                            </div>
+                            
+                            <!-- 成为语伴按钮 -->
+                            <button class="partner-button" data-name="山田花子" data-avatar="https://via.placeholder.com/60" data-flag="🇯🇵" data-language="日语">成为语伴</button>
+                        </div>
+                    </div>
+                    
+                    <div class="partner-card">
+                        <!-- 国旗标识 -->
+                        <div class="partner-nationality">
+                            <img src="https://iknow-pic.cdn.bcebos.com/203fb80e7bec54e71ed47a17ba389b504fc26afa" alt="美国国旗">
+                        </div>
+                        
+                        <div class="partner-content">
+                            <!-- 姓名 -->
+                            <h3 class="partner-name">John Smith</h3>
+                            
+                            <!-- 语言信息 -->
+                            <div class="partner-info">
+                                <p class="partner-language">母语: 英语</p>
+                                <p class="partner-language">学习: 中文</p>
+                            </div>
+                            
+                            <!-- 成为语伴按钮 -->
+                            <button class="partner-button" data-name="John Smith" data-avatar="https://via.placeholder.com/60" data-flag="🇺🇸" data-language="英语">成为语伴</button>
+                        </div>
+                    </div>
+                    
+                    <div class="partner-card">
+                        <!-- 国旗标识 -->
+                        <div class="partner-nationality">
+                            <img src="https://iknow-pic.cdn.bcebos.com/3801213fb80e7bec73f363e82c2eb9389b506b89" alt="法国国旗">
+                        </div>
+                        
+                        <div class="partner-content">
+                            <!-- 姓名 -->
+                            <h3 class="partner-name">Sophie Dupont</h3>
+                            
+                            <!-- 语言信息 -->
+                            <div class="partner-info">
+                                <p class="partner-language">母语: 法语</p>
+                                <p class="partner-language">学习: 中文</p>
+                            </div>
+                            
+                            <!-- 成为语伴按钮 -->
+                            <button class="partner-button" data-name="Sophie Dupont" data-avatar="https://via.placeholder.com/60" data-flag="🇫🇷" data-language="法语">成为语伴</button>
+                        </div>
+                    </div>
+                    
+                    <div class="partner-card">
+                        <!-- 国旗标识 -->
+                        <div class="partner-nationality">
+                            <img src="https://flagpedia.asia/data/flags/w1160/es.webp" alt="西班牙国旗">
+                        </div>
+                        
+                        <div class="partner-content">
+                            <!-- 姓名 -->
+                            <h3 class="partner-name">Carlos Rodriguez</h3>
+                            
+                            <!-- 语言信息 -->
+                            <div class="partner-info">
+                                <p class="partner-language">母语: 西班牙语</p>
+                                <p class="partner-language">学习: 中文</p>
+                            </div>
+                            
+                            <!-- 成为语伴按钮 -->
+                            <button class="partner-button" data-name="Carlos Rodriguez" data-avatar="https://via.placeholder.com/60" data-flag="🇪🇸" data-language="西班牙语">成为语伴</button>
+                        </div>
+                    </div>
+                    
+                    <div class="partner-card">
+                        <!-- 国旗标识 -->
+                        <div class="partner-nationality">
+                            <img src="https://iknow-pic.cdn.bcebos.com/b999a9014c086e06da735f4201087bf40bd1cbe4" alt="德国国旗">
+                        </div>
+                        
+                        <div class="partner-content">
+                            <!-- 姓名 -->
+                            <h3 class="partner-name">Hans Mueller</h3>
+                            
+                            <!-- 语言信息 -->
+                            <div class="partner-info">
+                                <p class="partner-language">母语: 德语</p>
+                                <p class="partner-language">学习: 中文</p>
+                            </div>
+                            
+                            <!-- 成为语伴按钮 -->
+                            <button class="partner-button" data-name="Hans Mueller" data-avatar="https://via.placeholder.com/60" data-flag="🇩🇪" data-language="德语">成为语伴</button>
+                        </div>
+                    </div>
+                    
+                    <div class="partner-card">
+                        <!-- 国旗标识 -->
+                        <div class="partner-nationality">
+                            <img src="https://tu.zhongwen.wiki/images/qiuwenbaike/zh/0/03/Flag_of_Italy.svg" alt="意大利国旗">
+                        </div>
+                        
+                        <div class="partner-content">
+                            <!-- 姓名 -->
+                            <h3 class="partner-name">Marco Rossi</h3>
+                            
+                            <!-- 语言信息 -->
+                            <div class="partner-info">
+                                <p class="partner-language">母语: 意大利语</p>
+                                <p class="partner-language">学习: 中文</p>
+                            </div>
+                            
+                            <!-- 成为语伴按钮 -->
+                            <button class="partner-button" data-name="Marco Rossi" data-avatar="https://via.placeholder.com/60" data-flag="🇮🇹" data-language="意大利语">成为语伴</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 右侧浮动按钮 -->
+        <div class="floating-menu">
+            <a href="index.html" class="floating-btn">
+                <i class="icon">🏠</i>
+            </a>
+            <div class="floating-btn">
+                <i class="icon">⚙️</i>
+            </div>
+            <!-- AI语伴按钮 -->
+    <div class="ai-companion-button" id="aiCompanionButton">
+        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1ib3QiPjxwYXRoIGQ9Ik0xMiA4VjRhMiAyIDAgMSAxIDQgMHY0Ii8+PHBhdGggZD0iTTQgMTJhOCA4IDAgMCAxIDE2IDBaIi8+PHBhdGggZD0iTTE4IDEydjJhNCA0IDAgMCAxLTQgNGgtNGE0IDQgMCAwIDEtNC00di0yIi8+PHBhdGggZD0iTTkgMTcuMDFWMjAiLz48cGF0aCBkPSJNMTUgMTcuMDFWMjAiLz48L3N2Zz4=" alt="AI语伴" class="ai-companion-icon">
+    </div>
+
+    <!-- AI语伴聊天界面 -->
+    <div class="ai-companion-chat" id="aiCompanionChat">
+        <div class="ai-chat-header">
+            <div class="ai-chat-title">
+                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1ib3QiPjxwYXRoIGQ9Ik0xMiA4VjRhMiAyIDAgMSAxIDQgMHY0Ii8+PHBhdGggZD0iTTQgMTJhOCA4IDAgMCAxIDE2IDBaIi8+PHBhdGggZD0iTTE4IDEydjJhNCA0IDAgMCAxLTQgNGgtNGE0IDQgMCAwIDEtNC00di0yIi8+PHBhdGggZD0iTTkgMTcuMDFWMjAiLz48cGF0aCBkPSJNMTUgMTcuMDFWMjAiLz48L3N2Zz4=" alt="AI语伴">
+                <span>AI语伴 | Language Partner</span>
+            </div>
+            <button class="ai-chat-close" id="aiChatClose">×</button>
+        </div>
+        
+        <div class="ai-chat-tabs">
+            <div class="ai-chat-tab active" data-tab="chat">聊天 | Chat</div>
+            <div class="ai-chat-tab" data-tab="learn">学习 | Learn</div>
+            <div class="ai-chat-tab" data-tab="profile">个人 | Profile</div>
+        </div>
+        
+        <div class="ai-chat-content">
+            <!-- 聊天标签页 -->
+            <div class="ai-chat-tab-content active" id="chatTab">
+                <div class="ai-chat-messages" id="chatMessages">
+                    <div class="ai-message ai">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM0MzYxZWUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1ib3QiPjxwYXRoIGQ9Ik0xMiA4VjRhMiAyIDAgMSAxIDQgMHY0Ii8+PHBhdGggZD0iTTQgMTJhOCA4IDAgMCAxIDE2IDBaIi8+PHBhdGggZD0iTTE4IDEydjJhNCA0IDAgMCAxLTQgNGgtNGE0IDQgMCAwIDEtNC00di0yIi8+PHBhdGggZD0iTTkgMTcuMDFWMjAiLz48cGF0aCBkPSJNMTUgMTcuMDFWMjAiLz48L3N2Zz4=" alt="AI" class="ai-message-avatar">
+                        <div class="ai-message-bubble">
+                            你好！我是你的AI语伴。我可以帮助你练习中文，解释文化知识，或者纠正你的语法错误。试试输入"春节"、"端午节"等关键词，了解中国传统文化！<br><br>
+                            Hello! I'm your AI language partner. I can help you practice Chinese, explain cultural knowledge, or correct your grammar. Try typing keywords like "Spring Festival" or "Dragon Boat Festival" to learn about Chinese traditions!
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 学习标签页 -->
+            <div class="ai-chat-tab-content" id="learnTab">
+                <div class="ai-learn-resources">
+                    <div class="ai-resource-card">
+                        <div class="ai-resource-title">今日推荐 | Today's Recommendation</div>
+                        <div class="ai-resource-description">中国传统节日：端午节</div>
+                        <div class="ai-resource-description">了解端午节的起源、习俗和庆祝方式</div>
+                        <a href="#" class="ai-resource-link">查看详情 | Learn more</a>
+                    </div>
+                    
+                    <div class="ai-resource-card">
+                        <div class="ai-resource-title">每日成语 | Idiom of the Day</div>
+                        <div class="ai-resource-description"><strong>画蛇添足</strong> (huà shé tiān zú)</div>
+                        <div class="ai-resource-description">给蛇画上脚。比喻做了多余的事，不但无益，反而不好。</div>
+                        <div class="ai-resource-description">Drawing legs on a snake - doing something unnecessary that ruins the effect.</div>
+                    </div>
+                    
+                    <div class="ai-resource-card">
+                        <a href="learningpath.html">
+                        <div class="ai-resource-title">学习路径 | Learning Path</div></a>
+                        <div class="ai-resource-description">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                <span>基础会话 | Basic Conversation</span>
+                                <span style="color: #4caf50;">完成 | Completed</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                <span>日常用语 | Daily Expressions</span>
+                                <span style="color: #ff9800;">进行中 | In Progress</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span>文化习俗 | Cultural Customs</span>
+                                <span style="color: #9e9e9e;">未开始 | Not Started</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 个人标签页 -->
+            <div class="ai-chat-tab-content" id="profileTab">
+                <div class="ai-profile-info">
+                    <div class="ai-profile-header">
+                        <img src="https://ts1.tc.mm.bing.net/th/id/R-C.413226704d6fb28423d6c7c44e20579c?rik=dY0cRjVHKMIUCQ&riu=http%3a%2f%2fimg.51miz.com%2fElement%2f00%2f18%2f81%2f44%2ff06713ff_E188144_9809375c.png!%2fquality%2f90%2funsharp%2ftrue%2fcompress%2ftrue%2fformat%2fpng&ehk=Ug1dzy9FlFGQGe8KL9yinE7%2fDDADIBvuD0z81KdUM1Q%3d&risl=&pid=ImgRaw&r=0" alt="用户头像" class="ai-profile-avatar">
+                        <div>
+                            <div class="ai-profile-name">语言学习者 | Language Learner</div>
+                            <div class="ai-profile-level">中文水平：中级 | Chinese Level: Intermediate</div>
+                        </div>
+                    </div>
+                    
+                    <div class="ai-profile-stats">
+                        <div class="ai-stat-item">
+                            <div class="ai-stat-value">12</div>
+                            <div class="ai-stat-label">对话 | Conversations</div>
+                        </div>
+                        <div class="ai-stat-item">
+                            <div class="ai-stat-value">48</div>
+                            <div class="ai-stat-label">学习时间 (分钟) | Minutes</div>
+                        </div>
+                        <div class="ai-stat-item">
+                            <div class="ai-stat-value">5</div>
+                            <div class="ai-stat-label">文化知识 | Cultural Notes</div>
+                        </div>
+                    </div>
+                    
+                    <div class="ai-profile-interests">
+                        <div class="ai-profile-section-title">兴趣标签 | Interest Tags</div>
+                        <div class="ai-interest-tags">
+                            <div class="ai-interest-tag">中国美食 | Chinese Cuisine</div>
+                            <div class="ai-interest-tag">传统节日 | Traditional Festivals</div>
+                            <div class="ai-interest-tag">成语故事 | Idiom Stories</div>
+                            <div class="ai-interest-tag">流行文化 | Pop Culture</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="ai-chat-input">
+            <div class="ai-input-container">
+                <input type="text" class="ai-text-input" id="aiTextInput" placeholder="输入消息... | Type a message...">
+                <button class="ai-send-button" id="aiSendButton">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1zZW5kIj48cGF0aCBkPSJNMjIgMiAxMSAxMyIvPjxwYXRoIGQ9Im0yMiAyLTcgMjAtMS0xMy0xMy0xIDIwLTciLz48L3N2Zz4=" alt="发送" width="20" height="20">
+                </button>
+            </div>
+            <div class="ai-input-tools">
+                <div class="ai-input-tools-left">
+                    <div class="ai-tool-button">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2NjY2NjYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1taWMiPjxwYXRoIGQ9Ik0xMiAxYTMgMyAwIDAgMC0zIDN2OGEzIDMgMCAwIDAgNiAwVjRhMyAzIDAgMCAwLTMtM1oiLz48cGF0aCBkPSJNMTkgMTB2MmE3IDcgMCAwIDEtMTQgMHYtMiIvPjxsaW5lIHgxPSIxMiIgeTE9IjE5IiB4Mj0iMTIiIHkyPSIyMyIvPjxsaW5lIHgxPSI4IiB5MT0iMjMiIHgyPSIxNiIgeTI9IjIzIi8+PC9zdmc+" alt="语音">
+                        语音
+                    </div>
+                    <div class="ai-tool-button">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2NjY2NjYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1pbWFnZSI+PHJlY3QgeD0iMyIgeT0iMyIgd2lkdGg9IjE4IiBoZWlnaHQ9IjE4IiByeD0iMiIgcnk9IjIiLz48Y2lyY2xlIGN4PSI4LjUiIGN5PSI4LjUiIHI9IjEuNSIvPjxwb2x5bGluZSBwb2ludHM9IjIxIDEzLjg1IDE2IDEwLjUgNSAyMSIvPjwvc3ZnPg==" alt="图片">
+                        图片
+                    </div>
+                    <div class="ai-tool-button">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2NjY2NjYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1sYW5ndWFnZXMiPjxwYXRoIGQ9Ik0yIDEyYzAgMy45IDMuMSA3IDcgN2E4IDggMCAwIDAgOC04YzAgMy0yIDctNyA3cy03LTQtNy03IDItNyA3LTcgNyA0IDcgN2MwIDQtMy4xIDctNyA3YTggOCAwIDAgMS04LTgiLz48L3N2Zz4=" alt="翻译">
+                        翻译
+                    </div>
+                </div>
+                <div>
+                    AI语伴将帮助你提高中文水平 | AI will help improve your Chinese
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 为所有"成为语伴"按钮添加点击事件
+            const partnerButtons = document.querySelectorAll('.partner-button');
+            
+            partnerButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const name = this.getAttribute('data-name');
+                    const avatar = this.getAttribute('data-avatar');
+                    const flag = this.getAttribute('data-flag');
+                    const language = this.getAttribute('data-language');
+                    
+                    // 直接跳转到聊天页面
+                    window.location.href = `chat.html?partner=${encodeURIComponent(name)}&avatar=${encodeURIComponent(avatar)}&flag=${encodeURIComponent(flag)}&language=${encodeURIComponent(language)}`;
+                });
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取DOM元素
+            const aiButton = document.getElementById('aiCompanionButton');
+            const aiChat = document.getElementById('aiCompanionChat');
+            const aiCloseBtn = document.getElementById('aiChatClose');
+            const aiTabs = document.querySelectorAll('.ai-chat-tab');
+            const aiTabContents = document.querySelectorAll('.ai-chat-tab-content');
+            const chatMessages = document.getElementById('chatMessages');
+            const textInput = document.getElementById('aiTextInput');
+            const sendButton = document.getElementById('aiSendButton');
+            
+            // 示例回复数据
+            const sampleResponses = {
+                "你好": "你好！很高兴见到你。今天想聊些什么呢？\n\nHello! Nice to meet you. What would you like to talk about today?",
+                "hello": "你好！很高兴见到你。今天想聊些什么呢？\n\nHello! Nice to meet you. What would you like to talk about today?",
+                "红包": "红包（hóng bāo）是中国传统文化中的一种礼物，通常在春节、婚礼或其他重要场合赠送。里面装有钱，象征着好运和祝福。\n\nRed envelopes (hong bao) are a traditional Chinese gift, usually given during Spring Festival, weddings, or other important occasions. They contain money and symbolize good luck and blessings.",
+                "功夫茶": "功夫茶（gōng fu chá）是中国的一种传统茶艺，起源于福建和广东。它强调茶具、水质和冲泡技巧，以展现茶叶的最佳风味。\n\nKung Fu Tea is a traditional Chinese tea ceremony that originated in Fujian and Guangdong. It emphasizes tea ware, water quality, and brewing techniques to bring out the best flavor of the tea leaves.",
+                "I very like": "I noticed a small grammar issue. Instead of 'I very like', a more natural way to say it would be 'I really enjoy' or 'I like very much'. In English, we use 'really' or 'very much' with the verb 'like', not just 'very'.",
+                "我很喜欢这个": "你的中文很好！不过，更地道的表达是'我非常喜欢这个'或'我特别喜欢这个'。'很'通常用于形容词前，而'非常'或'特别'更适合用于'喜欢'这个动词前。",
+                "春节": "春节是中国最重要的传统节日，庆祝农历新年的开始。人们会贴春联、放鞭炮、吃团圆饭，还有红包传统。这个节日象征着家庭团聚、辞旧迎新。\n\nSpring Festival is China's most important traditional holiday, celebrating the start of the lunar new year. People put up spring couplets, set off firecrackers, have reunion dinners, and give red envelopes. This festival symbolizes family reunion and the start of a new year.",
+                "端午节": "端午节是中国的传统节日，通常在农历五月初五庆祝。人们会赛龙舟、吃粽子，纪念爱国诗人屈原。\n\nThe Dragon Boat Festival is a traditional Chinese holiday celebrated on the 5th day of the 5th lunar month. People race dragon boats and eat zongzi (sticky rice dumplings) to commemorate the patriotic poet Qu Yuan.",
+                "中秋节": "中秋节是中国传统的团圆节日，在农历八月十五举行。人们会赏月、吃月饼、与家人团聚。这个节日象征着团圆和丰收。\n\nThe Mid-Autumn Festival is a traditional Chinese festival for family reunions, held on the 15th day of the 8th lunar month. People admire the full moon, eat mooncakes, and gather with family. This festival symbolizes reunion and harvest.",
+                "元宵节": "元宵节是农历正月十五，标志着春节庆祝活动的结束。主要习俗包括赏花灯、猜灯谜、吃元宵。这是新年后第一个月圆之夜。\n\nThe Lantern Festival falls on the 15th day of the first lunar month, marking the end of Spring Festival celebrations. Main customs include viewing lanterns, solving lantern riddles, and eating tangyuan (sweet rice balls). It's the first full moon night after the lunar new year.",
+                "清明节": "清明节是中国传统的扫墓祭祖节日，也是春季重要的节气。人们会去祖先墓地祭拜、踏青郊游，表达对先人的怀念和敬意。\n\nQingming Festival is a traditional Chinese festival for tomb sweeping and ancestor worship, also an important spring solar term. People visit ancestral graves, go on spring outings, and express remembrance and respect for their ancestors.",
+                "鬼节": "中元节又称鬼节，是农历七月十五。这不是一个恐怖的节日，而是人们祭奠祖先、超度亡魂的传统节日，表达对逝者的尊重和思念。\n\nThe Ghost Festival, also known as Zhongyuan Festival, falls on the 15th day of the 7th lunar month. It's not a scary holiday, but a traditional festival where people make offerings to ancestors and pray for departed souls, expressing respect and remembrance for the deceased."
+};
+            
+            // 文化术语数据
+            const culturalTerms = {
+                "红包": {
+                    term: "红包",
+                    pinyin: "hóng bāo",
+                    explanation: "Red envelopes containing money given during holidays or special occasions as a symbol of good luck.",
+                    category: "custom"
+                },
+                "功夫茶": {
+                    term: "功夫茶",
+                    pinyin: "gōng fu chá",
+                    explanation: "A traditional Chinese tea ceremony that involves the ritualistic preparation and serving of tea.",
+                    category: "custom"
+                },
+                "春节": {
+                    term: "春节",
+                    pinyin: "chūn jié",
+                    explanation: "Spring Festival or Chinese New Year, the most important traditional holiday in China celebrating the beginning of a new year on the lunar calendar.",
+                    category: "festival"
+                },
+                "端午节": {
+                    term: "端午节",
+                    pinyin: "duān wǔ jié",
+                    explanation: "Dragon Boat Festival, celebrated on the 5th day of the 5th lunar month with dragon boat races and sticky rice dumplings.",
+                    category: "festival"
+                },
+                "中秋节": {
+                    term: "中秋节",
+                    pinyin: "zhōng qiū jié",
+                    explanation: "Mid-Autumn Festival, celebrated on the 15th day of the 8th lunar month when families gather to admire the full moon and eat mooncakes.",
+                    category: "festival"
+                },
+                "元宵节": {
+                    term: "元宵节",
+                    pinyin: "yuán xiāo jié",
+                    explanation: "Lantern Festival, celebrated on the 15th day of the first lunar month with colorful lanterns, riddles, and sweet rice balls called tangyuan.",
+                    category: "festival"
+                },
+                "清明节": {
+                    term: "清明节",
+                    pinyin: "qīng míng jié",
+                    explanation: "Tomb Sweeping Day, a traditional festival when people visit ancestral graves to clean them and make offerings to honor the deceased.",
+                    category: "festival"
+                },
+                "鬼节": {
+                    term: "中元节/鬼节",
+                    pinyin: "zhōng yuán jié/guǐ jié",
+                    explanation: "Ghost Festival, held on the 15th day of the 7th lunar month when people make offerings to ancestors and wandering spirits.",
+                    category: "festival"
+                }
+            };
+            
+            // 打开聊天窗口
+            aiButton.addEventListener('click', function() {
+                aiChat.classList.add('active');
+            });
+            
+            // 关闭聊天窗口
+            aiCloseBtn.addEventListener('click', function() {
+                aiChat.classList.remove('active');
+            });
+            
+            // 标签页切换
+            aiTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // 移除所有标签页的active类
+                    aiTabs.forEach(t => t.classList.remove('active'));
+                    aiTabContents.forEach(c => c.classList.remove('active'));
+                    
+                    // 添加当前标签页的active类
+                    this.classList.add('active');
+                    const tabId = this.getAttribute('data-tab') + 'Tab';
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // 发送消息
+            function sendMessage() {
+                const message = textInput.value.trim();
+                if (!message) return;
+                
+                // 添加用户消息
+                addMessage(message, 'user');
+                textInput.value = '';
+                
+                // 显示AI正在输入
+                showTypingIndicator();
+                
+                // 模拟AI回复延迟
+                setTimeout(() => {
+                    // 移除输入指示器
+                    removeTypingIndicator();
+                    
+                    // 检查是否有匹配的示例回复
+                    let response = '';
+                    let culturalTerm = null;
+                    
+                    // 检查完全匹配
+                    if (sampleResponses[message]) {
+                        response = sampleResponses[message];
+                    } else {
+                        // 检查部分匹配
+                        for (const key in sampleResponses) {
+                            if (message.toLowerCase().includes(key.toLowerCase())) {
+                                response = sampleResponses[key];
+                                break;
+                            }
+                        }
+                    }
+                    
+                    // 如果没有匹配，使用默认回复
+                    if (!response) {
+                        response = "谢谢你的消息！我很高兴能和你聊天。你对中国文化有什么特别感兴趣的方面吗？\n\nThank you for your message! I'm happy to chat with you. Is there any aspect of Chinese culture you're particularly interested in?";
+                    }
+                    
+                    // 检查文化术语
+                    for (const term in culturalTerms) {
+                        if (message.includes(term)) {
+                            culturalTerm = culturalTerms[term];
+                            break;
+                        }
+                    }
+                    
+                    // 添加AI回复
+                    addMessage(response, 'ai');
+
+                    // 如果有文化术语，添加文化小知识和建议问题
+                    if (culturalTerm) {
+                        setTimeout(() => {
+                            addCulturalNote(culturalTerm);
+                            
+                            // 添加建议问题
+                            setTimeout(() => {
+                                addSuggestions(culturalTerm.term);
+                            }, 500);
+                        }, 500);
+                    }
+                }, 1500);
+            }
+            
+            // 添加消息到聊天窗口
+            function addMessage(content, sender) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `ai-message ${sender}`;
+                
+                const avatar = document.createElement('img');
+                avatar.className = 'ai-message-avatar';
+                
+                if (sender === 'ai') {
+                    avatar.src = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM0MzYxZWUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1ib3QiPjxwYXRoIGQ9Ik0xMiA4VjRhMiAyIDAgMSAxIDQgMHY0Ii8+PHBhdGggZD0iTTQgMTJhOCA4IDAgMCAxIDE2IDBaIi8+PHBhdGggZD0iTTE4IDEydjJhNCA0IDAgMCAxLTQgNGgtNGE0IDQgMCAwIDEtNC00di0yIi8+PHBhdGggZD0iTTkgMTcuMDFWMjAiLz48cGF0aCBkPSJNMTUgMTcuMDFWMjAiLz48L3N2Zz4=";
+                    avatar.alt = "AI";
+                } else {
+                    avatar.src = "https://ts1.tc.mm.bing.net/th/id/R-C.413226704d6fb28423d6c7c44e20579c?rik=dY0cRjVHKMIUCQ&riu=http%3a%2f%2fimg.51miz.com%2fElement%2f00%2f18%2f81%2f44%2ff06713ff_E188144_9809375c.png!%2fquality%2f90%2funsharp%2ftrue%2fcompress%2ftrue%2fformat%2fpng&ehk=Ug1dzy9FlFGQGe8KL9yinE7%2fDDADIBvuD0z81KdUM1Q%3d&risl=&pid=ImgRaw&r=0";
+                    avatar.alt = "User";
+                }
+                
+                const bubble = document.createElement('div');
+                bubble.className = 'ai-message-bubble';
+                bubble.innerHTML = content.replace(/\n/g, '<br>');
+                
+                messageDiv.appendChild(avatar);
+                messageDiv.appendChild(bubble);
+                
+                chatMessages.appendChild(messageDiv);
+                
+                // 滚动到底部
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            // 添加文化小知识
+            function addCulturalNote(term) {
+                const noteDiv = document.createElement('div');
+                noteDiv.className = 'ai-cultural-note';
+                
+                const titleDiv = document.createElement('div');
+                titleDiv.className = 'ai-cultural-note-title';
+                titleDiv.innerHTML = `<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmM0MDAiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1saWdodGJ1bGIiPjxsaW5lIHgxPSI5IiB5MT0iMTgiIHgyPSIxNSIgeTI9IjE4Ii8+PGxpbmUgeDE9IjEwIiB5MT0iMjIiIHgyPSIxNCIgeTI9IjIyIi8+PHBhdGggZD0iTTE1LjA5IDEwLjJBNSA1IDAgMSAwIDguOSAxMC4yQTQuNSA0LjUgMCAwIDAgMTIgMTkuOWg0LjVhNC41IDQuNSAwIDAgMC0xLjQxLTkuN1oiLz48L3N2Zz4=" alt="文化小知识"> 文化小知识 | Cultural Note: ${term.term}`;
+                
+                const contentDiv = document.createElement('div');
+                contentDiv.innerHTML = `<strong>${term.term}</strong> (${term.pinyin}): ${term.explanation}`;
+                
+                noteDiv.appendChild(titleDiv);
+                noteDiv.appendChild(contentDiv);
+                
+                chatMessages.appendChild(noteDiv);
+                
+                // 滚动到底部
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            // 显示AI正在输入指示器
+            function showTypingIndicator() {
+                const typingDiv = document.createElement('div');
+                typingDiv.className = 'ai-typing';
+                typingDiv.id = 'aiTyping';
+                
+                for (let i = 0; i < 3; i++) {
+                    const dot = document.createElement('div');
+                    dot.className = 'ai-typing-dot';
+                    typingDiv.appendChild(dot);
+                }
+                
+                chatMessages.appendChild(typingDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            // 移除AI正在输入指示器
+            function removeTypingIndicator() {
+                const typingIndicator = document.getElementById('aiTyping');
+                if (typingIndicator) {
+                    typingIndicator.remove();
+                }
+            }
+
+            // 添加建议问题
+            function addSuggestions(term) {
+                let suggestions = [];
+                
+                // 根据不同的文化术语提供不同的建议问题
+                switch(term) {
+                    case "春节":
+                        suggestions = ["春节有哪些传统食物？", "为什么要贴春联？", "红包的意义是什么？"];
+                        break;
+                    case "端午节":
+                        suggestions = ["端午节的由来是什么？", "为什么要吃粽子？", "龙舟比赛有什么意义？"];
+                        break;
+                    case "中秋节":
+                        suggestions = ["月饼的由来是什么？", "中秋节有哪些传说？", "为什么中秋要赏月？"];
+                        break;
+                    case "元宵节":
+                        suggestions = ["元宵和汤圆有什么区别？", "灯谜活动是怎么开始的？", "元宵节的历史由来是什么？"];
+                        break;
+                    case "清明节":
+                        suggestions = ["清明节为什么要扫墓？", "清明节有哪些传统食物？", "寒食节与清明节有什么关系？"];
+                        break;
+                    case "中元节/鬼节":
+                        suggestions = ["中元节的习俗有哪些？", "为什么称为鬼节？", "中元节与西方万圣节有什么不同？"];
+                        break;
+                    case "红包":
+                        suggestions = ["红包的颜色有什么含义？", "什么场合会给红包？", "红包里放多少钱合适？"];
+                        break;
+                    case "功夫茶":
+                        suggestions = ["功夫茶的步骤是什么？", "功夫茶用什么茶具？", "功夫茶与普通泡茶有什么不同？"];
+                        break;
+                    default:
+                        suggestions = ["中国有哪些传统节日？", "你能介绍一下中国文化吗？", "如何学习中文？"];
+                }
+                
+                // 创建建议问题元素
+                const suggestionsDiv = document.createElement('div');
+                suggestionsDiv.className = 'ai-cultural-note';
+                suggestionsDiv.style.backgroundColor = '#f0f4ff';
+                suggestionsDiv.style.borderLeftColor = '#4361ee';
+                
+                let suggestionsHTML = `
+                    <div class="ai-cultural-note-title">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM0MzYxZWUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1oZWxwLWNpcmNsZSI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48cGF0aCBkPSJNOS4wOSA5YTMgMyAwIDAgMSA1LjgzIDFjMCAyLTMgMy0zIDMiLz48cGF0aCBkPSJNMTIgMTd2LjAxIi8+PC9zdmc+" alt="建议问题">
+                        你可能想问 | You might want to ask:
+                    </div>
+                `;
+                
+                suggestions.forEach(suggestion => {
+                    suggestionsHTML += `
+                        <div style="padding: 8px; margin: 5px 0; background-color: white; border-radius: 8px; cursor: pointer;" 
+                             class="suggestion-item" onclick="useSuggestion(this)">
+                            ${suggestion}
+                        </div>
+                    `;
+                });
+                
+                suggestionsDiv.innerHTML = suggestionsHTML;
+                chatMessages.appendChild(suggestionsDiv);
+                
+                // 滚动到底部
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            // 使用建议问题
+            function useSuggestion(element) {
+                const text = element.textContent.trim();
+                textInput.value = text;
+                textInput.focus();
+            }
+
+            // 将useSuggestion函数添加到全局作用域
+            window.useSuggestion = useSuggestion;
+            
+            // 发送按钮点击事件
+            sendButton.addEventListener('click', sendMessage);
+            
+            // 输入框回车事件
+            textInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

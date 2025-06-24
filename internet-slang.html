@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>语e桥 - 网络用语</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        
+        :root {
+            --primary: #4361ee;
+            --primary-light: #eef2ff;
+            --secondary: #3ccf91;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --bg-light: #f9fafb;
+            --border-color: #e5e7eb;
+            --culture-red: #e53e3e;
+            --culture-gold: #d69e2e;
+            --slang-purple: #805ad5;
+            --slang-purple-light: #e9d8fd;
+            --premium-purple: #8b5cf6;
+            --premium-light: #ede9fe;
+            --premium-dark: #6d28d9;
+        }
+        
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            padding: 0 20px;
+        }
+        
+        /* 顶部导航栏 */
+        .top-nav {
+            background-color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            position: fixed;
+            width: 100%;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            left: 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin: 0 15px;
+            position: relative;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+            padding: 8px 12px;
+            border-radius: 6px;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .nav-links a.active {
+            color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .nav-links i {
+            margin-right: 8px;
+        }
+        
+        .login-btn {
+            background-color: var(--primary);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .login-btn:hover {
+            background-color: #3051d3;
+            transform: translateY(-2px);
+        }
+        
+        /* 下拉菜单 */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            z-index: 1;
+            top: 100%;
+            left: 0;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        
+        .dropdown-content a {
+            color: var(--text-dark);
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: all 0.2s;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: var(--primary-light);
+            color: var(--primary);
+        }
+        
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+        .dropdown-icon {
+            margin-left: 5px;
+            font-size: 12px;
+        }
+        
+        /* 主要内容区域 */
+        .main-content {
+            padding-top: 90px;
+            min-height: 100vh;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .page-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+        }
+        
+        .page-title i {
+            margin-right: 15px;
+            color: var(--slang-purple);
+            font-size: 32px;
+        }
+        
+        .page-actions {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .page-action {
+            padding: 8px 16px;
+            border-radius: 6px;
+            background-color: white;
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+        }
+        
+        .page-action:hover {
+            background-color: var(--slang-purple-light);
+            color: var(--slang-purple);
+            border-color: var(--slang-purple-light);
+        }
+        
+        .page-action i {
+            margin-right: 8px;
+        }
+        
+        /* 搜索栏 */
+        .search-container {
+            margin-bottom: 30px;
+        }
+        
+        .search-bar {
+            display: flex;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 15px 20px;
+            border: none;
+            font-size: 16px;
+            outline: none;
+        }
+        
+        .search-button {
+            background-color: var(--slang-purple);
+            color: white;
+            border: none;
+            padding: 0 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .search-button:hover {
+            background-color: #6b46c1;
+        }
+        
+        /* 分类标签 */
+        .category-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .category-tag {
+            padding: 8px 16px;
+            border-radius: 6px;
+            background-color: white;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid var(--border-color);
+        }
+        
+        .category-tag:hover, .category-tag.active {
+            background-color: var(--slang-purple-light);
+            color: var(--slang-purple);
+            border-color: var(--slang-purple-light);
+        }
+        
+        /* 网络用语表格 */
+        .slang-table-container {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            margin-bottom: 40px;
+        }
+        
+        .slang-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .slang-table th {
+            background-color: var(--slang-purple-light);
+            color: var(--slang-purple);
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .slang-table td {
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .slang-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .slang-table tr:hover {
+            background-color: var(--bg-light);
+        }
+        
+        .slang-chinese {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        
+        .slang-pinyin {
+            color: var(--text-light);
+        }
+        
+        .slang-definition {
+            color: var(--text-dark);
+        }
+        
+        .slang-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .slang-action {
+            display: flex;
+            align-items: center;
+            color: var(--text-light);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .slang-action:hover {
+            color: var(--slang-purple);
+        }
+        
+        .slang-action i {
+            margin-right: 5px;
+        }
+        
+        /* 热门网络用语卡片 */
+        .popular-slang {
+            margin-top: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .section-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 10px;
+            color: var(--slang-purple);
+        }
+        
+        .slang-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .slang-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
+            border-top: 4px solid var(--slang-purple);
+        }
+        
+        .slang-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        }
+        
+        .slang-card-header {
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .slang-card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--slang-purple);
+        }
+        
+        .slang-card-category {
+            font-size: 12px;
+            color: white;
+            background-color: var(--slang-purple);
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        
+        .slang-card-content {
+            padding: 15px;
+        }
+        
+        .slang-card-text {
+            font-size: 16px;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .slang-card-example {
+            background-color: var(--bg-light);
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: var(--text-light);
+        }
+        
+        .slang-card-footer {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 15px;
+            background-color: var(--bg-light);
+            color: var(--text-light);
+            font-size: 13px;
+        }
+        
+        /* 分页 */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 40px;
+            margin-bottom: 60px;
+        }
+        
+        .page-item {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 6px;
+            background-color: white;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid var(--border-color);
+        }
+        
+        .page-item:hover, .page-item.active {
+            background-color: var(--slang-purple);
+            color: white;
+            border-color: var(--slang-purple);
+        }
+        
+        .page-item.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .page-item.premium {
+            background-color: var(--premium-light);
+            color: var(--premium-purple);
+            border-color: var(--premium-purple);
+        }
+        
+        .page-item.premium:hover {
+            background-color: var(--premium-purple);
+            color: white;
+        }
+        
+        /* 订阅横幅 */
+        .subscription-banner {
+            background: linear-gradient(135deg, var(--premium-purple) 0%, var(--premium-dark) 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .banner-content {
+            flex: 1;
+        }
+        
+        .banner-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .banner-title i {
+            margin-right: 10px;
+        }
+        
+        .banner-description {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 15px;
+        }
+        
+        .banner-features {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .banner-feature {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+        }
+        
+        .banner-feature i {
+            margin-right: 5px;
+            color: #a5b4fc;
+        }
+        
+        .banner-action {
+            background-color: white;
+            color: var(--premium-dark);
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+        
+        .banner-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* 订阅模态框 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .subscription-modal {
+            background-color: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(20px);
+            transition: all 0.3s;
+        }
+        
+        .modal-overlay.active .subscription-modal {
+            transform: translateY(0);
+        }
+        
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        .subscription-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .subscription-option {
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+        
+        .subscription-option:hover {
+            border-color: var(--premium-purple);
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .subscription-option.selected {
+            border-color: var(--premium-purple);
+            background-color: var(--premium-light);
+        }
+        
+        .option-badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background-color: var(--premium-purple);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .option-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--text-dark);
+        }
+        
+        .option-price {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--premium-purple);
+            margin-bottom: 10px;
+        }
+        
+        .option-price span {
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--text-light);
+        }
+        
+        .option-features {
+            margin-top: 15px;
+        }
+        
+        .option-feature {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: var(--text-light);
+        }
+        
+        .option-feature i {
+            margin-right: 8px;
+            color: var(--premium-purple);
+        }
+        
+        .payment-methods {
+            margin-top: 20px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+        }
+        
+        .payment-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+        }
+        
+        .payment-options {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .payment-option {
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+        }
+        
+        .payment-option:hover {
+            border-color: var(--premium-purple);
+        }
+        
+        .payment-option.selected {
+            border-color: var(--premium-purple);
+            background-color: var(--premium-light);
+        }
+        
+        .payment-option i {
+            margin-right: 8px;
+            font-size: 20px;
+        }
+        
+        .modal-footer {
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+        
+        .modal-btn {
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .modal-btn.cancel {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+        }
+        
+        .modal-btn.cancel:hover {
+            background-color: var(--border-color);
+        }
+        
+        .modal-btn.subscribe {
+            background-color: var(--premium-purple);
+            color: white;
+            border: none;
+        }
+        
+        .modal-btn.subscribe:hover {
+            background-color: var(--premium-dark);
+        }
+        
+        /* 付费内容遮罩 */
+        .premium-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+        
+        .premium-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .premium-content {
+            background-color: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            padding: 30px;
+            text-align: center;
+            transform: translateY(20px);
+            transition: all 0.3s;
+        }
+        
+        .premium-overlay.active .premium-content {
+            transform: translateY(0);
+        }
+        
+        .premium-icon {
+            font-size: 60px;
+            color: var(--premium-purple);
+            margin-bottom: 20px;
+        }
+        
+        .premium-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+        }
+        
+        .premium-description {
+            font-size: 16px;
+            color: var(--text-light);
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+        
+        .premium-btn {
+            background-color: var(--premium-purple);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            margin-bottom: 15px;
+        }
+        
+        .premium-btn:hover {
+            background-color: var(--premium-dark);
+        }
+        
+        .premium-close {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        
+        /* 更新提示标签 */
+        .update-badge {
+            background-color: var(--premium-purple);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-left: 10px;
+            font-weight: 500;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 900px) {
+            .slang-cards {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+            
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .page-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+            
+            .slang-table th:nth-child(2), 
+            .slang-table td:nth-child(2) {
+                display: none;
+            }
+            
+            .subscription-banner {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .banner-features {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            .banner-action {
+                margin-top: 15px;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .slang-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .top-nav {
+                padding: 12px 15px;
+            }
+            
+            .nav-links li {
+                margin: 0 5px;
+            }
+            
+            .nav-links a {
+                padding: 6px 8px;
+                font-size: 14px;
+            }
+            
+            .login-btn {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+            
+            .page-title {
+                font-size: 22px;
+            }
+            
+            .page-title i {
+                font-size: 24px;
+            }
+            
+            .slang-table th:last-child, 
+            .slang-table td:last-child {
+                display: none;
+            }
+            
+            .subscription-options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <nav class="top-nav">
+        <a href="index.html" class="logo">语e桥</a>
+        
+        <ul class="nav-links">
+            <li><a href="index.html"><i class="icon">🏠</i>首页</a></li>
+            <li><a href="languagepartner-search.html"><i class="icon">👫</i>语伴</a></li>
+            <li class="dropdown">
+                <a href="chat.html"><i class="icon">💬</i>聊天<span class="dropdown-icon">▼</span></a>
+                <div class="dropdown-content">
+                    <a href="ai-chat.html">AI语伴</a>
+                    <a href="chat.html">语伴聊天</a>
+                </div>
+            </li>
+            <li><a href="experiment.html"><i class="icon">🧪</i>实验招募</a></li>
+            <li class="dropdown">
+                <a href="community-resources.html" class="active"><i class="icon">📚</i>学习社区<span class="dropdown-icon">▼</span></a>
+                <div class="dropdown-content">
+                    <a href="personal-publish.html">个人发布</a>
+                    <a href="community-resources.html">社区资源</a>
+                    <a href="learningpath.html">学习路径</a>
+                </div>
+            </li>
+            <li><a href="tutor-matching.html"><i class="icon">👥</i>轻辅导</a></li>
+        </ul>
+        
+        <a href="login.html" class="login-btn">登录</a>
+    </nav>
+
+    <div class="container">
+        <div class="main-content">
+            <div class="page-header">
+                <h1 class="page-title"><i class="icon">🔤</i> 中文网络用语大全 <span class="update-badge">每周更新</span></h1>
+                <div class="page-actions">
+                    <button class="page-action">
+                        <i class="icon">🔄</i> 随机用语
+                    </button>
+                    <button class="page-action">
+                        <i class="icon">❤️</i> 我的收藏
+                    </button>
+                    <button class="page-action" style="background-color: var(--premium-light); color: var(--premium-purple); border-color: var(--premium-purple);" id="subscribeBtn">
+                        <i class="icon">⭐</i> 订阅会员
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 订阅横幅 -->
+            <div class="subscription-banner">
+                <div class="banner-content">
+                    <h3 class="banner-title"><i class="icon">🎁</i> 解锁完整网络用语内容</h3>
+                    <p class="banner-description">订阅会员，畅享最新流行网络用语，轻松融入中文互联网文化！</p>
+                    <div class="banner-features">
+                        <div class="banner-feature"><i class="icon">✓</i> 每周更新内容</div>
+                        <div class="banner-feature"><i class="icon">✓</i> 详细释义与例句</div>
+                        <div class="banner-feature"><i class="icon">✓</i> 发音与使用技巧</div>
+                    </div>
+                </div>
+                <button class="banner-action" id="bannerSubscribeBtn">立即订阅</button>
+            </div>
+            
+            <div class="search-container">
+                <div class="search-bar">
+                    <input type="text" class="search-input" placeholder="搜索网络用语...">
+                    <button class="search-button">搜索</button>
+                </div>
+            </div>
+            
+            <div class="category-tags">
+                <div class="category-tag active">全部</div>
+                <div class="category-tag">社交媒体</div>
+                <div class="category-tag">游戏用语</div>
+                <div class="category-tag">网络缩写</div>
+                <div class="category-tag">流行词汇</div>
+                <div class="category-tag">表情包用语</div>
+            </div>
+            
+            <div class="slang-table-container">
+                <table class="slang-table">
+                    <thead>
+                        <tr>
+                            <th>汉字</th>
+                            <th>拼音</th>
+                            <th>含义</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="slang-chinese">永远的神</td>
+                            <td class="slang-pinyin">yǒngyuǎn de shén</td>
+                            <td class="slang-definition">yyds; eternal god</td>
+                            <td>
+                                <div class="slang-actions">
+                                    <div class="slang-action"><i class="icon">🔊</i> 发音</div>
+                                    <div class="slang-action"><i class="icon">❤️</i> 收藏</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="slang-chinese">你说得对</td>
+                            <td class="slang-pinyin">nǐ shuō dé duì</td>
+                            <td class="slang-definition">nsdd; you're right</td>
+                            <td>
+                                <div class="slang-actions">
+                                    <div class="slang-action"><i class="icon">🔊</i> 发音</div>
+                                    <div class="slang-action"><i class="icon">❤️</i> 收藏</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="slang-chinese">真情实感</td>
+                            <td class="slang-pinyin">zhēnqíng shígǎn</td>
+                            <td class="slang-definition">zqsg; heartfelt and emotional</td>
+                            <td>
+                                <div class="slang-actions">
+                                    <div class="slang-action"><i class="icon">🔊</i> 发音</div>
+                                    <div class="slang-action"><i class="icon">❤️</i> 收藏</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="slang-chinese">笑死我了</td>
+                            <td class="slang-pinyin">xiào sǐ wǒ le</td>
+                            <td class="slang-definition">xswl; hilarious</td>
+                            <td>
+                                <div class="slang-actions">
+                                    <div class="slang-action"><i class="icon">🔊</i> 发音</div>
+                                    <div class="slang-action"><i class="icon">❤️</i> 收藏</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="slang-chinese">漂亮哥哥</td>
+                            <td class="slang-pinyin">piàoliang gēgē</td>
+                            <td class="slang-definition">plgg; a pretty boy</td>
+                            <td>
+                                <div class="slang-actions">
+                                    <div class="slang-action"><i class="icon">🔊</i> 发音</div>
+                                    <div class="slang-action"><i class="icon">❤️</i> 收藏</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="slang-chinese">漂亮姐姐</td>
+                            <td class="slang-pinyin">piàoliang jiějiě</td>
+                            <td class="slang-definition">pljj; a pretty girl</td>
+                            <td>
+                                <div class="slang-actions">
+                                    <div class="slang-action"><i class="icon">🔊</i> 发音</div>
+                                    <div class="slang-action"><i class="icon">❤️</i> 收藏</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="slang-chinese">不懂就问</td>
+                            <td class="slang-pinyin">bù dǒng jiù wèn</td>
+                            <td class="slang-definition">bdjw; just asking</td>
+                            <td>
+                                <div class="slang-actions">
+                                    <div class="slang-action"><i class="icon">🔊</i> 发音</div>
+                                    <div class="slang-action"><i class="icon">❤️</i> 收藏</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="slang-chinese">网络</td>
+                            <td class="slang-pinyin">wǎngluò</td>
+                            <td class="slang-definition">internet</td>
+                            <td>
+                                <div class="slang-actions">
+                                    <div class="slang-action"><i class="icon">🔊</i> 发音</div>
+                                    <div class="slang-action"><i class="icon">❤️</i> 收藏</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="slang-chinese">俚语</td>
+                            <td class="slang-pinyin">lǐyǔ</td>
+                            <td class="slang-definition">slang</td>
+                            <td>
+                                <div class="slang-actions">
+                                    <div class="slang-action"><i class="icon">🔊</i> 发音</div>
+                                    <div class="slang-action"><i class="icon">❤️</i> 收藏</div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="popular-slang">
+                <h2 class="section-title"><i class="icon">🔥</i> 热门网络用语</h2>
+                <div class="slang-cards">
+                    <div class="slang-card">
+                        <div class="slang-card-header">
+                            <h3 class="slang-card-title">666</h3>
+                            <div class="slang-card-category">流行词汇</div>
+                        </div>
+                        <div class="slang-card-content">
+                            <p class="slang-card-text">形容某人技术很厉害、很强或者很棒。源自游戏用语，后来广泛流行。</p>
+                            <div class="slang-card-example">
+                                "这个选手的操作太6了！" (This player's skills are amazing!)
+                            </div>
+                        </div>
+                        <div class="slang-card-footer">
+                            <span>拼音: liù liù liù</span>
+                            <span>英文缩写: 666</span>
+                        </div>
+                    </div>
+                    
+                    <div class="slang-card">
+                        <div class="slang-card-header">
+                            <h3 class="slang-card-title">凡尔赛</h3>
+                            <div class="slang-card-category">流行词汇</div>
+                        </div>
+                        <div class="slang-card-content">
+                            <p class="slang-card-text">指炫耀时故作谦虚，源自法国凡尔赛宫的奢华。形容一种看似谦虚实则炫耀的说话方式。</p>
+                            <div class="slang-card-example">
+                                "我这个破车开了五年了，勉强能开，唉，奔驰就是不耐用。" (My old car has been running for five years, barely works. Sigh, Mercedes just isn't durable.)
+                            </div>
+                        </div>
+                        <div class="slang-card-footer">
+                            <span>拼音: fán ěr sài</span>
+                            <span>英文: Versailles</span>
+                        </div>
+                    </div>
+                    
+                    <div class="slang-card">
+                        <div class="slang-card-header">
+                            <h3 class="slang-card-title">老六</h3>
+                            <div class="slang-card-category">网络用语</div>
+                        </div>
+                        <div class="slang-card-content">
+                            <p class="slang-card-text">指行为猥琐、不光明正大的人。在网络上常用来调侃朋友或形容某些行为。</p>
+                            <div class="slang-card-example">
+                                "你偷看别人手机，真是个老六！" (You're sneaking a look at someone else's phone, what a sneaky person!)
+                            </div>
+                        </div>
+                        <div class="slang-card-footer">
+                            <span>拼音: lǎo liù</span>
+                            <span>英文: sneaky person</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="pagination">
+                <div class="page-item disabled">«</div>
+                <div class="page-item active">1</div>
+                <div class="page-item">2</div>
+                <div class="page-item">3</div>
+                <div class="page-item">4</div>
+                <div class="page-item">5</div>
+                <div class="page-item premium">6</div>
+                <div class="page-item premium">7</div>
+                <div class="page-item premium">8</div>
+                <div class="page-item premium">»</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 订阅模态框 -->
+    <div class="modal-overlay" id="subscriptionModal">
+        <div class="subscription-modal">
+            <div class="modal-header">
+                <h3 class="modal-title">选择您的订阅计划</h3>
+                <button class="modal-close" id="modalClose">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="subscription-options">
+                    <div class="subscription-option" data-plan="weekly">
+                        <div class="option-title">周订阅</div>
+                        <div class="option-price">¥6.9 <span>/周</span></div>
+                        <div class="option-features">
+                            <div class="option-feature"><i class="icon">✓</i> 解锁全部网络用语</div>
+                            <div class="option-feature"><i class="icon">✓</i> 每周更新</div>
+                            <div class="option-feature"><i class="icon">✓</i> 发音功能</div>
+                        </div>
+                    </div>
+                    
+                    <div class="subscription-option" data-plan="monthly">
+                        <div class="option-badge">最受欢迎</div>
+                        <div class="option-title">月订阅</div>
+                        <div class="option-price">¥24.9 <span>/月</span></div>
+                        <div class="option-features">
+                            <div class="option-feature"><i class="icon">✓</i> 解锁全部网络用语</div>
+                            <div class="option-feature"><i class="icon">✓</i> 每周更新</div>
+                            <div class="option-feature"><i class="icon">✓</i> 发音功能</div>
+                            <div class="option-feature"><i class="icon">✓</i> 节省28%</div>
+                        </div>
+                    </div>
+                    
+                    <div class="subscription-option" data-plan="full">
+                        <div class="option-title">全模块解锁</div>
+                        <div class="option-price">¥39.9 <span>/一次性</span></div>
+                        <div class="option-features">
+                            <div class="option-feature"><i class="icon">✓</i> 解锁全部网络用语</div>
+                            <div class="option-feature"><i class="icon">✓</i> 每周更新</div>
+                            <div class="option-feature"><i class="icon">✓</i> 发音功能</div>
+                            <div class="option-feature"><i class="icon">✓</i> 解锁所有学习模块</div>
+                            <div class="option-feature"><i class="icon">✓</i> 最佳性价比</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="payment-methods">
+                    <div class="payment-title">选择支付方式</div>
+                    <div class="payment-options">
+                        <div class="payment-option selected">
+                            <i class="icon">💳</i> 微信支付
+                        </div>
+                        <div class="payment-option">
+                            <i class="icon">💰</i> 支付宝
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn cancel" id="cancelBtn">取消</button>
+                <button class="modal-btn subscribe" id="confirmSubscribeBtn">确认订阅</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 付费内容遮罩 -->
+    <div class="premium-overlay" id="premiumOverlay">
+        <div class="premium-content">
+            <div class="premium-icon">🔒</div>
+            <h3 class="premium-title">付费内容</h3>
+            <p class="premium-description">您正在尝试访问付费内容。订阅会员后即可解锁全部网络用语内容，轻松融入中文互联网文化！</p>
+            <button class="premium-btn" id="premiumSubscribeBtn">立即订阅</button>
+            <button class="premium-close" id="premiumClose">返回免费内容</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 分类标签点击事件
+            const categoryTags = document.querySelectorAll('.category-tag');
+            categoryTags.forEach(tag => {
+                tag.addEventListener('click', function() {
+                    categoryTags.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // 收藏功能
+            const favoriteButtons = document.querySelectorAll('.slang-action:nth-child(2)');
+            favoriteButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    this.innerHTML = '<i class="icon">❤️</i> 已收藏';
+                    this.style.color = '#e53e3e';
+                });
+            });
+            
+            // 发音功能
+            const pronunciationButtons = document.querySelectorAll('.slang-action:first-child');
+            pronunciationButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    alert('发音功能即将上线');
+                });
+            });
+            
+            // 分页功能
+            const pageItems = document.querySelectorAll('.page-item:not(.disabled)');
+            pageItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    if (!this.classList.contains('active')) {
+                        // 检查是否为付费页面
+                        if (this.classList.contains('premium')) {
+                            showPremiumOverlay();
+                            return;
+                        }
+                        
+                        pageItems.forEach(p => p.classList.remove('active'));
+                        this.classList.add('active');
+                    }
+                });
+            });
+            
+            // 随机用语按钮
+            const randomButton = document.querySelector('.page-action:first-child');
+            randomButton.addEventListener('click', function() {
+                alert('随机网络用语功能即将上线');
+            });
+            
+            // 我的收藏按钮
+            const myFavoritesButton = document.querySelector('.page-action:nth-child(2)');
+            myFavoritesButton.addEventListener('click', function() {
+                alert('我的收藏功能即将上线');
+            });
+            
+            // 订阅相关功能
+            const subscribeBtn = document.getElementById('subscribeBtn');
+            const bannerSubscribeBtn = document.getElementById('bannerSubscribeBtn');
+            const subscriptionModal = document.getElementById('subscriptionModal');
+            const modalClose = document.getElementById('modalClose');
+            const cancelBtn = document.getElementById('cancelBtn');
+            const confirmSubscribeBtn = document.getElementById('confirmSubscribeBtn');
+            
+            // 显示订阅模态框
+            function showSubscriptionModal() {
+                subscriptionModal.classList.add('active');
+            }
+            
+            // 隐藏订阅模态框
+            function hideSubscriptionModal() {
+                subscriptionModal.classList.remove('active');
+            }
+            
+            // 订阅按钮点击事件
+            subscribeBtn.addEventListener('click', showSubscriptionModal);
+            bannerSubscribeBtn.addEventListener('click', showSubscriptionModal);
+            
+            // 关闭订阅模态框
+            modalClose.addEventListener('click', hideSubscriptionModal);
+            cancelBtn.addEventListener('click', hideSubscriptionModal);
+            
+            // 确认订阅
+            confirmSubscribeBtn.addEventListener('click', function() {
+                alert('订阅成功！您现在可以访问所有网络用语内容了。');
+                hideSubscriptionModal();
+                
+                // 移除付费页面的premium类
+                document.querySelectorAll('.page-item.premium').forEach(item => {
+                    item.classList.remove('premium');
+                });
+            });
+            
+            // 订阅选项选择
+            const subscriptionOptions = document.querySelectorAll('.subscription-option');
+            subscriptionOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    subscriptionOptions.forEach(o => o.classList.remove('selected'));
+                    this.classList.add('selected');
+                });
+            });
+            
+            // 默认选中月订阅
+            document.querySelector('.subscription-option[data-plan="monthly"]').classList.add('selected');
+            
+            // 支付方式选择
+            const paymentOptions = document.querySelectorAll('.payment-option');
+            paymentOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    paymentOptions.forEach(o => o.classList.remove('selected'));
+                    this.classList.add('selected');
+                });
+            });
+            
+            // 付费内容遮罩
+            const premiumOverlay = document.getElementById('premiumOverlay');
+            const premiumSubscribeBtn = document.getElementById('premiumSubscribeBtn');
+            const premiumClose = document.getElementById('premiumClose');
+            
+            // 显示付费内容遮罩
+            function showPremiumOverlay() {
+                premiumOverlay.classList.add('active');
+            }
+            
+            // 隐藏付费内容遮罩
+            function hidePremiumOverlay() {
+                premiumOverlay.classList.remove('active');
+            }
+            
+            // 付费内容订阅按钮
+            premiumSubscribeBtn.addEventListener('click', function() {
+                hidePremiumOverlay();
+                showSubscriptionModal();
+            });
+            
+            // 关闭付费内容遮罩
+            premiumClose.addEventListener('click', hidePremiumOverlay);
+        });
+    </script>
+</body>
+</html>

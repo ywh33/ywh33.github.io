@@ -1,0 +1,2174 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI语伴聊天 2.0 | AI Language Companion - 语e桥</title>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    }
+    
+    :root {
+        --primary: #4361ee;
+        --primary-light: #eef2ff;
+        --secondary: #3ccf91;
+        --secondary-light: #e8f5e9;
+        --text-dark: #333333;
+        --text-light: #666666;
+        --bg-light: #f9fafb;
+        --border-color: #e5e7eb;
+        --warning-light: #fff3cd;
+        --warning: #ffc107;
+        --info-light: #e1f5fe;
+        --info: #03a9f4;
+        --success-light: #e8f5e9;
+        --success: #4caf50;
+        --user-color: #4caf50;
+        --ai-color: #4361ee;
+        --contact1-color: #f44336;
+        --contact2-color: #ff9800;
+        --contact3-color: #9c27b0;
+        --partner1-color: #e91e63;
+        --partner2-color: #2196f3;
+        --partner3-color: #ff5722;
+    }
+    
+    body {
+        background-color: var(--bg-light);
+        color: var(--text-dark);
+        line-height: 1.6;
+        height: 100vh;
+        overflow: hidden;
+    }
+    
+    /* 顶部导航栏 */
+    .top-nav {
+        background-color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 30px;
+        height: 64px;
+        position: fixed;
+        width: 100%;
+        z-index: 100;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        left: 0;
+    }
+    
+    .logo {
+        display: flex;
+        align-items: center;
+        font-size: 22px;
+        font-weight: bold;
+        color: var(--primary);
+        text-decoration: none;
+    }
+    
+    .nav-links {
+        display: flex;
+        list-style: none;
+        height: 100%;
+    }
+
+    .nav-links li {
+        height: 100%;
+        position: relative;
+    }
+
+    .nav-links a {
+        text-decoration: none;
+        color: var(--text-dark);
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        transition: all 0.3s;
+        padding: 0 20px;
+        height: 100%;
+    }
+
+    .nav-links a:hover {
+        color: var(--primary);
+        background-color: var(--primary-light);
+    }
+
+    .nav-links a.active {
+        color: var(--primary);
+        background-color: var(--primary-light);
+        position: relative;
+    }
+
+    .nav-links a.active::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background-color: var(--primary);
+    }
+    
+    .nav-links i {
+        margin-right: 8px;
+        font-size: 18px;
+    }
+    
+    /* 下拉菜单 */
+    .dropdown {
+        position: relative;
+        display: inline-block;
+        height: 100%;
+    }
+    
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: white;
+        min-width: 180px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.1);
+        border-radius: 8px;
+        z-index: 1;
+        top: 100%;
+        left: 0;
+        margin-top: 5px;
+        overflow: hidden;
+    }
+    
+    .dropdown-content a {
+        color: var(--text-dark);
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+        transition: all 0.2s;
+        height: auto;
+    }
+    
+    .dropdown-content a:hover {
+        background-color: var(--primary-light);
+        color: var(--primary);
+    }
+    
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+    
+    .dropdown-icon {
+        margin-left: 5px;
+        font-size: 12px;
+    }
+    
+    /* 主要聊天区域 */
+    .app-container {
+        display: flex;
+        height: 100vh;
+        padding-top: 64px;
+    }
+    
+    /* 左侧会话列表 */
+    .sidebar {
+        width: 320px;
+        background-color: white;
+        height: 100%;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        border-right: 1px solid var(--border-color);
+    }
+    
+    .search-container {
+        padding: 20px;
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    .search-bar {
+        position: relative;
+        width: 100%;
+    }
+    
+    .search-bar input {
+        width: 100%;
+        padding: 12px 15px 12px 40px;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        background-color: var(--bg-light);
+        font-size: 14px;
+        transition: all 0.3s;
+    }
+    
+    .search-bar input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px var(--primary-light);
+    }
+    
+    .search-icon {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-light);
+    }
+    
+    .sidebar-tabs {
+        display: flex;
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    .sidebar-tab {
+        flex: 1;
+        padding: 12px;
+        text-align: center;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s;
+        background-color: white;
+        border: none;
+        color: var(--text-light);
+    }
+    
+    .sidebar-tab.active {
+        color: var(--primary);
+        border-bottom: 2px solid var(--primary);
+    }
+    
+    .sidebar-tab:hover {
+        background-color: var(--bg-light);
+    }
+    
+    .sidebar-content {
+        flex: 1;
+        overflow-y: auto;
+        display: none;
+    }
+    
+    .sidebar-content.active {
+        display: block;
+    }
+    
+    .conversations {
+        padding: 10px 0;
+    }
+    
+    .conversation-item {
+        display: flex;
+        align-items: center;
+        padding: 15px 20px;
+        cursor: pointer;
+        transition: all 0.3s;
+        border-left: 3px solid transparent;
+    }
+    
+    .conversation-item:hover {
+        background-color: var(--bg-light);
+    }
+    
+    .conversation-item.active {
+        background-color: var(--primary-light);
+        border-left-color: var(--primary);
+    }
+    
+    .avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        color: white;
+        font-size: 16px;
+        margin-right: 15px;
+        flex-shrink: 0;
+    }
+    
+    .avatar.ai {
+        background-color: var(--ai-color);
+    }
+    
+    .avatar.user {
+        background-color: var(--user-color);
+    }
+    
+    .avatar.contact1 {
+        background-color: var(--contact1-color);
+    }
+    
+    .avatar.contact2 {
+        background-color: var(--contact2-color);
+    }
+    
+    .avatar.contact3 {
+        background-color: var(--contact3-color);
+    }
+    
+    .avatar.partner1 {
+        background-color: var(--partner1-color);
+    }
+    
+    .avatar.partner2 {
+        background-color: var(--partner2-color);
+    }
+    
+    .avatar.partner3 {
+        background-color: var(--partner3-color);
+    }
+    
+    .conversation-info {
+        flex: 1;
+        min-width: 0;
+    }
+    
+    .conversation-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 5px;
+    }
+    
+    .conversation-name {
+        font-weight: 600;
+        font-size: 15px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .conversation-time {
+        font-size: 12px;
+        color: var(--text-light);
+        white-space: nowrap;
+    }
+    
+    .conversation-preview {
+        font-size: 13px;
+        color: var(--text-light);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    /* 语伴推荐 */
+    .partners-container {
+        padding: 15px;
+    }
+    
+    .partners-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    
+    .partners-title {
+        font-weight: 600;
+        font-size: 16px;
+        color: var(--text-dark);
+    }
+    
+    .partners-subtitle {
+        font-size: 13px;
+        color: var(--text-light);
+        margin-bottom: 15px;
+    }
+    
+    .partner-card {
+        background-color: white;
+        border-radius: 12px;
+        padding: 15px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s;
+        cursor: pointer;
+    }
+    
+    .partner-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .partner-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    
+    .partner-info {
+        margin-left: 12px;
+    }
+    
+    .partner-name {
+        font-weight: 600;
+        font-size: 15px;
+    }
+    
+    .partner-details {
+        font-size: 12px;
+        color: var(--text-light);
+    }
+    
+    .partner-match {
+        display: inline-block;
+        background-color: var(--success-light);
+        color: var(--success);
+        font-size: 12px;
+        font-weight: 500;
+        padding: 3px 8px;
+        border-radius: 12px;
+        margin-top: 5px;
+    }
+    
+    .partner-interests {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        margin-top: 10px;
+    }
+    
+    .interest-tag {
+        font-size: 11px;
+        padding: 3px 8px;
+        border-radius: 12px;
+        background-color: var(--bg-light);
+        color: var(--text-light);
+    }
+    
+    .connect-button {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        border-radius: 8px;
+        background-color: var(--primary);
+        color: white;
+        text-align: center;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s;
+        margin-top: 15px;
+    }
+    
+    .connect-button:hover {
+        background-color: #3051d3;
+    }
+    
+    /* 学习资源 */
+    .resources-container {
+        padding: 15px;
+    }
+    
+    .resources-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    
+    .resources-title {
+        font-weight: 600;
+        font-size: 16px;
+        color: var(--text-dark);
+    }
+    
+    .resources-subtitle {
+        font-size: 13px;
+        color: var(--text-light);
+        margin-bottom: 15px;
+    }
+    
+    .resource-card {
+        background-color: white;
+        border-radius: 12px;
+        padding: 15px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s;
+        cursor: pointer;
+    }
+    
+    .resource-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .resource-type {
+        display: inline-block;
+        font-size: 12px;
+        padding: 3px 8px;
+        border-radius: 12px;
+        margin-bottom: 8px;
+    }
+    
+    .resource-type.article {
+        background-color: var(--info-light);
+        color: var(--info);
+    }
+    
+    .resource-type.video {
+        background-color: var(--warning-light);
+        color: var(--warning);
+    }
+    
+    .resource-type.exercise {
+        background-color: var(--success-light);
+        color: var(--success);
+    }
+    
+    .resource-title {
+        font-weight: 600;
+        font-size: 15px;
+        margin-bottom: 5px;
+    }
+    
+    .resource-description {
+        font-size: 13px;
+        color: var(--text-light);
+        margin-bottom: 10px;
+    }
+    
+    .resource-relevance {
+        display: flex;
+        align-items: center;
+        font-size: 12px;
+        color: var(--primary);
+    }
+    
+    .resource-relevance i {
+        margin-right: 5px;
+    }
+    
+    .view-all-button {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        border-radius: 8px;
+        background-color: var(--bg-light);
+        color: var(--text-dark);
+        text-align: center;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s;
+        margin-top: 10px;
+    }
+    
+    .view-all-button:hover {
+        background-color: var(--border-color);
+    }
+    
+    /* 右侧聊天区域 */
+    .chat-container {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        background-color: white;
+    }
+    
+    .chat-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 30px;
+        border-bottom: 1px solid var(--border-color);
+        background-color: white;
+    }
+    
+    .chat-user {
+        display: flex;
+        align-items: center;
+    }
+    
+    .chat-user-info {
+        margin-left: 15px;
+    }
+    
+    .chat-username {
+        font-weight: 600;
+        font-size: 16px;
+    }
+    
+    .chat-status {
+        font-size: 13px;
+        color: var(--secondary);
+    }
+    
+    .chat-actions {
+        display: flex;
+        gap: 15px;
+    }
+    
+    .action-button {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--bg-light);
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 18px;
+    }
+    
+    .action-button:hover {
+        background-color: var(--primary-light);
+        color: var(--primary);
+    }
+    
+    .chat-messages {
+        flex: 1;
+        padding: 30px;
+        overflow-y: auto;
+        background-color: var(--bg-light);
+    }
+    
+    .message-group {
+        margin-bottom: 30px;
+    }
+    
+    .message-time-divider {
+        text-align: center;
+        margin: 20px 0;
+        position: relative;
+    }
+    
+    .time-label {
+        background-color: var(--bg-light);
+        padding: 0 15px;
+        font-size: 12px;
+        color: var(--text-light);
+        position: relative;
+        z-index: 1;
+        display: inline-block;
+    }
+    
+    .time-divider {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background-color: var(--border-color);
+        z-index: 0;
+    }
+    
+    .message {
+        display: flex;
+        margin-bottom: 20px;
+        position: relative;
+        max-width: 80%;
+    }
+    
+    .message.received {
+        align-self: flex-start;
+        margin-right: auto;
+    }
+    
+    .message.sent {
+        flex-direction: row-reverse;
+        align-self: flex-end;
+        margin-left: auto;
+    }
+    
+    .message-content {
+        padding: 15px 20px;
+        border-radius: 18px;
+        position: relative;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+    
+    .message.received .message-content {
+        background-color: white;
+        border-top-left-radius: 4px;
+        margin-left: 15px;
+    }
+    
+    .message.sent .message-content {
+        background-color: var(--primary-light);
+        color: var(--primary);
+        border-top-right-radius: 4px;
+        margin-right: 15px;
+    }
+    
+    .message-text {
+        line-height: 1.5;
+        font-size: 15px;
+    }
+    
+    .message-time {
+        font-size: 12px;
+        color: var(--text-light);
+        margin-top: 5px;
+        text-align: right;
+    }
+    
+    /* AI 功能区域 */
+    .ai-features {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 15px;
+    }
+    
+    .feature-tag {
+        font-size: 13px;
+        padding: 6px 12px;
+        border-radius: 20px;
+        display: inline-flex;
+        align-items: center;
+        cursor: pointer;
+        background-color: white;
+        border: 1px solid var(--border-color);
+        transition: all 0.3s;
+    }
+    
+    .feature-tag:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+        background-color: var(--primary-light);
+    }
+    
+    .feature-tag i {
+        margin-right: 6px;
+        font-size: 14px;
+    }
+    
+    /* AI 功能卡片 */
+    .ai-feature-card {
+        width: 100%;
+        background-color: var(--info-light);
+        border-radius: 12px;
+        padding: 15px;
+        margin-top: 15px;
+        border-left: 4px solid var(--info);
+        transition: all 0.3s;
+        overflow: hidden;
+        max-height: 0;
+        opacity: 0;
+    }
+    
+    .ai-feature-card.active {
+        max-height: 500px;
+        opacity: 1;
+        margin-top: 15px;
+    }
+    
+    .ai-feature-card.warning {
+        background-color: var(--warning-light);
+        border-left-color: var(--warning);
+    }
+    
+    .ai-feature-card.success {
+        background-color: var(--success-light);
+        border-left-color: var(--success);
+    }
+    
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    
+    .card-title {
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    
+    .card-close {
+        font-size: 20px;
+        cursor: pointer;
+        color: var(--text-light);
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: all 0.2s;
+    }
+    
+    .card-close:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+    
+    .card-content {
+        font-size: 14px;
+    }
+    
+    .card-content p {
+        margin-bottom: 8px;
+    }
+    
+    .card-content ul {
+        padding-left: 20px;
+        margin-bottom: 8px;
+    }
+    
+    .card-content ul li {
+        margin-bottom: 5px;
+    }
+    
+    .suggestion-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 12px;
+        background-color: white;
+        border-radius: 8px;
+        margin-bottom: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    
+    .suggestion-item:hover {
+        background-color: var(--primary-light);
+    }
+    
+    .suggestion-text {
+        flex: 1;
+    }
+    
+    .suggestion-use {
+        color: var(--primary);
+        font-size: 13px;
+        font-weight: 500;
+        padding: 4px 8px;
+        border-radius: 4px;
+        background-color: var(--primary-light);
+        transition: all 0.2s;
+    }
+    
+    .suggestion-item:hover .suggestion-use {
+        background-color: var(--primary);
+        color: white;
+    }
+    
+    /* 智能推荐卡片 */
+    .smart-recommendation {
+        background-color: white;
+        border-radius: 12px;
+        padding: 15px;
+        margin: 20px 0;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        border-left: 4px solid var(--secondary);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .recommendation-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    
+    .recommendation-title {
+        font-weight: 600;
+        font-size: 16px;
+        color: var(--text-dark);
+        display: flex;
+        align-items: center;
+    }
+    
+    .recommendation-title i {
+        margin-right: 8px;
+        color: var(--secondary);
+    }
+    
+    .recommendation-close {
+        font-size: 20px;
+        cursor: pointer;
+        color: var(--text-light);
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: all 0.2s;
+    }
+    
+    .recommendation-close:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+    
+    .recommendation-content {
+        margin-bottom: 15px;
+    }
+    
+    .recommendation-text {
+        font-size: 14px;
+        color: var(--text-light);
+        margin-bottom: 10px;
+    }
+    
+    .recommendation-items {
+        display: flex;
+        gap: 10px;
+        overflow-x: auto;
+        padding-bottom: 10px;
+    }
+    
+    .recommendation-item {
+        min-width: 200px;
+        background-color: var(--bg-light);
+        border-radius: 8px;
+        padding: 12px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    .recommendation-item:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .recommendation-item-title {
+        font-weight: 500;
+        font-size: 14px;
+        margin-bottom: 5px;
+    }
+    
+    .recommendation-item-desc {
+        font-size: 12px;
+        color: var(--text-light);
+    }
+    
+    .recommendation-actions {
+        display: flex;
+        justify-content: flex-end;
+    }
+    
+    .recommendation-button {
+        padding: 8px 15px;
+        border-radius: 20px;
+        background-color: var(--secondary);
+        color: white;
+        font-size: 13px;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+    }
+    
+    .recommendation-button i {
+        margin-right: 5px;
+    }
+    
+    .recommendation-button:hover {
+        background-color: #2ba978;
+        transform: translateY(-2px);
+    }
+    
+    /* 语伴匹配推荐 */
+    .partner-recommendation {
+        background-color: white;
+        border-radius: 12px;
+        padding: 15px;
+        margin: 20px 0;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        border-left: 4px solid var(--partner1-color);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .partner-recommendation-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    
+    .partner-recommendation-title {
+        font-weight: 600;
+        font-size: 16px;
+        color: var(--text-dark);
+        display: flex;
+        align-items: center;
+    }
+    
+    .partner-recommendation-title i {
+        margin-right: 8px;
+        color: var(--partner1-color);
+    }
+    
+    .partner-recommendation-text {
+        font-size: 14px;
+        color: var(--text-light);
+        margin-bottom: 15px;
+    }
+    
+    .partner-matches {
+        display: flex;
+        gap: 15px;
+        overflow-x: auto;
+        padding-bottom: 10px;
+    }
+    
+    .partner-match-card {
+        min-width: 180px;
+        background-color: var(--bg-light);
+        border-radius: 12px;
+        padding: 15px;
+        transition: all 0.3s;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .partner-match-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .partner-match-avatar {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        color: white;
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+    
+    .partner-match-info {
+        text-align: center;
+    }
+    
+    .partner-match-name {
+        font-weight: 600;
+        font-size: 15px;
+        margin-bottom: 5px;
+    }
+    
+    .partner-match-details {
+        font-size: 12px;
+        color: var(--text-light);
+        margin-bottom: 5px;
+    }
+    
+    .partner-match-compatibility {
+        display: inline-block;
+        background-color: var(--success-light);
+        color: var(--success);
+        font-size: 12px;
+        font-weight: 500;
+        padding: 3px 8px;
+        border-radius: 12px;
+    }
+    
+    .partner-match-button {
+        margin-top: 10px;
+        padding: 6px 12px;
+        border-radius: 20px;
+        background-color: var(--partner1-color);
+        color: white;
+        font-size: 12px;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    .partner-match-button:hover {
+        opacity: 0.9;
+    }
+    
+    .partner-recommendation-actions {
+        display: flex;
+        justify-content: center;
+        margin-top: 15px;
+    }
+    
+    .view-all-partners-button {
+        padding: 8px 20px;
+        border-radius: 20px;
+        background-color: var(--partner1-color);
+        color: white;
+        font-size: 14px;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+    }
+    
+    .view-all-partners-button i {
+        margin-right: 5px;
+    }
+    
+    .view-all-partners-button:hover {
+        background-color: #d81b60;
+        transform: translateY(-2px);
+    }
+    
+    /* 输入区域 */
+    .chat-input-area {
+        padding: 20px 30px;
+        border-top: 1px solid var(--border-color);
+        background-color: white;
+    }
+    
+    .input-tools {
+        display: flex;
+        margin-bottom: 15px;
+    }
+    
+    .tool-button {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--text-light);
+        transition: all 0.3s;
+        margin-right: 10px;
+        font-size: 18px;
+    }
+    
+    .tool-button:hover {
+        background-color: var(--primary-light);
+        color: var(--primary);
+    }
+    
+    .input-container {
+        display: flex;
+        align-items: flex-end;
+    }
+    
+    .chat-input {
+        flex: 1;
+        padding: 15px 20px;
+        border-radius: 24px;
+        border: 1px solid var(--border-color);
+        background-color: var(--bg-light);
+        font-size: 15px;
+        transition: all 0.3s;
+        resize: none;
+        max-height: 150px;
+        min-height: 50px;
+    }
+    
+    .chat-input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px var(--primary-light);
+    }
+    
+    .send-button {
+        background-color: var(--primary);
+        color: white;
+        border: none;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        margin-left: 15px;
+        transition: all 0.3s;
+        font-size: 20px;
+    }
+    
+    .send-button:hover {
+        background-color: #3051d3;
+        transform: scale(1.05);
+    }
+    
+    /* 响应式调整 */
+    @media (max-width: 1200px) {
+        .sidebar {
+            width: 280px;
+        }
+    }
+    
+    @media (max-width: 992px) {
+        .app-container {
+            flex-direction: column;
+        }
+        
+        .sidebar {
+            width: 100%;
+            height: 300px;
+            border-right: none;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .chat-container {
+            height: calc(100% - 300px);
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .top-nav {
+            padding: 0 15px;
+        }
+        
+        .nav-links a {
+            padding: 0 12px;
+        }
+        
+        .chat-messages {
+            padding: 20px;
+        }
+        
+        .chat-header, .chat-input-area {
+            padding: 15px 20px;
+        }
+        
+        .message {
+            max-width: 90%;
+        }
+        
+        .partner-matches, .recommendation-items {
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .partner-match-card, .recommendation-item {
+            min-width: auto;
+            width: 100%;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .top-nav {
+            padding: 0 10px;
+        }
+        
+        .logo {
+            font-size: 20px;
+        }
+        
+        .nav-links a {
+            padding: 0 8px;
+        }
+        
+        .nav-links i {
+            margin-right: 0;
+        }
+        
+        .chat-messages {
+            padding: 15px;
+        }
+        
+        .message {
+            max-width: 95%;
+        }
+    }
+</style>
+</head>
+<body>
+<!-- 顶部导航栏 -->
+<nav class="top-nav">
+    <a href="index.html" class="logo">语e桥</a>
+    
+    <ul class="nav-links">
+        <li><a href="index.html"><i class="icon">🏠</i>首页</a></li>
+        <li><a href="languagepartner-search.html"><i class="icon">👫</i>语伴</a></li>
+        <li class="dropdown">
+            <a href="chat.html" class="active"><i class="icon">💬</i>聊天<span class="dropdown-icon">▼</span></a>
+            <div class="dropdown-content">
+                <a href="ai-chat.html">AI语伴聊天</a>
+                <a href="chat.html">语伴聊天</a>
+            </div>
+        </li>
+        <li><a href="experiment.html"><i class="icon">🧪</i>实验招募</a></li>
+        <li class="dropdown">
+            <a href="community-resources.html"><i class="icon">📚</i>学习社区<span class="dropdown-icon">▼</span></a>
+            <div class="dropdown-content">
+                <a href="personal-publish.html">个人发布</a>
+                <a href="community-resources.html">社区资源</a>
+                <a href="dragon-boat-festival.html">传统节日</a>
+                <a href="learningpath.html">学习路径</a>
+            </div>
+        </li>
+        <li><a href="tutor-matching.html"><i class="icon">👥</i>轻辅导</a></li>
+        <li><a href="login.html">登录</a></li>
+    </ul>
+</nav>
+
+<!-- 应用主容器 -->
+<div class="app-container">
+    <!-- 左侧会话列表 -->
+    <div class="sidebar">
+        <div class="search-container">
+            <div class="search-bar">
+                <input type="text" placeholder="搜索对话...">
+                <span class="search-icon">🔍</span>
+            </div>
+        </div>
+        
+        <div class="sidebar-tabs">
+            <button class="sidebar-tab active" onclick="switchTab('conversations')">聊天</button>
+            <button class="sidebar-tab" onclick="switchTab('partners')">语伴推荐</button>
+            <button class="sidebar-tab" onclick="switchTab('resources')">学习资源</button>
+        </div>
+        
+        <div id="conversations-tab" class="sidebar-content active">
+            <div class="conversations">
+                <div class="conversation-item active">
+                    <div class="avatar ai">AI</div>
+                    <div class="conversation-info">
+                        <div class="conversation-header">
+                            <div class="conversation-name">AI语伴助手</div>
+                            <div class="conversation-time">上午10:30</div>
+                        </div>
+                        <div class="conversation-preview">欢迎使用AI语伴！我可以帮助你提升语言能力...</div>
+                    </div>
+                </div>
+                
+                <div class="conversation-item">
+                    <div class="avatar contact1">王小</div>
+                    <div class="conversation-info">
+                        <div class="conversation-header">
+                            <div class="conversation-name">王小明</div>
+                            <div class="conversation-time">昨天</div>
+                        </div>
+                        <div class="conversation-preview">下次我们去中关村见面吧！</div>
+                    </div>
+                </div>
+                
+                <div class="conversation-item">
+                    <div class="avatar contact2">LC</div>
+                    <div class="conversation-info">
+                        <div class="conversation-header">
+                            <div class="conversation-name">Lisa Chen</div>
+                            <div class="conversation-time">周一</div>
+                        </div>
+                        <div class="conversation-preview">Thank you for helping with my Chinese!</div>
+                    </div>
+                </div>
+                
+                <div class="conversation-item">
+                    <div class="avatar contact3">张伟</div>
+                    <div class="conversation-info">
+                        <div class="conversation-header">
+                            <div class="conversation-name">张伟</div>
+                            <div class="conversation-time">上周</div>
+                        </div>
+                        <div class="conversation-preview">明天我们继续讨论项目计划</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="partners-tab" class="sidebar-content">
+            <div class="partners-container">
+                <div class="partners-header">
+                    <div class="partners-title">为您推荐的语伴</div>
+                </div>
+                <div class="partners-subtitle">基于您的聊天内容和学习兴趣，我们找到了这些匹配度高的语伴</div>
+                
+                <div class="partner-card">
+                    <div class="partner-header">
+                        <div class="avatar partner1">林小</div>
+                        <div class="partner-info">
+                            <div class="partner-name">林小雨</div>
+                            <div class="partner-details">中文母语 | 英语流利 | 北京</div>
+                            <div class="partner-match">匹配度: 92%</div>
+                        </div>
+                    </div>
+                    <div class="partner-interests">
+                        <span class="interest-tag">传统节日</span>
+                        <span class="interest-tag">中国文化</span>
+                        <span class="interest-tag">电影</span>
+                    </div>
+                    <button class="connect-button" onclick="window.location.href='chat.html?partner=林小雨&avatar=https://ui-avatars.com/api/?name=林小雨&background=e91e63&color=fff&size=50&flag=🇨🇳&language=中文'">立即连接</button>
+                </div>
+                
+                <div class="partner-card">
+                    <div class="partner-header">
+                        <div class="avatar partner2">MK</div>
+                        <div class="partner-info">
+                            <div class="partner-name">Mike Kim</div>
+                            <div class="partner-details">英语母语 | 中文中级 | 上海</div>
+                            <div class="partner-match">匹配度: 87%</div>
+                        </div>
+                    </div>
+                    <div class="partner-interests">
+                        <span class="interest-tag">商务中文</span>
+                        <span class="interest-tag">旅游</span>
+                        <span class="interest-tag">美食</span>
+                    </div>
+                    <button class="connect-button" onclick="window.location.href='chat.html?partner=Mike Kim&avatar=https://ui-avatars.com/api/?name=MK&background=2196f3&color=fff&size=50&flag=🇺🇸&language=英语'">立即连接</button>
+                </div>
+                
+                <div class="partner-card">
+                    <div class="partner-header">
+                        <div class="avatar partner3">赵文</div>
+                        <div class="partner-info">
+                            <div class="partner-name">赵文静</div>
+                            <div class="partner-details">中文母语 | 英语中级 | 成都</div>
+                            <div class="partner-match">匹配度: 85%</div>
+                        </div>
+                    </div>
+                    <div class="partner-interests">
+                        <span class="interest-tag">俚语</span>
+                        <span class="interest-tag">音乐</span>
+                        <span class="interest-tag">网络文化</span>
+                    </div>
+                    <button class="connect-button" onclick="window.location.href='chat.html?partner=赵文静&avatar=https://ui-avatars.com/api/?name=赵文&background=ff5722&color=fff&size=50&flag=🇨🇳&language=中文'">立即连接</button>
+                </div>
+                
+                <button class="view-all-button">查看更多语伴</button>
+            </div>
+        </div>
+        
+        <div id="resources-tab" class="sidebar-content">
+            <div class="resources-container">
+                <div class="resources-header">
+                    <div class="resources-title">个性化学习资源</div>
+                </div>
+                <div class="resources-subtitle">根据您的聊天内容和学习进度，为您推荐以下资源</div>
+                
+                <div class="resource-card">
+                    <div class="resource-type article">文章</div>
+                    <div class="resource-title">中国传统节日：中元节的由来与习俗</div>
+                    <div class="resource-description">了解中元节的文化背景、祭祀传统和现代庆祝方式</div>
+                    <div class="resource-relevance">
+                        <i>🔍</i> 基于您对"鬼节"的提问推荐
+                    </div>
+                </div>
+                
+                <div class="resource-card">
+                    <div class="resource-type video">视频</div>
+                    <div class="resource-title">中文动物比喻表达指南</div>
+                    <div class="resource-description">学习中文中常见的动物比喻及其文化内涵</div>
+                    <div class="resource-relevance">
+                        <i>🔍</i> 基于您的"猪"相关表达推荐
+                    </div>
+                </div>
+                
+                <div class="resource-card">
+                    <div class="resource-type exercise">练习</div>
+                    <div class="resource-title">商务中文：高语境表达练习</div>
+                    <div class="resource-description">通过情境对话练习理解和使用"磨合"等商务表达</div>
+                    <div class="resource-relevance">
+                        <i>🔍</i> 基于您的商务表达疑问推荐
+                    </div>
+                </div>
+                
+                <button class="view-all-button">查看全部学习资源</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 右侧聊天区域 -->
+    <div class="chat-container">
+        <div class="chat-header">
+            <div class="chat-user">
+                <div class="avatar ai">AI</div>
+                <div class="chat-user-info">
+                    <div class="chat-username">AI语伴助手</div>
+                    <div class="chat-status">在线</div>
+                </div>
+            </div>
+            
+            <div class="chat-actions">
+                <button class="action-button">🔊</button>
+                <button class="action-button">📞</button>
+                <button class="action-button">⚙️</button>
+            </div>
+        </div>
+        
+        <div class="chat-messages" id="chatMessages">
+            <div class="message-time-divider">
+                <span class="time-label">今天 上午10:30</span>
+                <div class="time-divider"></div>
+            </div>
+            
+            <!-- 欢迎消息 -->
+            <div class="message received">
+                <div class="avatar ai">AI</div>
+                <div class="message-content">
+                    <div class="message-text">
+                        <p>你好！我是你的AI语伴助手，能够帮助你提升中文水平并理解中国文化。有什么我可以帮助你的吗？</p>
+                        <div class="ai-features">
+                            <div class="feature-tag" data-feature="translation"><i>🌐</i>翻译</div>
+                            <div class="feature-tag" data-feature="culture"><i>📚</i>文化百科</div>
+                            <div class="feature-tag" data-feature="correction"><i>✨</i>智能纠错</div>
+                            <div class="feature-tag" data-feature="warning"><i>⚠️</i>冲突预警</div>
+                        </div>
+                    </div>
+                    <div class="message-time">10:30</div>
+                </div>
+            </div>
+            
+            <!-- 节日文化讨论场景 -->
+            <div class="message sent">
+                <div class="avatar user">ME</div>
+                <div class="message-content">
+                    <div class="message-text">
+                        <p>Hey, my Chinese friend just said they're busy preparing for 鬼节. Why would anyone celebrate a ghost festival? Sounds creepy...</p>
+                    </div>
+                    <div class="message-time">10:35</div>
+                </div>
+            </div>
+            
+            <div class="message received">
+                <div class="avatar ai">AI</div>
+                <div class="message-content">
+                    <div class="message-text">
+                        <p>I noticed you're asking about "鬼节" (Ghost Festival). This might be a cultural misunderstanding. Let me explain.</p>
+                        <div class="ai-features">
+                            <div class="feature-tag" data-feature="translation" onclick="toggleFeature('translation1')"><i>🌐</i>查看翻译</div>
+                            <div class="feature-tag" data-feature="culture" onclick="toggleFeature('culture1')"><i>📚</i>文化百科</div>
+                            <div class="feature-tag" data-feature="warning" onclick="toggleFeature('warning1')"><i>⚠️</i>冲突预警</div>
+                        </div>
+                        
+                        <div id="translation1" class="ai-feature-card">
+                            <div class="card-header">
+                                <div class="card-title"><i>🌐</i> 多语言实时翻译</div>
+                                <div class="card-close" onclick="toggleFeature('translation1')">×</div>
+                            </div>
+                            <div class="card-content">
+                                <p><strong>"鬼节" → "Hungry Ghost Festival (中元节)"</strong></p>
+                                <p>而非直译 "Ghost Festival"</p>
+                            </div>
+                        </div>
+                        
+                        <div id="culture1" class="ai-feature-card">
+                            <div class="card-header">
+                                <div class="card-title"><i>📚</i> 文化术语即时百科</div>
+                                <div class="card-close" onclick="toggleFeature('culture1')">×</div>
+                            </div>
+                            <div class="card-content">
+                                <p>🧧 <strong>文化卡片：中元节</strong></p>
+                                <ul>
+                                    <li>非恐怖节日，而是表达对祖先的尊重</li>
+                                    <li>对比：类似万圣节但内核不同</li>
+                                    <li>安全用语：不要说"Happy Ghost Festival"</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div id="warning1" class="ai-feature-card warning">
+                            <div class="card-header">
+                                <div class="card-title"><i>⚠️</i> 冲突预警系统</div>
+                                <div class="card-close" onclick="toggleFeature('warning1')">×</div>
+                            </div>
+                            <div class="card-content">
+                                <p>⚠️ 检测到潜在文化误解</p>
+                                <p>→ 推荐回复模板：</p>
+                                <div class="suggestion-item">
+                                    <div class="suggestion-text">"原来这是表达孝道的节日，能分享些传统习俗吗？"</div>
+                                    <div class="suggestion-use">使用</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="message-time">10:36</div>
+                </div>
+            </div>
+            
+            <!-- 学习资源推荐 -->
+            <div class="smart-recommendation">
+                <div class="recommendation-header">
+                    <div class="recommendation-title"><i>📚</i> 个性化学习推荐</div>
+                    <div class="recommendation-close" onclick="closeRecommendation(this)">×</div>
+                </div>
+                <div class="recommendation-content">
+                    <div class="recommendation-text">根据您对中元节的兴趣，为您推荐以下学习资源：</div>
+                    <div class="recommendation-items">
+                        <div class="recommendation-item">
+                            <div class="recommendation-item-title">中元节的历史与传统</div>
+                            <div class="recommendation-item-desc">了解中元节的起源、演变和现代意义</div>
+                        </div>
+                        <div class="recommendation-item">
+                            <div class="recommendation-item-title">中西方祭祀文化对比</div>
+                            <div class="recommendation-item-desc">探索东西方对待祖先和逝者的文化差异</div>
+                        </div>
+                        <div class="recommendation-item">
+                            <div class="recommendation-item-title">中国传统节日词汇</div>
+                            <div class="recommendation-item-desc">掌握与中国传统节日相关的常用词汇</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="recommendation-actions">
+                    <button class="recommendation-button"><i>📚</i> 查看全部资源</button>
+                </div>
+            </div>
+            
+            <div class="message-time-divider">
+                <span class="time-label">今天 上午10:40</span>
+                <div class="time-divider"></div>
+            </div>
+            
+            <!-- 俚语使用纠错场景 -->
+            <div class="message sent">
+                <div class="avatar user">ME</div>
+                <div class="message-content">
+                    <div class="message-text">
+                        <p>I want to describe my lazy roommate, can I say 他像只猪一样睡觉?</p>
+                    </div>
+                    <div class="message-time">10:42</div>
+                </div>
+            </div>
+            
+            <div class="message received">
+                <div class="avatar ai">AI</div>
+                <div class="message-content">
+                    <div class="message-text">
+                        <p>While grammatically correct, comparing someone to a pig in Chinese can be quite offensive. Let me suggest some better alternatives.</p>
+                        <div class="ai-features">
+                            <div class="feature-tag" data-feature="correction" onclick="toggleFeature('correction1')"><i>✨</i>智能纠错</div>
+                            <div class="feature-tag" data-feature="culture" onclick="toggleFeature('culture2')"><i>📚</i>文化百科</div>
+                        </div>
+                        
+                        <div id="correction1" class="ai-feature-card success">
+                            <div class="card-header">
+                                <div class="card-title"><i>✨</i> 智能纠错与升级提议</div>
+                                <div class="card-close" onclick="toggleFeature('correction1')">×</div>
+                            </div>
+                            <div class="card-content">
+                                <p>✨ 智能优化建议：</p>
+                                <p>原句："他像只猪一样睡觉" → 可能冒犯</p>
+                                <p>推荐表达：</p>
+                                <div class="suggestion-item">
+                                    <div class="suggestion-text">"他睡得跟考拉似的"</div>
+                                    <div class="suggestion-use">使用</div>
+                                </div>
+                                <div class="suggestion-item">
+                                    <div class="suggestion-text">"他睡觉像冬眠的熊"</div>
+                                    <div class="suggestion-use">使用</div>
+                                </div>
+                                <p>▸ 理由：用动物比喻需注意文化差异，考拉在西方认知中更可爱无害</p>
+                                <p>▸ 延伸学习：<a href="#">《中文动物隐喻避坑指南》</a></p>
+                            </div>
+                        </div>
+                        
+                        <div id="culture2" class="ai-feature-card">
+                            <div class="card-header">
+                                <div class="card-title"><i>📚</i> 文化术语即时百科</div>
+                                <div class="card-close" onclick="toggleFeature('culture2')">×</div>
+                            </div>
+                            <div class="card-content">
+                                <p>📖 <strong>"猪"在中国文化中的双重含义：</strong></p>
+                                <ul>
+                                    <li>正面：象征财富（存钱罐造型）</li>
+                                    <li>负面：2018年后网络语境中的贬义增强</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="message-time">10:43</div>
+                </div>
+            </div>
+            
+            <!-- 语伴匹配推荐 -->
+            <div class="partner-recommendation">
+                <div class="partner-recommendation-header">
+                    <div class="partner-recommendation-title"><i>👫</i> 语伴智能匹配</div>
+                    <div class="recommendation-close" onclick="closeRecommendation(this)">×</div>
+                </div>
+                <div class="partner-recommendation-text">
+                    我们发现有几位语伴对动物隐喻和中文表达特别擅长，他们可以帮助你更好地理解中文中的文化差异！
+                </div>
+                <div class="partner-matches">
+                    <div class="partner-match-card">
+                        <div class="partner-match-avatar partner1">林小</div>
+                        <div class="partner-match-info">
+                            <div class="partner-match-name">林小雨</div>
+                            <div class="partner-match-details">中文教师 | 北京</div>
+                            <div class="partner-match-compatibility">匹配度: 92%</div>
+                        </div>
+                        <button class="partner-match-button">立即连接</button>
+                    </div>
+                    <div class="partner-match-card">
+                        <div class="partner-match-avatar partner2">MK</div>
+                        <div class="partner-match-info">
+                            <div class="partner-match-name">Mike Kim</div>
+                            <div class="partner-match-details">语言学博士 | 上海</div>
+                            <div class="partner-match-compatibility">匹配度: 87%</div>
+                        </div>
+                        <button class="partner-match-button">立即连接</button>
+                    </div>
+                    <div class="partner-match-card">
+                        <div class="partner-match-avatar partner3">赵文</div>
+                        <div class="partner-match-info">
+                            <div class="partner-match-name">赵文静</div>
+                            <div class="partner-match-details">文学爱好者 | 成都</div>
+                            <div class="partner-match-compatibility">匹配度: 85%</div>
+                        </div>
+                        <button class="partner-match-button">立即连接</button>
+                    </div>
+                </div>
+                <div class="partner-recommendation-actions">
+                    <button class="view-all-partners-button"><i>👫</i> 查看更多匹配语伴</button>
+                </div>
+            </div>
+            
+            <div class="message-time-divider">
+                <span class="time-label">今天 上午10:50</span>
+                <div class="time-divider"></div>
+            </div>
+            
+            <!-- 实时翻译与文化调解场景 -->
+            <div class="message sent">
+                <div class="avatar user">ME</div>
+                <div class="message-content">
+                    <div class="message-text">
+                        <p>My language partner sent me: "这次合作方案，我们还需要再磨合磨合" - I don't understand what they mean. Can you help?</p>
+                    </div>
+                    <div class="message-time">10:50</div>
+                </div>
+            </div>
+            
+            <div class="message received">
+                <div class="avatar ai">AI</div>
+                <div class="message-content">
+                    <div class="message-text">
+                        <p>This is a common business expression in Chinese. Let me translate and explain.</p>
+                        <div class="ai-features">
+                            <div class="feature-tag" data-feature="translation" onclick="toggleFeature('translation2')"><i>🌐</i>查看翻译</div>
+                            <div class="feature-tag" data-feature="warning" onclick="toggleFeature('warning2')"><i>⚠️</i>冲突预警</div>
+                            <div class="feature-tag" data-feature="culture" onclick="toggleFeature('culture3')"><i>📚</i>文化百科</div>
+                        </div>
+                        
+                        <div id="translation2" class="ai-feature-card">
+                            <div class="card-header">
+                                <div class="card-title"><i>🌐</i> 多语言实时翻译</div>
+                                <div class="card-close" onclick="toggleFeature('translation2')">×</div>
+                            </div>
+                            <div class="card-content">
+                                <p>🌐 深度翻译：</p>
+                                <p><strong>"磨合磨合" → "need more time to coordinate our working styles"</strong></p>
+                                <p>（而非字面翻译"grind"）</p>
+                            </div>
+                        </div>
+                        
+                        <div id="warning2" class="ai-feature-card warning">
+                            <div class="card-header">
+                                <div class="card-title"><i>⚠️</i> 冲突预警系统</div>
+                                <div class="card-close" onclick="toggleFeature('warning2')">×</div>
+                            </div>
+                            <div class="card-content">
+                                <p>⚠️ 检测到高语境表达风险</p>
+                                <p>→ 西方人可能误解为"方案有缺陷"</p>
+                                <p>→ 建议追问：</p>
+                                <div class="suggestion-item">
+                                    <div class="suggestion-text">"具体哪些方面需要调整呢？"</div>
+                                    <div class="suggestion-use">使用</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="culture3" class="ai-feature-card">
+                            <div class="card-header">
+                                <div class="card-title"><i>📚</i> 文化术语即时百科</div>
+                                <div class="card-close" onclick="toggleFeature('culture3')">×</div>
+                            </div>
+                            <div class="card-content">
+                                <p>🔍 <strong>"磨合"的机械学起源：</strong></p>
+                                <ul>
+                                    <li>源自新零件需要摩擦才能契合</li>
+                                    <li>商务场景中的积极含义：期待长期合作</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="message-time">10:51</div>
+                </div>
+            </div>
+            
+            <!-- 学习资源推荐 -->
+            <div class="smart-recommendation">
+                <div class="recommendation-header">
+                    <div class="recommendation-title"><i>📚</i> 商务中文学习推荐</div>
+                    <div class="recommendation-close" onclick="closeRecommendation(this)">×</div>
+                </div>
+                <div class="recommendation-content">
+                    <div class="recommendation-text">我们注意到您对商务中文表达感兴趣，为您推荐以下学习资源：</div>
+                    <div class="recommendation-items">
+                        <div class="recommendation-item">
+                            <div class="recommendation-item-title">中文商务表达指南</div>
+                            <div class="recommendation-item-desc">掌握高语境商务表达的技巧和文化背景</div>
+                        </div>
+                        <div class="recommendation-item">
+                            <div class="recommendation-item-title">商务会议情境对话</div>
+                            <div class="recommendation-item-desc">通过真实场景练习商务中文表达</div>
+                        </div>
+                        <div class="recommendation-item">
+                            <div class="recommendation-item-title">中西方商务文化对比</div>
+                            <div class="recommendation-item-desc">了解中西方商务交流中的文化差异</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="recommendation-actions">
+                    <button class="recommendation-button"><i>📚</i> 查看全部资源</button>
+                </div>
+            </div>
+            
+            <!-- 网络用语实践场景 -->
+            <div class="message sent">
+                <div class="avatar user">ME</div>
+                <div class="message-content">
+                    <div class="message-text">
+                        <p>Just won a game! 我是不是很牛？😎</p>
+                    </div>
+                    <div class="message-time">10:58</div>
+                </div>
+            </div>
+            
+            <div class="message received">
+                <div class="avatar ai">AI</div>
+                <div class="message-content">
+                    <div class="message-text">
+                        <p>Congratulations on your win! "牛" is good slang to express that you're awesome. Let me share some variations you could use.</p>
+                        <div class="ai-features">
+                            <div class="feature-tag" data-feature="correction" onclick="toggleFeature('correction2')"><i>✨</i>智能纠错</div>
+                            <div class="feature-tag" data-feature="culture" onclick="toggleFeature('culture4')"><i>📚</i>文化百科</div>
+                            <div class="feature-tag" data-feature="warning" onclick="toggleFeature('warning3')"><i>⚠️</i>冲突预警</div>
+                        </div>
+                        
+                        <div id="correction2" class="ai-feature-card success">
+                            <div class="card-header">
+                                <div class="card-title"><i>✨</i> 智能纠错与升级提议</div>
+                                <div class="card-close" onclick="toggleFeature('correction2')">×</div>
+                            </div>
+                            <div class="card-content">
+                                <p>✨ 语境适配建议：</p>
+                                <p>"牛" → 根据场景可替换为：</p>
+                                <div class="suggestion-item">
+                                    <div class="suggestion-text">朋友间：666！</div>
+                                    <div class="suggestion-use">使用</div>
+                                </div>
+                                <div class="suggestion-item">
+                                    <div class="suggestion-text">正式场合：实力超群</div>
+                                    <div class="suggestion-use">使用</div>
+                                </div>
+                                <div class="suggestion-item">
+                                    <div class="suggestion-text">幽默自嘲：这把纯属躺赢</div>
+                                    <div class="suggestion-use">使用</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="culture4" class="ai-feature-card">
+                            <div class="card-header">
+                                <div class="card-title"><i>📚</i> 文化术语即时百科</div>
+                                <div class="card-close" onclick="toggleFeature('culture4')">×</div>
+                            </div>
+                            <div class="card-content">
+                                <p>📈 <strong>"牛"的语义演变：</strong></p>
+                                <p>1980s：字面指牛 → 2000s网络：厉害 → 2020s：衍生出"yyds"</p>
+                            </div>
+                        </div>
+                        
+                        <div id="warning3" class="ai-feature-card warning">
+                            <div class="card-header">
+                                <div class="card-title"><i>⚠️</i> 冲突预警系统</div>
+                                <div class="card-close" onclick="toggleFeature('warning3')">×</div>
+                            </div>
+                            <div class="card-content">
+                                <p>⚠️ 检测到表情符号使用风险</p>
+                                <p>→ 😎在中文社交可能显得高傲</p>
+                                <p>→ 推荐替换：🐮（符合"牛"主题）</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="message-time">10:59</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="chat-input-area">
+            <div class="input-tools">
+                <button class="tool-button">😊</button>
+                <button class="tool-button">🔗</button>
+                <button class="tool-button">🎤</button>
+                <button class="tool-button">📷</button>
+            </div>
+            
+            <div class="input-container">
+                <textarea class="chat-input" placeholder="输入消息..." rows="1"></textarea>
+                <button class="send-button">📤</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 功能卡片切换
+    function toggleFeature(featureId) {
+        const featureCard = document.getElementById(featureId);
+        if (featureCard.classList.contains('active')) {
+            featureCard.classList.remove('active');
+        } else {
+            featureCard.classList.add('active');
+        }
+    }
+    
+    // 关闭推荐卡片
+    function closeRecommendation(element) {
+        const card = element.closest('.smart-recommendation, .partner-recommendation');
+        card.style.display = 'none';
+    }
+    
+    // 切换侧边栏标签
+    function switchTab(tabId) {
+        // 隐藏所有内容
+        const contents = document.querySelectorAll('.sidebar-content');
+        contents.forEach(content => {
+            content.classList.remove('active');
+        });
+        
+        // 取消所有标签的激活状态
+        const tabs = document.querySelectorAll('.sidebar-tab');
+        tabs.forEach(tab => {
+            tab.classList.remove('active');
+        });
+        
+        // 激活选中的标签和内容
+        document.getElementById(`${tabId}-tab`).classList.add('active');
+        const activeTab = document.querySelector(`.sidebar-tab[onclick="switchTab('${tabId}')"]`);
+        activeTab.classList.add('active');
+    }
+    
+    // 自动调整输入框高度
+    const chatInput = document.querySelector('.chat-input');
+    chatInput.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = (this.scrollHeight) + 'px';
+        if (this.scrollHeight > 150) {
+            this.style.overflowY = 'auto';
+        } else {
+            this.style.overflowY = 'hidden';
+        }
+    });
+    
+    // 滚动到底部
+    function scrollToBottom() {
+        const chatMessages = document.getElementById('chatMessages');
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+    
+    // 页面加载时滚动到底部
+    window.onload = function() {
+        scrollToBottom();
+        
+        // 初始化会话项点击事件
+        const conversationItems = document.querySelectorAll('.conversation-item');
+        conversationItems.forEach(item => {
+            item.addEventListener('click', function() {
+                conversationItems.forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        
+        // 使用建议点击事件
+        const suggestionElements = document.querySelectorAll('.suggestion-use');
+        suggestionElements.forEach(element => {
+            element.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const suggestionText = this.parentElement.querySelector('.suggestion-text').textContent;
+                chatInput.value = suggestionText;
+                chatInput.style.height = 'auto';
+                chatInput.style.height = (chatInput.scrollHeight) + 'px';
+                chatInput.focus();
+            });
+        });
+        
+        // 建议项点击事件
+        const suggestionItems = document.querySelectorAll('.suggestion-item');
+        suggestionItems.forEach(item => {
+            item.addEventListener('click', function() {
+                const suggestionText = this.querySelector('.suggestion-text').textContent;
+                chatInput.value = suggestionText;
+                chatInput.style.height = 'auto';
+                chatInput.style.height = (chatInput.scrollHeight) + 'px';
+                chatInput.focus();
+            });
+        });
+    };
+
+// 关键词触发对话功能
+const keywordResponses = {
+    "春节": {
+        title: "春节 (Spring Festival)",
+        content: "春节是中国最重要的传统节日，庆祝农历新年的开始。人们会贴春联、放鞭炮、吃团圆饭，还有红包传统。这个节日象征着家庭团聚、辞旧迎新。",
+        suggestions: ["春节有哪些传统食物？", "为什么要贴春联？", "红包的意义是什么？"]
+    },
+    "端午节": {
+        title: "端午节 (Dragon Boat Festival)",
+        content: "端午节是为纪念爱国诗人屈原而设立的传统节日。主要习俗包括赛龙舟、吃粽子、挂艾草和菖蒲。这个节日通常在农历五月初五。",
+        suggestions: ["端午节的由来是什么？", "为什么要吃粽子？", "龙舟比赛有什么意义？"]
+    },
+    "中秋节": {
+        title: "中秋节 (Mid-Autumn Festival)",
+        content: "中秋节是中国传统的团圆节日，在农历八月十五举行。人们会赏月、吃月饼、与家人团聚。这个节日象征着团圆和丰收。",
+        suggestions: ["月饼的由来是什么？", "中秋节有哪些传说？", "为什么中秋要赏月？"]
+    },
+    "元宵节": {
+        title: "元宵节 (Lantern Festival)",
+        content: "元宵节是农历正月十五，标志着春节庆祝活动的结束。主要习俗包括赏花灯、猜灯谜、吃元宵。这是新年后第一个月圆之夜。",
+        suggestions: ["元宵和汤圆有什么区别？", "灯谜活动是怎么开始的？", "元宵节的历史由来是什么？"]
+    },
+    "清明节": {
+        title: "清明节 (Qingming Festival)",
+        content: "清明节是中国传统的扫墓祭祖节日，也是春季重要的节气。人们会去祖先墓地祭拜、踏青郊游，表达对先人的怀念和敬意。",
+        suggestions: ["清明节为什么要扫墓？", "清明节有哪些传统食物？", "寒食节与清明节有什么关系？"]
+    },
+    "鬼节": {
+        title: "中元节 (Ghost Festival)",
+        content: "中元节又称鬼节，是农历七月十五。这不是一个恐怖的节日，而是人们祭奠祖先、超度亡魂的传统节日，表达对逝者的尊重和思念。",
+        suggestions: ["中元节的习俗有哪些？", "为什么称为鬼节？", "中元节与西方万圣节有什么不同？"]
+    }
+};
+
+// 发送消息函数
+document.querySelector('.send-button').addEventListener('click', function() {
+    const chatInput = document.querySelector('.chat-input');
+    const message = chatInput.value.trim();
+    
+    if (message) {
+        // 添加用户消息
+        addMessage(message, 'sent');
+        
+        // 清空输入框
+        chatInput.value = '';
+        chatInput.style.height = 'auto';
+        
+        // 检查关键词并响应
+        setTimeout(() => {
+            checkKeywordsAndRespond(message);
+        }, 1000);
+    }
+});
+
+// 添加消息到聊天界面
+function addMessage(content, type) {
+    const chatMessages = document.getElementById('chatMessages');
+    const now = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${type}`;
+    
+    const avatar = type === 'sent' ? 'ME' : 'AI';
+    const avatarClass = type === 'sent' ? 'user' : 'ai';
+    
+    messageDiv.innerHTML = `
+        <div class="avatar ${avatarClass}">${avatar}</div>
+        <div class="message-content">
+            <div class="message-text">
+                <p>${content}</p>
+            </div>
+            <div class="message-time">${now}</div>
+        </div>
+    `;
+    
+    chatMessages.appendChild(messageDiv);
+    scrollToBottom();
+}
+
+// 检查关键词并响应
+function checkKeywordsAndRespond(message) {
+    let responded = false;
+    
+    // 检查消息中是否包含关键词
+    for (const keyword in keywordResponses) {
+        if (message.toLowerCase().includes(keyword.toLowerCase())) {
+            const response = keywordResponses[keyword];
+            
+            // 添加AI回复
+            const replyContent = `<p><strong>${response.title}</strong></p><p>${response.content}</p>`;
+            addMessage(replyContent, 'received');
+            
+            // 添加建议问题
+            setTimeout(() => {
+                addSuggestions(response.suggestions);
+            }, 500);
+            
+            responded = true;
+            break;
+        }
+    }
+    
+    // 如果没有匹配关键词，给出默认回复
+    if (!responded) {
+        const defaultReplies = [
+            "我理解你的问题。你想了解更多关于中国文化的哪些方面呢？",
+            "这是个有趣的问题！你可以尝试问我关于中国传统节日、语言学习或文化差异的问题。",
+            "我可以帮你解答关于中文学习的问题。你对哪个方面特别感兴趣？",
+            "如果你想了解中国文化，可以尝试输入关键词如'春节'、'端午节'、'中秋节'等。"
+        ];
+        
+        const randomReply = defaultReplies[Math.floor(Math.random() * defaultReplies.length)];
+        addMessage(randomReply, 'received');
+    }
+}
+
+// 添加建议问题
+function addSuggestions(suggestions) {
+    const chatMessages = document.getElementById('chatMessages');
+    
+    const suggestionDiv = document.createElement('div');
+    suggestionDiv.className = 'ai-feature-card success active';
+    suggestionDiv.style.marginBottom = '20px';
+    
+    let suggestionsHTML = `
+        <div class="card-header">
+            <div class="card-title"><i>💡</i> 你可能想问</div>
+            <div class="card-close" onclick="this.parentElement.parentElement.style.display='none'">×</div>
+        </div>
+        <div class="card-content">
+    `;
+    
+    suggestions.forEach(suggestion => {
+        suggestionsHTML += `
+            <div class="suggestion-item">
+                <div class="suggestion-text">${suggestion}</div>
+                <div class="suggestion-use">使用</div>
+            </div>
+        `;
+    });
+    
+    suggestionsHTML += `</div>`;
+    suggestionDiv.innerHTML = suggestionsHTML;
+    
+    chatMessages.appendChild(suggestionDiv);
+    
+    // 添加建议点击事件
+    const suggestionItems = suggestionDiv.querySelectorAll('.suggestion-item');
+    suggestionItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const suggestionText = this.querySelector('.suggestion-text').textContent;
+            document.querySelector('.chat-input').value = suggestionText;
+            document.querySelector('.chat-input').focus();
+        });
+    });
+    
+    scrollToBottom();
+}
+
+// 回车发送消息
+document.querySelector('.chat-input').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        document.querySelector('.send-button').click();
+    }
+});
+</script>
+</body>
+</html>

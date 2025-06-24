@@ -1,0 +1,1971 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>语e桥 - 汉语教学语伴轻辅导</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        
+        :root {
+            --primary: #4361ee;
+            --primary-light: #eef2ff;
+            --secondary: #3ccf91;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --bg-light: #f9fafb;
+            --border-color: #e5e7eb;
+            
+            /* 等级颜色 */
+            --entry-color: #4ade80;
+            --entry-light: #dcfce7;
+            --intermediate-color: #4361ee;
+            --intermediate-light: #eef2ff;
+            --advanced-color: #a855f7;
+            --advanced-light: #f3e8ff;
+        }
+        
+        body {
+            background-color: var(--bg-light);
+            padding-top: 60px; /* 为顶部导航栏留出空间 */
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            padding: 0 20px;
+        }
+        
+        /* 顶部导航栏 */
+        .top-nav {
+            background-color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            position: fixed;
+            width: 100%;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            left: 0;
+            top: 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin: 0 15px;
+            position: relative;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+            padding: 8px 12px;
+            border-radius: 6px;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .nav-links a.active {
+            color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .nav-links i {
+            margin-right: 8px;
+        }
+        
+        /* 下拉菜单 */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            z-index: 1;
+            top: 100%;
+            left: 0;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        
+        .dropdown-content a {
+            color: var(--text-dark);
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: all 0.2s;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: var(--primary-light);
+            color: var(--primary);
+        }
+        
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+        .dropdown-icon {
+            margin-left: 5px;
+            font-size: 12px;
+        }
+        
+        /* 页面标题 */
+        .page-title {
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        .page-title h1 {
+            font-size: 28px;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+        
+        .page-title p {
+            font-size: 16px;
+            color: var(--text-light);
+        }
+        
+        /* 主要内容区域 */
+        .main-content {
+            display: flex;
+            margin-bottom: 40px;
+        }
+        
+        /* 侧边筛选栏 */
+        .filter-sidebar {
+            width: 280px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            margin-right: 20px;
+            position: sticky;
+            top: 80px;
+            height: fit-content;
+        }
+        
+        .filter-section {
+            margin-bottom: 25px;
+        }
+        
+        .filter-section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .filter-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+        }
+        
+        .filter-title i {
+            margin-right: 8px;
+            color: var(--primary);
+        }
+        
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+        }
+        
+        .checkbox-item input[type="checkbox"] {
+            margin-right: 10px;
+            width: 16px;
+            height: 16px;
+            accent-color: var(--primary);
+        }
+        
+        .checkbox-item label {
+            font-size: 14px;
+            color: var(--text-light);
+            cursor: pointer;
+        }
+        
+        .date-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .date-option {
+            padding: 8px 12px;
+            background-color: var(--bg-light);
+            border-radius: 6px;
+            font-size: 14px;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+        
+        .date-option:hover {
+            background-color: var(--primary-light);
+            color: var(--primary);
+        }
+        
+        .date-option.active {
+            background-color: var(--primary-light);
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+        
+        .tag-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .tag {
+            padding: 6px 12px;
+            background-color: var(--bg-light);
+            border-radius: 20px;
+            font-size: 13px;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .tag:hover {
+            background-color: var(--primary-light);
+            color: var(--primary);
+        }
+        
+        .tag.active {
+            background-color: var(--primary-light);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+        
+        /* 内容区域 */
+        .content-area {
+            flex: 1;
+        }
+        
+        /* 等级筛选导航栏 */
+        .level-nav {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .level-card {
+            flex: 1;
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid transparent;
+        }
+        
+        .level-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .level-card.active {
+            border-color: currentColor;
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .level-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: currentColor;
+        }
+        
+        .entry-level {
+            color: var(--entry-color);
+        }
+        
+        .entry-level::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--entry-light) 0%, white 70%);
+            z-index: 0;
+            opacity: 0.7;
+        }
+        
+        .intermediate-level {
+            color: var(--intermediate-color);
+        }
+        
+        .intermediate-level::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--intermediate-light) 0%, white 70%);
+            z-index: 0;
+            opacity: 0.7;
+        }
+        
+        .advanced-level {
+            color: var(--advanced-color);
+        }
+        
+        .advanced-level::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--advanced-light) 0%, white 70%);
+            z-index: 0;
+            opacity: 0.7;
+        }
+        
+        .level-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .level-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .level-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: currentColor;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 12px;
+            color: white;
+            font-size: 20px;
+        }
+        
+        .level-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--text-dark);
+        }
+        
+        .level-price {
+            font-size: 16px;
+            font-weight: bold;
+            color: currentColor;
+            margin-top: 5px;
+        }
+        
+        .level-tag {
+            display: inline-block;
+            padding: 4px 10px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border: 1px solid currentColor;
+            border-radius: 20px;
+            font-size: 13px;
+            color: currentColor;
+            margin-top: 10px;
+        }
+        
+        /* 辅导者列表 */
+        .tutors-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        .tutor-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .tutor-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tutor-header {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        
+        .tutor-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background-color: var(--primary-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            color: var(--primary);
+            margin-right: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .tutor-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .tutor-info {
+            flex: 1;
+        }
+        
+        .tutor-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+        }
+        
+        .tutor-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 8px;
+        }
+        
+        .tutor-tag {
+            padding: 3px 8px;
+            background-color: var(--primary-light);
+            color: var(--primary);
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        .tutor-rating {
+            display: flex;
+            align-items: center;
+        }
+        
+        .stars {
+            display: flex;
+            margin-right: 5px;
+        }
+        
+        .star {
+            color: #ffc107;
+            font-size: 14px;
+        }
+        
+        .rating-count {
+            font-size: 13px;
+            color: var(--text-light);
+        }
+        
+        .tutor-price {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 5px 10px;
+            background-color: var(--primary-light);
+            color: var(--primary);
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        .entry-level-price {
+            background-color: var(--entry-light);
+            color: var(--entry-color);
+        }
+        
+        .intermediate-level-price {
+            background-color: var(--intermediate-light);
+            color: var(--intermediate-color);
+        }
+        
+        .advanced-level-price {
+            background-color: var(--advanced-light);
+            color: var(--advanced-color);
+        }
+        
+        .tutor-description {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 15px;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .tutor-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .action-btn {
+            flex: 1;
+            padding: 8px 0;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+        
+        .book-btn {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .book-btn:hover {
+            background-color: #3051d3;
+        }
+        
+        .details-btn {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+        }
+        
+        .details-btn:hover {
+            background-color: var(--primary-light);
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+        
+        /* 辅导者详情浮层 */
+        .tutor-detail-overlay {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: flex;
+            justify-content: flex-end;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+        
+        .tutor-detail-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .tutor-detail-panel {
+            width: 500px;
+            height: 100%;
+            background-color: white;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            overflow-y: auto;
+            transform: translateX(100%);
+            transition: transform 0.3s;
+        }
+        
+        .tutor-detail-overlay.active .tutor-detail-panel {
+            transform: translateX(0);
+        }
+        
+        .detail-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: var(--bg-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .detail-close:hover {
+            background-color: var(--primary-light);
+            color: var(--primary);
+        }
+        
+        .detail-header {
+            display: flex;
+            margin-bottom: 25px;
+        }
+        
+        .detail-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: var(--primary-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 36px;
+            color: var(--primary);
+            margin-right: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .detail-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .detail-info {
+            flex: 1;
+        }
+        
+        .detail-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+        }
+        
+        .detail-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .detail-tag {
+            padding: 3px 8px;
+            background-color: var(--primary-light);
+            color: var(--primary);
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        .detail-rating {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        
+        .detail-price {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .detail-section {
+            margin-bottom: 25px;
+        }
+        
+        .detail-section-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .detail-bio {
+            font-size: 14px;
+            color: var(--text-light);
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .education-item, .experience-item {
+            margin-bottom: 15px;
+        }
+        
+        .education-degree, .experience-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+        }
+        
+        .education-school, .experience-company {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 3px;
+        }
+        
+        .education-year, .experience-year {
+            font-size: 13px;
+            color: var(--text-light);
+        }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .calendar-day {
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-light);
+            padding: 5px 0;
+            font-weight: 500;
+        }
+        
+        .time-slots {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+        }
+        
+        .time-slot {
+            padding: 8px 0;
+            text-align: center;
+            font-size: 12px;
+            background-color: var(--bg-light);
+            border-radius: 4px;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .time-slot:hover {
+            background-color: var(--primary-light);
+            color: var(--primary);
+        }
+        
+        .time-slot.available {
+            background-color: var(--entry-light);
+            color: var(--entry-color);
+            cursor: pointer;
+        }
+        
+        .time-slot.available:hover {
+            background-color: var(--entry-color);
+            color: white;
+        }
+        
+        .time-slot.selected {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .review-item {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .review-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .reviewer-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .reviewer-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: var(--primary-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            color: var(--primary);
+            margin-right: 10px;
+            overflow: hidden;
+        }
+        
+        .reviewer-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .reviewer-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+        
+        .review-date {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+        
+        .review-content {
+            font-size: 14px;
+            color: var(--text-light);
+            line-height: 1.5;
+        }
+        
+        .rating-distribution {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .rating-bar {
+            display: flex;
+            align-items: center;
+        }
+        
+        .rating-label {
+            width: 30px;
+            font-size: 13px;
+            color: var(--text-light);
+            margin-right: 10px;
+        }
+        
+        .rating-progress {
+            flex: 1;
+            height: 8px;
+            background-color: var(--bg-light);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-right: 10px;
+        }
+        
+        .rating-fill {
+            height: 100%;
+            background-color: #ffc107;
+        }
+        
+        .rating-percent {
+            width: 40px;
+            font-size: 13px;
+            color: var(--text-light);
+            text-align: right;
+        }
+        
+        .detail-book-btn {
+            width: 100%;
+            padding: 12px 0;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 20px;
+        }
+        
+        .detail-book-btn:hover {
+            background-color: #3051d3;
+        }
+        
+        /* 支付浮窗 */
+        .payment-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+        
+        .payment-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .payment-panel {
+            width: 400px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            transform: translateY(20px);
+            transition: transform 0.3s;
+            position: relative;
+        }
+        
+        .payment-modal.active .payment-panel {
+            transform: translateY(0);
+        }
+        
+        .payment-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .payment-info {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: var(--bg-light);
+            border-radius: 8px;
+        }
+        
+        .payment-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .payment-item:last-child {
+            margin-bottom: 0;
+            padding-top: 10px;
+            border-top: 1px dashed var(--border-color);
+            font-weight: bold;
+        }
+        
+        .payment-label {
+            font-size: 14px;
+            color: var(--text-light);
+        }
+        
+        .payment-value {
+            font-size: 14px;
+            color: var(--text-dark);
+        }
+        
+        .payment-methods {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .payment-method {
+            flex: 1;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .payment-method:hover {
+            border-color: var(--primary);
+        }
+        
+        .payment-method.active {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .payment-method-icon {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: var(--primary);
+        }
+        
+        .payment-method-name {
+            font-size: 14px;
+            color: var(--text-dark);
+        }
+        
+        .payment-btn {
+            width: 100%;
+            padding: 12px 0;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .payment-btn:hover {
+            background-color: #3051d3;
+        }
+        
+        .payment-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: var(--bg-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .payment-close:hover {
+            background-color: var(--primary-light);
+            color: var(--primary);
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 1024px) {
+            .tutors-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .level-nav {
+                flex-direction: column;
+            }
+            
+            .tutor-detail-panel {
+                width: 90%;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .filter-sidebar {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 20px;
+                position: static;
+            }
+            
+            .level-card {
+                padding: 15px;
+            }
+            
+            .level-icon {
+                width: 30px;
+                height: 30px;
+                font-size: 16px;
+            }
+            
+            .level-title {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <nav class="top-nav">
+        <a href="index.html" class="logo">语e桥</a>
+        
+        <ul class="nav-links">
+            <li><a href="index.html"><i class="icon">🏠</i>首页</a></li>
+            <li><a href="languagepartner-search.html"><i class="icon">👫</i>语伴</a></li>
+            <li class="dropdown">
+                <a href="chat.html"><i class="icon">💬</i>聊天<span class="dropdown-icon">▼</span></a>
+                <div class="dropdown-content">
+                    <a href="ai-chat.html">AI语伴聊天</a>
+                    <a href="chat.html">语伴聊天</a>
+                </div>
+            </li>
+            <li><a href="experiment.html"><i class="icon">🧪</i>实验招募</a></li>
+            <li class="dropdown">
+                <a href="community-resources.html"><i class="icon">📚</i>学习社区<span class="dropdown-icon">▼</span></a>
+                <div class="dropdown-content">
+                    <a href="personal-publish.html">个人发布</a>
+                    <a href="community-resources.html">社区资源</a>
+                    <a href="learningpath.html">学习路径</a>
+                </div>
+            </li>
+            <li><a href="tutor-matching.html" class="active"><i class="icon">👥</i>轻辅导</a></li>
+            <li><a href="login.html">登录</a></li>
+        </ul>
+    </nav>
+    
+    <div class="container">
+        <!-- 页面标题 -->
+        <div class="page-title">
+            <h1>汉语教学语伴轻辅导</h1>
+            <p>找到适合您的汉语辅导者，提升语言能力</p>
+        </div>
+        
+        <!-- 主要内容区域 -->
+        <div class="main-content">
+            <!-- 侧边筛选栏 -->
+            <div class="filter-sidebar">
+                <div class="filter-section">
+                    <div class="filter-title">
+                        <i class="icon">🌐</i>可辅导语言
+                    </div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="lang-chinese" checked>
+                            <label for="lang-chinese">中文</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="lang-english">
+                            <label for="lang-english">英语</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="lang-japanese">
+                            <label for="lang-japanese">日语</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="filter-section">
+                    <div class="filter-title">
+                        <i class="icon">🕒</i>可用时间
+                    </div>
+                    <div class="date-selector">
+                        <div class="date-option">今日</div>
+                        <div class="date-option">明日</div>
+                        <div class="date-option">本周</div>
+                        <div class="date-option">自定义</div>
+                    </div>
+                </div>
+                
+                <div class="filter-section">
+                    <div class="filter-title">
+                        <i class="icon">🏷️</i>特色标签
+                    </div>
+                    <div class="tag-cloud">
+                        <div class="tag">HSK专项</div>
+                        <div class="tag">商务汉语</div>
+                        <div class="tag">发音矫正</div>
+                        <div class="tag">口语练习</div>
+                        <div class="tag">语法指导</div>
+                        <div class="tag">文化交流</div>
+                        <div class="tag">考试备考</div>
+                        <div class="tag">初学者友好</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 内容区域 -->
+            <div class="content-area">
+                <!-- 等级筛选导航栏 -->
+                <div class="level-nav">
+                    <div class="level-card entry-level" data-level="entry">
+                        <div class="level-content">
+                            <div class="level-header">
+                                <div class="level-icon">🎓</div>
+                                <div>
+                                    <div class="level-title">入门级</div>
+                                    <div class="level-price">¥36/小时</div>
+                                </div>
+                            </div>
+                            <div class="level-tag">汉教学生陪练</div>
+                        </div>
+                    </div>
+                    
+                    <div class="level-card intermediate-level" data-level="intermediate">
+                        <div class="level-content">
+                            <div class="level-header">
+                                <div class="level-icon">👨‍🏫</div>
+                                <div>
+                                    <div class="level-title">进阶级</div>
+                                    <div class="level-price">¥48/小时</div>
+                                </div>
+                            </div>
+                            <div class="level-tag">认证教师指导</div>
+                        </div>
+                    </div>
+                    
+                    <div class="level-card advanced-level" data-level="advanced">
+                        <div class="level-content">
+                            <div class="level-header">
+                                <div class="level-icon">👑</div>
+                                <div>
+                                    <div class="level-title">高阶级</div>
+                                    <div class="level-price">¥60/小时</div>
+                                </div>
+                            </div>
+                            <div class="level-tag">资深专家定制</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 辅导者列表 -->
+                <div class="tutors-grid">
+                    <!-- 辅导者1 -->
+                    <div class="tutor-card" data-level="entry" data-tags="HSK专项,口语练习">
+                        <div class="tutor-price entry-level-price">¥36/小时</div>
+                        <div class="tutor-header">
+                            <div class="tutor-avatar">
+                                <div class="avatar-text">张</div>
+                            </div>
+                            <div class="tutor-info">
+                                <div class="tutor-name">张明</div>
+                                <div class="tutor-tags">
+                                    <div class="tutor-tag">汉教硕士在读</div>
+                                    <div class="tutor-tag">HSK专项</div>
+                                </div>
+                                <div class="tutor-rating">
+                                    <div class="stars">
+                                        <div class="star">★</div>
+                                        <div class="star">★</div>
+                                        <div class="star">★</div>
+                                        <div class="star">★</div>
+                                        <div class="star">★</div>
+                                    </div>
+                                    <div class="rating-count">5.0 (24条评价)</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tutor-description">
+                            北京语言大学汉语国际教育硕士在读，有2年对外汉语教学经验，擅长HSK考试辅导和口语训练，教学风格活泼有趣。
+                        </div>
+                        <div class="tutor-actions">
+                            <button class="action-btn book-btn" data-tutor="张明" data-level="entry">立即预约</button>
+                            <button class="action-btn details-btn" data-tutor="张明" data-level="entry">查看详情</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 辅导者2 -->
+                    <div class="tutor-card" data-level="entry" data-tags="发音矫正,初学者友好">
+                        <div class="tutor-price entry-level-price">¥36/小时</div>
+                        <div class="tutor-header">
+                            <div class="tutor-avatar">
+                                <div class="avatar-text">李</div>
+                            </div>
+                            <div class="tutor-info">
+                                <div class="tutor-name">李婷</div>
+                                <div class="tutor-tags">
+                                    <div class="tutor-tag">汉语言文学本科</div>
+                                    <div class="tutor-tag">发音矫正</div>
+                                </div>
+                                <div class="tutor-rating">
+                                    <div class="stars">
+                                        <div class="star">★</div>
+                                        <div class="star">★</div>
+                                        <div class="star">★</div>
+                                        <div class="star">★</div>
+                                        <div class="star">☆</div>
+                                    </div>
+                                    <div class="rating-count">4.8 (15条评价)</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tutor-description">
+                            汉语言文学专业毕业，普通话一级甲等，擅长发音矫正和基础汉语教学，耐心细致，善于发现学生的问题并给予针对性指导。
+                        </div>
+                        <div class="tutor-actions">
+                            <button class="action-btn book-btn" data-tutor="李婷" data-level="entry">立即预约</button>
+                            <button class="action-btn details-btn" data-tutor="李婷" data-level="entry">查看详情</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 辅导者3 -->
+                    <div class="tutor-card" data-level="intermediate" data-tags="商务汉语,语法指导">
+                        <div class="tutor-price intermediate-level-price">¥48/小时</div>
+                        <div class="tutor-header">
+                            <div class="tutor-avatar">
+                                <div class="avatar-text">王</div>
+                            </div>
+                            <div class="tutor-info">
+                                <div class="tutor-name">王教授</div>
+                                <div class="tutor-tags">
+                                    <div class="tutor-tag">3年教学经验</div>
+                                    <div class="tutor-tag">商务汉语</div>
+                                </div>
+                                <div class="tutor-rating">
+                                    <div class="stars">
+                                        <div class="star">★</div>
+                                        <div class="star">★</div>
+                                        <div class="star">★</div>
+                                        <div class="star">★</div>
+                                        <div class="star">★</div>
+                                    </div>
+                                    <div class="rating-count">4.9 (32条评价)</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tutor-description">
+                            国际汉语教师资格证持有者，3年对外汉语教学经验，曾在多家语言培训机构任教，擅长商务汉语和中高级汉语教学。
+                        </div>
+                        <div class="tutor-actions">
+                            <button class="action-btn book-btn" data-tutor="王教授" data-level="intermediate">立即预约</button>
+                            <button class="action-btn details-btn" data-tutor="王教授" data-level="intermediate">查看详情</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 辅导者4 -->
+                    <div class="tutor-card" data-level="intermediate" data-tags="考试备考,HSK专项">
+                        <div class="tutor-price intermediate-level-price">¥48/小时</div>
+                        <div class="tutor-header">
+                            <div class="tutor-avatar">
+                                <div class="avatar-text">赵</div>
+                            </div>
+                            <div class="tutor-info">
+                                <div class="tutor-name">赵老师</div>
+                                <div class="tutor-tags">
+                                    <div class="tutor-tag">4年教学经验</div>
+                                    <div class="tutor-tag">考试备考</div>
+                                </div>
+                                <div class="tutor-rating">
+                                    <div class="stars">
+                                        <div class="star">★</div>
+                                        <div class="star">★</div>
+                                        <div class="star">★</div>
+                                        <div class="star">★</div>
+                                        <div class="star">☆</div>
+                                    </div>
+                                    <div class="rating-count">4.7 (28条评价)</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tutor-description">
+                            对外汉语教学硕士毕业，4年教学经验，曾在孔子学院任教，擅长HSK考试辅导，教学方法系统全面，注重实践应用。
+                        </div>
+                        <div class="tutor-actions">
+                            <button class="action-btn book-btn" data-tutor="赵老师" data-level="intermediate">立即预约</button>
+                            <button class="action-btn details-btn" data-tutor="赵老师" data-level="intermediate">查看详情</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 辅导者5 -->
+                    <div class="tutor-card" data-level="advanced" data-tags="语法指导,口语练习">
+                        <div class="tutor-price advanced-level-price">¥60/小时</div>
+                        <div class="tutor-header">
+                            <div class="tutor-avatar">
+                                <div class="avatar-text">陈</div>
+                            </div>
+                            <div class="tutor-info">
+                                <div class="tutor-name">陈教授</div>
+                                <div class="tutor-tags">
+                                    <div class="tutor-tag">10年教学经验</div>
+                                    <div class="tutor-tag">语言学博士</div>
+                                </div>
+                                <div class="tutor-rating">
+                                    <div class="stars">
+                                        <div class="star">★</div>
+                                        <div class="star">★</div>
+                                        <div class="star">★</div>
+                                        <div class="star">★</div>
+                                        <div class="star">★</div>
+                                    </div>
+                                    <div class="rating-count">5.0 (45条评价)</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tutor-description">
+                            语言学博士，10年对外汉语教学经验，曾在多所国际知名大学任教，出版过多部汉语教材，擅长高级汉语和学术汉语教学。
+                        </div>
+                        <div class="tutor-actions">
+                            <button class="action-btn book-btn" data-tutor="陈教授" data-level="advanced">立即预约</button>
+                            <button class="action-btn details-btn" data-tutor="陈教授" data-level="advanced">查看详情</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 辅导者6 -->
+                    <div class="tutor-card" data-level="advanced" data-tags="文化交流,口语练习">
+                        <div class="tutor-price advanced-level-price">¥60/小时</div>
+                        <div class="tutor-header">
+                            <div class="tutor-avatar">
+                                <div class="avatar-text">林</div>
+                            </div>
+                            <div class="tutor-info">
+                                <div class="tutor-name">林教授</div>
+                                <div class="tutor-tags">
+                                    <div class="tutor-tag">8年教学经验</div>
+                                    <div class="tutor-tag">文化交流</div>
+                                </div>
+                                <div class="tutor-rating">
+                                    <div class="stars">
+                                        <div class="star">★</div>
+                                        <div class="star">★</div>
+                                        <div class="star">★</div>
+                                        <div class="star">★</div>
+                                        <div class="star">★</div>
+                                    </div>
+                                    <div class="rating-count">4.9 (38条评价)</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tutor-description">
+                            汉语国际教育博士，8年教学经验，曾在多国孔子学院任教，擅长中国文化教学和高级汉语表达，教学风格生动有趣。
+                        </div>
+                        <div class="tutor-actions">
+                            <button class="action-btn book-btn" data-tutor="林教授" data-level="advanced">立即预约</button>
+                            <button class="action-btn details-btn" data-tutor="林教授" data-level="advanced">查看详情</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 辅导者详情浮层 -->
+    <div class="tutor-detail-overlay" id="tutorDetailOverlay">
+        <div class="tutor-detail-panel">
+            <div class="detail-close" id="detailClose">×</div>
+            
+            <div class="detail-header">
+                <div class="detail-avatar">
+                    <div class="avatar-text" id="detailAvatarText">张</div>
+                </div>
+                <div class="detail-info">
+                    <div class="detail-name" id="detailName">辅导者姓名</div>
+                    <div class="detail-tags" id="detailTags">
+                        <div class="detail-tag">汉教硕士在读</div>
+                        <div class="detail-tag">HSK专项</div>
+                    </div>
+                    <div class="detail-rating">
+                        <div class="stars">
+                            <div class="star">★</div>
+                            <div class="star">★</div>
+                            <div class="star">★</div>
+                            <div class="star">★</div>
+                            <div class="star">★</div>
+                        </div>
+                        <div class="rating-count" id="detailRating">5.0 (20条评价)</div>
+                    </div>
+                    <div class="detail-price" id="detailPrice">¥36/小时</div>
+                </div>
+            </div>
+            
+            <div class="detail-section">
+                <div class="detail-section-title">个人简介</div>
+                <div class="detail-bio" id="detailBio">
+                    这里是辅导者的个人简介，包括教学经验、专业背景和教学特点等信息。
+                </div>
+            </div>
+            
+            <div class="detail-section">
+                <div class="detail-section-title">教育背景</div>
+                <div class="education-item">
+                    <div class="education-degree">汉语国际教育硕士</div>
+                    <div class="education-school">北京语言大学</div>
+                    <div class="education-year">2018 - 2021</div>
+                </div>
+                <div class="education-item">
+                    <div class="education-degree">汉语言文学学士</div>
+                    <div class="education-school">北京师范大学</div>
+                    <div class="education-year">2014 - 2018</div>
+                </div>
+            </div>
+            
+            <div class="detail-section">
+                <div class="detail-section-title">教学经验</div>
+                <div class="experience-item">
+                    <div class="experience-title">汉语教师</div>
+                    <div class="experience-company">北京国际汉语学院</div>
+                    <div class="experience-year">2021 - 至今</div>
+                </div>
+                <div class="experience-item">
+                    <div class="experience-title">汉语助教</div>
+                    <div class="experience-company">北京语言大学国际学院</div>
+                    <div class="experience-year">2019 - 2021</div>
+                </div>
+            </div>
+            
+            <div class="detail-section">
+                <div class="detail-section-title">可预约时间</div>
+                <div class="calendar-grid">
+                    <div class="calendar-day">周一</div>
+                    <div class="calendar-day">周二</div>
+                    <div class="calendar-day">周三</div>
+                    <div class="calendar-day">周四</div>
+                    <div class="calendar-day">周五</div>
+                    <div class="calendar-day">周六</div>
+                    <div class="calendar-day">周日</div>
+                </div>
+                <div class="time-slots">
+                    <div class="time-slot available">9:00</div>
+                    <div class="time-slot">9:00</div>
+                    <div class="time-slot available">9:00</div>
+                    <div class="time-slot">9:00</div>
+                    <div class="time-slot available">9:00</div>
+                    <div class="time-slot available">9:00</div>
+                    <div class="time-slot available">9:00</div>
+                    
+                    <div class="time-slot">10:00</div>
+                    <div class="time-slot available">10:00</div>
+                    <div class="time-slot">10:00</div>
+                    <div class="time-slot available">10:00</div>
+                    <div class="time-slot">10:00</div>
+                    <div class="time-slot available">10:00</div>
+                    <div class="time-slot available">10:00</div>
+                    
+                    <div class="time-slot available">14:00</div>
+                    <div class="time-slot">14:00</div>
+                    <div class="time-slot available">14:00</div>
+                    <div class="time-slot available">14:00</div>
+                    <div class="time-slot">14:00</div>
+                    <div class="time-slot available">14:00</div>
+                    <div class="time-slot">14:00</div>
+                    
+                    <div class="time-slot">15:00</div>
+                    <div class="time-slot available">15:00</div>
+                    <div class="time-slot">15:00</div>
+                    <div class="time-slot available">15:00</div>
+                    <div class="time-slot available">15:00</div>
+                    <div class="time-slot">15:00</div>
+                    <div class="time-slot available">15:00</div>
+                </div>
+            </div>
+            
+            <div class="detail-section">
+                <div class="detail-section-title">用户评价</div>
+                <div class="rating-distribution">
+                    <div class="rating-bar">
+                        <div class="rating-label">5星</div>
+                        <div class="rating-progress">
+                            <div class="rating-fill" style="width: 80%;"></div>
+                        </div>
+                        <div class="rating-percent">80%</div>
+                    </div>
+                    <div class="rating-bar">
+                        <div class="rating-label">4星</div>
+                        <div class="rating-progress">
+                            <div class="rating-fill" style="width: 15%;"></div>
+                        </div>
+                        <div class="rating-percent">15%</div>
+                    </div>
+                    <div class="rating-bar">
+                        <div class="rating-label">3星</div>
+                        <div class="rating-progress">
+                            <div class="rating-fill" style="width: 5%;"></div>
+                        </div>
+                        <div class="rating-percent">5%</div>
+                    </div>
+                    <div class="rating-bar">
+                        <div class="rating-label">2星</div>
+                        <div class="rating-progress">
+                            <div class="rating-fill" style="width: 0%;"></div>
+                        </div>
+                        <div class="rating-percent">0%</div>
+                    </div>
+                    <div class="rating-bar">
+                        <div class="rating-label">1星</div>
+                        <div class="rating-progress">
+                            <div class="rating-fill" style="width: 0%;"></div>
+                        </div>
+                        <div class="rating-percent">0%</div>
+                    </div>
+                </div>
+                
+                <div class="review-item">
+                    <div class="review-header">
+                        <div class="reviewer-info">
+                            <div class="reviewer-avatar">
+                                <div class="avatar-text">学</div>
+                            </div>
+                            <div class="reviewer-name">学生A</div>
+                        </div>
+                        <div class="review-date">2025-01-15</div>
+                    </div>
+                    <div class="review-content">
+                        老师非常耐心，讲解清晰，能够针对我的问题给出很好的解答。课程内容丰富，学到了很多实用的表达方式。
+                    </div>
+                </div>
+                
+                <div class="review-item">
+                    <div class="review-header">
+                        <div class="reviewer-info">
+                            <div class="reviewer-avatar">
+                                <div class="avatar-text">学</div>
+                            </div>
+                            <div class="reviewer-name">学生B</div>
+                        </div>
+                        <div class="review-date">2025-01-28</div>
+                    </div>
+                    <div class="review-content">
+                        老师的教学方法很适合我，课程进度安排合理，每次课后都有针对性的练习，帮助我巩固所学知识。
+                    </div>
+                </div>
+                
+                <div class="review-item">
+                    <div class="review-header">
+                        <div class="reviewer-info">
+                            <div class="reviewer-avatar">
+                                <div class="avatar-text">学</div>
+                            </div>
+                            <div class="reviewer-name">学生C</div>
+                        </div>
+                        <div class="review-date">2025-02-10</div>
+                    </div>
+                    <div class="review-content">
+                        老师不仅教授语言知识，还会介绍相关的文化背景，让学习更加生动有趣。课堂气氛轻松愉快，很期待下次课程。
+                    </div>
+                </div>
+            </div>
+            
+            <button class="detail-book-btn" id="detailBookBtn">
+                立即预约
+            </button>
+        </div>
+    </div>
+    
+    <!-- 支付浮窗 -->
+    <div class="payment-modal" id="paymentModal">
+        <div class="payment-panel">
+            <div class="payment-close" id="paymentClose">×</div>
+            <div class="payment-title">确认预约</div>
+            
+            <div class="payment-info">
+                <div class="payment-item">
+                    <div class="payment-label">辅导者</div>
+                    <div class="payment-value" id="paymentTutor">张明</div>
+                </div>
+                <div class="payment-item">
+                    <div class="payment-label">辅导时间</div>
+                    <div class="payment-value" id="paymentTime">2024-01-20 10:00-11:00</div>
+                </div>
+                <div class="payment-item">
+                    <div class="payment-label">辅导费用</div>
+                    <div class="payment-value" id="paymentAmount">¥36.00</div>
+                </div>
+                <div class="payment-item">
+                    <div class="payment-label">总计</div>
+                    <div class="payment-value" id="paymentTotal">¥36.00</div>
+                </div>
+            </div>
+            
+            <div class="payment-methods">
+                <div class="payment-method active" data-method="wechat">
+                    <div class="payment-method-icon">💳</div>
+                    <div class="payment-method-name">微信支付</div>
+                </div>
+                <div class="payment-method" data-method="alipay">
+                    <div class="payment-method-icon">💰</div>
+                    <div class="payment-method-name">支付宝</div>
+                </div>
+            </div>
+            
+            <button class="payment-btn" id="paymentBtn">确认支付</button>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 生成姓氏头像
+            function generateAvatarText() {
+                const avatarElements = document.querySelectorAll('.avatar-text');
+                avatarElements.forEach(element => {
+                    const tutorName = element.closest('.tutor-card, .detail-avatar, .reviewer-avatar')?.querySelector('.tutor-name, .detail-name, .reviewer-name')?.textContent;
+                    if (tutorName) {
+                        element.textContent = tutorName.charAt(0);
+                    }
+                });
+            }
+            
+            generateAvatarText();
+            
+            // 等级筛选切换
+            const levelCards = document.querySelectorAll('.level-card');
+            const tutorCards = document.querySelectorAll('.tutor-card');
+            
+            levelCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    // 移除所有卡片的active类
+                    levelCards.forEach(c => c.classList.remove('active'));
+                    
+                    // 添加当前卡片的active类
+                    this.classList.add('active');
+                    
+                    // 获取当前选中的等级
+                    const level = this.getAttribute('data-level');
+                    
+                    // 筛选辅导者列表
+                    tutorCards.forEach(tutor => {
+                        if (tutor.getAttribute('data-level') === level) {
+                            tutor.style.display = 'block';
+                        } else {
+                            tutor.style.display = 'none';
+                        }
+                    });
+                    
+                    // 应用其他筛选条件
+                    applyFilters();
+                });
+            });
+            
+            // 标签点击事件
+            const tags = document.querySelectorAll('.tag');
+            
+            tags.forEach(tag => {
+                tag.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    applyFilters();
+                });
+            });
+            
+            // 日期选项点击事件
+            const dateOptions = document.querySelectorAll('.date-option');
+            
+            dateOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    dateOptions.forEach(o => o.classList.remove('active'));
+                    this.classList.add('active');
+                    applyFilters();
+                });
+            });
+            
+            // 语言筛选事件
+            const languageCheckboxes = document.querySelectorAll('.checkbox-item input[type="checkbox"]');
+            
+            languageCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    applyFilters();
+                });
+            });
+            
+            // 应用所有筛选条件
+            function applyFilters() {
+                const selectedLevel = document.querySelector('.level-card.active').getAttribute('data-level');
+                const selectedTags = Array.from(document.querySelectorAll('.tag.active')).map(tag => tag.textContent);
+                const selectedLanguages = Array.from(document.querySelectorAll('.checkbox-item input[type="checkbox"]:checked')).map(checkbox => checkbox.nextElementSibling.textContent);
+                
+                tutorCards.forEach(tutor => {
+                    // 首先检查等级
+                    const tutorLevel = tutor.getAttribute('data-level');
+                    let shouldDisplay = tutorLevel === selectedLevel;
+                    
+                    // 如果等级匹配，再检查标签
+                    if (shouldDisplay && selectedTags.length > 0) {
+                        const tutorTags = tutor.getAttribute('data-tags').split(',');
+                        shouldDisplay = selectedTags.some(tag => tutorTags.includes(tag));
+                    }
+                    
+                    // 如果还匹配，检查语言
+                    if (shouldDisplay && selectedLanguages.length > 0) {
+                        // 这里简化处理，假设所有辅导者都支持中文
+                        // 实际应用中应该有更详细的语言数据
+                        shouldDisplay = selectedLanguages.includes('中文');
+                    }
+                    
+                    tutor.style.display = shouldDisplay ? 'block' : 'none';
+                });
+            }
+            
+            // 辅导者详情浮层
+            const detailBtns = document.querySelectorAll('.details-btn');
+            const tutorDetailOverlay = document.getElementById('tutorDetailOverlay');
+            const detailClose = document.getElementById('detailClose');
+            
+            // 详情按钮点击事件
+            detailBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const tutorName = this.getAttribute('data-tutor');
+                    const level = this.getAttribute('data-level');
+                    
+                    // 更新详情浮层内容
+                    document.getElementById('detailName').textContent = tutorName;
+                    document.getElementById('detailAvatarText').textContent = tutorName.charAt(0);
+                    
+                    // 根据等级设置价格
+                    let price = '¥36/小时';
+                    if (level === 'intermediate') {
+                        price = '¥48/小时';
+                    } else if (level === 'advanced') {
+                        price = '¥60/小时';
+                    }
+                    document.getElementById('detailPrice').textContent = price;
+                    
+                    // 显示详情浮层
+                    tutorDetailOverlay.classList.add('active');
+                });
+            });
+            
+            // 关闭详情浮层
+            detailClose.addEventListener('click', function() {
+                tutorDetailOverlay.classList.remove('active');
+            });
+            
+            // 点击浮层背景关闭
+            tutorDetailOverlay.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                }
+            });
+            
+            // 时间槽点击事件
+            const timeSlots = document.querySelectorAll('.time-slot');
+            
+            timeSlots.forEach(slot => {
+                slot.addEventListener('click', function() {
+                    if (this.classList.contains('available')) {
+                        timeSlots.forEach(s => s.classList.remove('selected'));
+                        this.classList.add('selected');
+                    }
+                });
+            });
+            
+            // 详情页预约按钮
+            const detailBookBtn = document.getElementById('detailBookBtn');
+            const paymentModal = document.getElementById('paymentModal');
+            const paymentClose = document.getElementById('paymentClose');
+            
+            // 预约按钮点击事件
+            detailBookBtn.addEventListener('click', function() {
+                const tutorName = document.getElementById('detailName').textContent;
+                const price = document.getElementById('detailPrice').textContent;
+                
+                // 更新支付浮窗内容
+                document.getElementById('paymentTutor').textContent = tutorName;
+                
+                // 获取当前选中的时间槽
+                let selectedTime = '';
+                const selectedSlot = document.querySelector('.time-slot.selected');
+                if (selectedSlot) {
+                    const dayIndex = Array.from(selectedSlot.parentNode.children).indexOf(selectedSlot) % 7;
+                    const days = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+                    selectedTime = `${days[dayIndex]} ${selectedSlot.textContent}`;
+                } else {
+                    selectedTime = '请先选择时间';
+                }
+                
+                document.getElementById('paymentTime').textContent = selectedTime;
+                document.getElementById('paymentAmount').textContent = price;
+                document.getElementById('paymentTotal').textContent = price;
+                
+                // 显示支付浮窗
+                paymentModal.classList.add('active');
+                
+                // 隐藏详情浮层
+                tutorDetailOverlay.classList.remove('active');
+            });
+            
+            // 立即预约按钮点击事件
+            const bookBtns = document.querySelectorAll('.book-btn');
+            
+            bookBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const tutorName = this.getAttribute('data-tutor');
+                    const level = this.getAttribute('data-level');
+                    
+                    // 根据等级设置价格
+                    let price = '¥36/小时';
+                    if (level === 'intermediate') {
+                        price = '¥48/小时';
+                    } else if (level === 'advanced') {
+                        price = '¥60/小时';
+                    }
+                    
+                    // 更新支付浮窗内容
+                    document.getElementById('paymentTutor').textContent = tutorName;
+                    document.getElementById('paymentTime').textContent = '请在详情页选择时间';
+                    document.getElementById('paymentAmount').textContent = price;
+                    document.getElementById('paymentTotal').textContent = price;
+                    
+                    // 显示支付浮窗
+                    paymentModal.classList.add('active');
+                });
+            });
+            
+            // 关闭支付浮窗
+            paymentClose.addEventListener('click', function() {
+                paymentModal.classList.remove('active');
+            });
+            
+            // 点击浮窗背景关闭
+            paymentModal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                }
+            });
+            
+            // 支付方式选择
+            const paymentMethods = document.querySelectorAll('.payment-method');
+            
+            paymentMethods.forEach(method => {
+                method.addEventListener('click', function() {
+                    paymentMethods.forEach(m => m.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // 确认支付按钮
+            const paymentBtn = document.getElementById('paymentBtn');
+            
+            paymentBtn.addEventListener('click', function() {
+                // 获取辅导者信息
+                const tutorName = document.getElementById('paymentTutor').textContent;
+                const tutorTime = document.getElementById('paymentTime').textContent;
+                
+                // 存储预约信息到本地存储，以便聊天页面使用
+                localStorage.setItem('bookedTutor', tutorName);
+                localStorage.setItem('bookedTime', tutorTime);
+                localStorage.setItem('bookedPrice', document.getElementById('paymentTotal').textContent);
+                
+                alert('预约成功！即将跳转到聊天界面...');
+                paymentModal.classList.remove('active');
+                
+                // 跳转到聊天页面
+                setTimeout(function() {
+                    window.location.href = 'tutor-chat.html';
+                }, 1000);
+            });
+        });
+    </script>
+</body>
+</html>
